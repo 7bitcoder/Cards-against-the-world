@@ -10,16 +10,19 @@
 #include <ws2tcpip.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string>
+#include <iostream>
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
 // #pragma comment (lib, "Mswsock.lib")
 
-#define DEFAULT_BUFLEN 512
+#define DEFAULT_BUFLEN 8100
 #define DEFAULT_PORT "27015"
 
-int __cdecl main(void)
+int main(void)
 {
+	printf("start\n");
 	WSADATA wsaData;
 	int iResult;
 
@@ -75,7 +78,76 @@ int __cdecl main(void)
 
 	freeaddrinfo(result);
 
+
+	
 	iResult = listen(ListenSocket, SOMAXCONN);
+	
+	fd_set master;
+	FD_ZERO(&master);
+	FD_SET(ListenSocket, &master);
+	
+	TIMEVAL time;
+	time.tv_sec = 1;
+	time.tv_usec = 0;
+	printf("setup in while loop ->\n");
+	while (true)
+	{
+		fd_set copy = master;
+		printf("socket wait\n");
+		int socketCount = select(0, &copy, nullptr, nullptr, nullptr);
+		printf("after select /interval/interrupted\n");
+		for (int i = 0; i < socketCount; i++)
+		{
+			printf("in for %d\n", i);
+			SOCKET sock = copy.fd_array[i];
+			if (sock == ListenSocket)
+			{
+				//accept new connection
+				SOCKET client = accept(ListenSocket, nullptr, nullptr);
+				FD_SET(client, &master);
+
+				std::string welcome = "welcome to chat server xD!";
+				printf("new user\n");
+				send(client, welcome.c_str(), welcome.size() + 1, 0);
+
+			}
+			else //get message
+			{
+				ZeroMemory(recvbuf, recvbuflen);
+
+				int bytesIn = recv(sock, recvbuf, recvbuflen, 0);
+				printf("Message: %s\n", recvbuf);
+				if (bytesIn <= 0)//message is wrong
+				{
+					printf("message error close socket\n");
+					closesocket(sock);
+					FD_CLR(sock, &master);
+				}
+				else//if message is correct
+				{
+					for (int i = 0; i < master.fd_count; i++)
+					{
+						SOCKET outSock = master.fd_array[i];
+						if (outSock != ListenSocket && outSock != sock)
+						{
+							std::string ss = "Socket :";
+							ss += " :";
+							ss += sock;
+							ss += " :";
+							ss += recvbuf;
+							ss += "\n";
+							send(outSock, ss.c_str(), ss.size() + 1, 0);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	
+	
+	/*
+	
 	if (iResult == SOCKET_ERROR) {
 		printf("listen failed with error: %d\n", WSAGetLastError());
 		closesocket(ListenSocket);
@@ -137,6 +209,7 @@ int __cdecl main(void)
 	WSACleanup();
 
 	return 0;
+*/
 }
 // Uruchomienie programu: Ctrl + F5 lub menu Debugowanie > Uruchom bez debugowania
 // Debugowanie programu: F5 lub menu Debugowanie > Rozpocznij debugowanie

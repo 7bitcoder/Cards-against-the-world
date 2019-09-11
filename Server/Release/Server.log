@@ -1,0 +1,9 @@
+﻿  Server.cpp
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\Server.cpp(128): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\Server.cpp(35): warning C4101: "iSendResult": lokalna zmienna, do której nie istnieje odwołanie
+  Trwa generowanie kodu
+  1 of 71 functions ( 1.4%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Zakończono generowanie kodu
+  Server.vcxproj -> C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\Release\Server.exe
