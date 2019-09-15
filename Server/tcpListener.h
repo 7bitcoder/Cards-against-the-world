@@ -19,7 +19,6 @@ class tcpListener
 private:
 	const char* passCode = "abcde"; // "o6EA9s4XGw1pRCtvqg02stfvfAlp8p";
 	int port;
-	int proposingLobbyPort;
 	std::string ip;
 	SOCKET sock;
 	SOCKET clientSocket;
@@ -35,7 +34,6 @@ public:
 	~tcpListener();
 	bool init();
 	bool run();
-	int GetFreePortToListen();
 	void closeConnection() { closesocket(clientSocket); }
 	std::string getLobby() { return std::string(lobbyId); }
 	bool isNewLobby() { return newLobby[0] == 'y'; }

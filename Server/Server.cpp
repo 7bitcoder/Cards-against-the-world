@@ -2,25 +2,21 @@
 //
 
 #undef UNICODE
-
 #define WIN32_LEAN_AND_MEAN
+#define TIME_WAIT 60
 #include "tcpListener.h"
 #include "lobbyThread.h"
 
-
-// Need to link with Ws2_32.lib
-
-// #pragma comment (lib, "Mswsock.lib")
 extern std::mutex mut;
+extern std::map<std::string, int> mapaLobby;
+
 namespace error {
 	const char lobbyIsAlredyChosen[] = "a";
 	const char noPortsAreAvailable[] = "b";
 	const char lobbyNameIsIncorrect[] = "c";
 	const char couldNotFindLobby[] = "d";
 }
-#define DEFAULT_BUFLEN 8100
-#define DEFAULT_PORT "27015"
-extern std::map<std::string, int> mapaLobby;
+
 int main(void) {
 	WSADATA wsaData;
 	int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -35,18 +31,14 @@ int main(void) {
 	while (true) {
 		if (!mainListener.run())
 			continue;
-		if (!mainListener.checkData())
+		if (!mainListener.checkData()) //get data and check serure code
 			continue;
 		if (mainListener.isNewLobby()) {
-			int newPort;
-			std::string message;
-			char portbuff[10];
 			mut.lock();
 			if (mapaLobby.find(mainListener.getLobby()) != mapaLobby.end()) {
 				mut.unlock();
 				printf("lobby is alredy chosen\n");
-				message = error::lobbyIsAlredyChosen;
-				mainListener.sendAll(message.c_str(), message.size());
+				mainListener.sendAll(error::lobbyIsAlredyChosen, strlen(error::lobbyIsAlredyChosen));
 				Sleep(1);
 				mainListener.closeConnection();
 				continue;
@@ -55,24 +47,19 @@ int main(void) {
 			std::string lobbyStr = mainListener.getLobby();
 			if (lobbyStr.empty()) {
 				printf("lobby name is incorrect\n");
-				message = error::lobbyNameIsIncorrect;
-				mainListener.sendAll(message.c_str(), message.size());
+				mainListener.sendAll(error::lobbyNameIsIncorrect, strlen(error::lobbyNameIsIncorrect));
 				Sleep(1);
 				mainListener.closeConnection();
 				continue;
 			}
-			std::thread lobby(lobbyThread, mainListener.getNewClientSocket(), lobbyStr);//, std::ref(mut), std::ref(mapaLobby));
+			std::thread lobby(lobbyThread, mainListener.getNewClientSocket(), lobbyStr);
 			lobby.detach();
 		}
 		else {
 			std::string lobby = mainListener.getLobby();
-			int newPort;
-			std::string message;
-			char portbuff[10];
 			if (lobby.empty()) {
 				printf("lobby name is incorrect\n");
-				message = error::lobbyNameIsIncorrect;
-				mainListener.sendAll(message.c_str(), message.size());
+				mainListener.sendAll(error::lobbyNameIsIncorrect, strlen(error::lobbyNameIsIncorrect));
 				Sleep(1);
 				mainListener.closeConnection();
 				continue;
@@ -81,16 +68,16 @@ int main(void) {
 			if (mapaLobby.find(lobby) == mapaLobby.end()) {
 				mut.unlock();
 				printf("could not find lobby\n");
-				message = error::couldNotFindLobby;
-				mainListener.sendAll(message.c_str(), message.size());
+				mainListener.sendAll(error::couldNotFindLobby, strlen(error::couldNotFindLobby));
 				Sleep(1);
 				mainListener.closeConnection();
 				continue;
 			}
-			newPort = mapaLobby[mainListener.getLobby()];
+			int newPort = mapaLobby[mainListener.getLobby()];
 			mut.unlock();
-			message = std::to_string(newPort);
-			mainListener.sendAll(message.c_str(), message.size());
+			std::string portMsg = std::to_string(newPort);
+			mainListener.sendAll(portMsg.c_str(), portMsg.size());
+			Sleep(1);
 			mainListener.closeConnection();
 		}
 	}

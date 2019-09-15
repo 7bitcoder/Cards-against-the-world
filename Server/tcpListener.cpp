@@ -1,4 +1,8 @@
 #include "tcpListener.h"
+#ifndef TIME_WAIT
+#define TIME_WAIT 60
+#endif // !1
+
 
 bool tcpListener::sendAll(const char* data, int length)
 {
@@ -43,7 +47,6 @@ tcpListener::tcpListener(int port_, std::string ipv4)
 	: port(port_), ip(ipv4) {
 	sock = INVALID_SOCKET;
 	clientSocket = INVALID_SOCKET;
-	proposingLobbyPort = 2000;
 }
 
 tcpListener::~tcpListener() {}
@@ -58,7 +61,7 @@ bool tcpListener::run(){
 		closesocket(clientSocket);
 		return false;
 	}
-	TIMEVAL tv = { 1000,0 };
+	TIMEVAL tv = { TIME_WAIT,0 };
 
 	// Set up the file descriptor set.
 	fd_set fds;
@@ -89,35 +92,6 @@ bool tcpListener::run(){
 		return false;
 	}
 	return true;
-}
-int tcpListener::GetFreePortToListen()
-{
-	int iResult;
-	
-	SOCKET newSock = INVALID_SOCKET;
-
-	// Create a SOCKET for connecting to server
-	newSock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (newSock == INVALID_SOCKET) {
-		printf("socket failed with error: %ld\n", WSAGetLastError());
-		return 0;
-	}
-	sockaddr_in addr;
-	int size = sizeof(addr);
-	addr.sin_family = AF_INET;
-	addr.sin_port = htons(0);
-	addr.sin_addr.s_addr = INADDR_ANY;
-
-	iResult = bind(newSock, (struct sockaddr*)& addr, size);
-	if (iResult == SOCKET_ERROR) {
-		printf("bind failed with error: %d\n", WSAGetLastError());
-		closesocket(newSock);
-		return 0;
-	}
-	getsockname(newSock, (struct sockaddr*) & addr, &size);
-	int newPort = ntohs(addr.sin_port);
-	shutdown(newSock, SD_BOTH);
-	return newPort;
 }
 
 bool tcpListener::init()
