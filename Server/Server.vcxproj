@@ -154,11 +154,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="lobbyThread.cpp" />
+    <ClCompile Include="MainThreadListener.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="tcpListener.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lobbyThread.h" />
+    <ClInclude Include="MainThreadListener.h" />
     <ClInclude Include="tcpListener.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

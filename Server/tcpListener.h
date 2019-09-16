@@ -17,13 +17,13 @@
 class tcpListener
 {
 private:
-	const char* passCode = "abcde"; // "o6EA9s4XGw1pRCtvqg02stfvfAlp8p";
+	const char* passCode = "a7dzRwQjnw5kW6uEnhx7"; // "o6EA9s4XGw1pRCtvqg02stfvfAlp8p";
 	int port;
 	std::string ip;
 	SOCKET sock;
 	SOCKET clientSocket;
 	char buff[LEN];
-	char code[6] = { 0 };
+	char code[21] = { 0 };
 	char newLobby[2] = { 0 };
 	char nickname[31] = { 0 };
 	char lobbyId[31] = { 0 };

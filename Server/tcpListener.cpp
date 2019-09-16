@@ -24,10 +24,11 @@ bool tcpListener::checkData()
 	ZeroMemory(&newLobby, sizeof(newLobby));
 	ZeroMemory(&nickname, sizeof(nickname));
 	ZeroMemory(&lobbyId, sizeof(lobbyId));
-	strncpy_s(code, buff, 5);
-	strncpy_s(newLobby, buff + 5, 1);
-	strncpy_s(nickname, buff + 6, 30);
-	strncpy_s(lobbyId, buff + 36, 30);
+	printf("all : %s\n", buff);
+	strncpy_s(code, buff, 20);
+	strncpy_s(newLobby, buff + 22, 1);
+	strncpy_s(nickname, buff + 24, 30);
+	strncpy_s(lobbyId, buff + 55, 30);
 	printf("%s\n", code);
 	printf("%s\n", newLobby);
 	printf("%s\n", nickname);

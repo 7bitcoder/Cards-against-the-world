@@ -6,6 +6,7 @@
 #define TIME_WAIT 60
 #include "tcpListener.h"
 #include "lobbyThread.h"
+#include <thread>
 
 extern std::mutex mut;
 extern std::map<std::string, int> mapaLobby;
@@ -15,9 +16,12 @@ namespace error {
 	const char noPortsAreAvailable[] = "b";
 	const char lobbyNameIsIncorrect[] = "c";
 	const char couldNotFindLobby[] = "d";
+	const char ServerIsFull[] = "e";
 }
 
 int main(void) {
+	const int maxLobby = 30;
+	int numberOfLobbys = 0;
 	WSADATA wsaData;
 	int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (iResult != 0) {
@@ -52,8 +56,19 @@ int main(void) {
 				mainListener.closeConnection();
 				continue;
 			}
-			std::thread lobby(lobbyThread, mainListener.getNewClientSocket(), lobbyStr);
-			lobby.detach();
+			mut.lock();
+			if (mapaLobby.size() < maxLobby) {
+				mut.unlock();
+				std::thread lobby(lobbyThread, mainListener.getNewClientSocket(), lobbyStr);
+				lobby.detach();
+				continue;
+			}
+			mut.unlock();
+			printf("server is full\n");
+			mainListener.sendAll(error::ServerIsFull, strlen(error::ServerIsFull));
+			Sleep(1);
+			mainListener.closeConnection();
+
 		}
 		else {
 			std::string lobby = mainListener.getLobby();
