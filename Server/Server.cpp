@@ -9,7 +9,7 @@
 #include <thread>
 
 extern std::mutex mut;
-extern std::map<std::string, int> mapaLobby;
+extern std::map<std::string, player> mapaLobby;
 
 namespace error {
 	const char lobbyIsAlredyChosen[] = "a";
@@ -38,8 +38,9 @@ int main(void) {
 		if (!mainListener.checkData()) //get data and check serure code
 			continue;
 		if (mainListener.isNewLobby()) {
+			std::string lobbyStr = mainListener.getLobby();
 			mut.lock();
-			if (mapaLobby.find(mainListener.getLobby()) != mapaLobby.end()) {
+			if (mapaLobby.find(lobbyStr) != mapaLobby.end() && mapaLobby[lobbyStr].chatPort && mapaLobby[lobbyStr].lobbyPort) {
 				mut.unlock();
 				printf("lobby is alredy chosen\n");
 				mainListener.sendAll(error::lobbyIsAlredyChosen, strlen(error::lobbyIsAlredyChosen));
@@ -48,7 +49,6 @@ int main(void) {
 				continue;
 			}
 			mut.unlock();
-			std::string lobbyStr = mainListener.getLobby();
 			if (lobbyStr.empty()) {
 				printf("lobby name is incorrect\n");
 				mainListener.sendAll(error::lobbyNameIsIncorrect, strlen(error::lobbyNameIsIncorrect));
@@ -80,7 +80,7 @@ int main(void) {
 				continue;
 			}
 			mut.lock();
-			if (mapaLobby.find(lobby) == mapaLobby.end()) {
+			if (mapaLobby.find(lobby) == mapaLobby.end() || !mapaLobby[lobby].chatPort || mapaLobby[lobby].lobbyPort) {
 				mut.unlock();
 				printf("could not find lobby\n");
 				mainListener.sendAll(error::couldNotFindLobby, strlen(error::couldNotFindLobby));
@@ -88,7 +88,7 @@ int main(void) {
 				mainListener.closeConnection();
 				continue;
 			}
-			int newPort = mapaLobby[mainListener.getLobby()];
+			int newPort = mapaLobby[mainListener.getLobby()].lobbyPort;
 			mut.unlock();
 			std::string portMsg = std::to_string(newPort);
 			mainListener.sendAll(portMsg.c_str(), portMsg.size());

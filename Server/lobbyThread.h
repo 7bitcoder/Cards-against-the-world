@@ -12,8 +12,12 @@
 #include <string>
 #include<mutex>
 #include<map>
-
+struct player
+{
+	int lobbyPort = 0;
+	int chatPort = 0;
+};
 extern std::mutex mut;
-extern std::map<std::string, int> mapaLobby;
+extern std::map<std::string, player> mapaLobby;
 void lobbyThread(SOCKET socket, std::string lobbyId);
 

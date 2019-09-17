@@ -2,10 +2,10 @@
 
 
 extern std::mutex mut;
-extern std::map<std::string, int> mapaLobby;
+extern std::map<std::string, player> mapaLobby;
 MainThreadListener::MainThreadListener(SOCKET socket_, std::string lobbyId_)
 {
-	socket = socket_;
+	oldSocket = socket_;
 	lobbyId = lobbyId_;
 }
 
@@ -33,18 +33,18 @@ bool MainThreadListener::init()
 	listenPort = ntohs(addr.sin_port);
 	freeaddrinfo(result);
 	mut.lock();
-	mapaLobby[lobbyId] = listenPort;
+	mapaLobby[lobbyId].lobbyPort = listenPort;
 	mut.unlock();
 	std::string msg = std::to_string(listenPort);
-	int iResult = send(socket, msg.c_str(), msg.size(), 0);
+	int iResult = send(oldSocket, msg.c_str(), msg.size(), 0);
 	if (iResult == SOCKET_ERROR) {
 		printf("send failed with error: %d\n", WSAGetLastError());
-		closesocket(socket);
+		closesocket(oldSocket);
 		WSACleanup();
 		return false;
 	}
 	Sleep(1);
-	closesocket(socket);
+	closesocket(oldSocket);
 	return true;
 }
 
@@ -89,7 +89,7 @@ bool MainThreadListener::validateLeader()
 		return false;
 	}
 	printf("start\n");
-	/*
+	
 		char buff[500];
 	ZeroMemory(&buff, sizeof(buff));
 	while (buff[0] != 'q' && buff[1] != 'u' && buff[2] != 'i' && buff[3] != 't') {
@@ -105,7 +105,6 @@ bool MainThreadListener::validateLeader()
 	}
 	printf("exiting\n", listenPort);
 	shutdown(ClientSocket, SD_BOTH);
-	return ;*/
 	return true;
 }
 

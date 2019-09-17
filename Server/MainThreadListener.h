@@ -1,10 +1,10 @@
 #pragma once
 #include "lobbyThread.h"
-#define DEFAULT_BUFLEN 512
+#define DEFAULT_BUFLEN 1024
 class MainThreadListener
 {
 public:
-	SOCKET socket;
+	SOCKET oldSocket;
 	std::string lobbyId;
 	SOCKET ListenSocket = INVALID_SOCKET;
 	SOCKET ClientSocket = INVALID_SOCKET;
@@ -19,4 +19,3 @@ public:
 	bool validateLeader();
 	~MainThreadListener();
 };
-
