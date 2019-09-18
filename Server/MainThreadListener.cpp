@@ -9,13 +9,13 @@ MainThreadListener::MainThreadListener(SOCKET socket_, std::string lobbyId_)
 	lobbyId = lobbyId_;
 }
 
-bool MainThreadListener::init()
+int MainThreadListener::init()
 {
 	printf("startin thread\n");
 	ListenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (ListenSocket == INVALID_SOCKET) {
 		printf("socket failed with error: %ld\n", WSAGetLastError());
-		return false;
+		return 0;
 	}
 	sockaddr_in addr;
 	int size = sizeof(addr);
@@ -27,36 +27,34 @@ bool MainThreadListener::init()
 	if (iResult == SOCKET_ERROR) {
 		printf("bind failed with error: %d\n", WSAGetLastError());
 		closesocket(ListenSocket);
-		return false;
+		return 0;
 	}
 	getsockname(ListenSocket, (struct sockaddr*) & addr, &size);
 	listenPort = ntohs(addr.sin_port);
 	freeaddrinfo(result);
-	mut.lock();
-	mapaLobby[lobbyId].lobbyPort = listenPort;
-	mut.unlock();
 	std::string msg = std::to_string(listenPort);
 	int iResult = send(oldSocket, msg.c_str(), msg.size(), 0);
 	if (iResult == SOCKET_ERROR) {
 		printf("send failed with error: %d\n", WSAGetLastError());
 		closesocket(oldSocket);
 		WSACleanup();
-		return false;
+		return 0;
 	}
-	Sleep(1);
-	closesocket(oldSocket);
-	return true;
-}
-
-bool MainThreadListener::validateLeader()
-{
-	printf("listening with %d port thread\n", listenPort);
+	printf("po wyslaniu portu\n");
 	iResult = listen(ListenSocket, SOMAXCONN);
 	if (iResult == SOCKET_ERROR) {
 		printf("listen failed with error: %d\n", WSAGetLastError());
 		closesocket(ListenSocket);
 		return false;
 	}
+	return listenPort;
+}
+
+bool MainThreadListener::validateLeader()
+{
+	closesocket(oldSocket);
+	Sleep(1);
+	printf("listening with %d port thread\n", listenPort);
 
 	// Accept a client socket
 	printf("accepting with %d port thread\n", listenPort);
@@ -66,44 +64,9 @@ bool MainThreadListener::validateLeader()
 		closesocket(ListenSocket);
 		return false;
 	}
-	TIMEVAL tv = { 1000,0 };
-
-	// Set up the file descriptor set.
-	fd_set fds;
-	FD_ZERO(&fds);
-	FD_SET(ClientSocket, &fds);
-
-	// Set up the struct timeval for the timeout.
-
 	// Wait until timeout or data received.
 	printf("accepted with %d port thread\n", listenPort);
-	iResult = select(0, &fds, NULL, NULL, &tv);
-	if (iResult == SOCKET_ERROR) {
-		printf("select failed with error: %d\n", WSAGetLastError());
-		closesocket(ClientSocket);
-		return false;
-	}
-	else if (iResult == 0) {
-		printf("response time for code is is up");
-		closesocket(ClientSocket);
-		return false;
-	}
 	printf("start\n");
-	
-		char buff[500];
-	ZeroMemory(&buff, sizeof(buff));
-	while (buff[0] != 'q' && buff[1] != 'u' && buff[2] != 'i' && buff[3] != 't') {
-		ZeroMemory(&buff, sizeof(buff));
-		iResult = recv(ClientSocket, buff, 500, 0);
-		if (iResult <= 0)
-		{
-			printf("receive failed with error: %d\n", WSAGetLastError());
-			closesocket(ClientSocket);
-			return;
-		}
-		printf("message :%s\n", buff);
-	}
-	printf("exiting\n", listenPort);
 	shutdown(ClientSocket, SD_BOTH);
 	return true;
 }
