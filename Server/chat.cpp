@@ -3,7 +3,7 @@
 
 bool chat::disconnect(SOCKET socket)
 {
-	printf("message error close socket\n");
+	printf("plyer disconnected\n");
 	std::string msg = clients[socket].nick + " disconnected.";
 	if (!broadCast(socket, msg)) {
 		//todo
@@ -112,6 +112,7 @@ bool chat::limitedResponseWait(int time, SOCKET socket)
 }
 chat::chat(SOCKET socket_, std::string lobbyId_, std::string port_)
 {
+	printf("Creating chat object\n");
 	listenSocket = socket_;
 	lobbyId = lobbyId_;
 	port = port_;
