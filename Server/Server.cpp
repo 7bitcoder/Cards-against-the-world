@@ -89,8 +89,12 @@ int main(void) {
 				continue;
 			}
 			int newPort = mapaLobby[mainListener.getLobby()].lobbyPort;
+			int chatPort = mapaLobby[mainListener.getLobby()].chatPort;
 			mut.unlock();
 			std::string portMsg = std::to_string(newPort);
+			mainListener.sendAll(portMsg.c_str(), portMsg.size());
+			Sleep(1);
+			std::string portMsg = std::to_string(chatPort);
 			mainListener.sendAll(portMsg.c_str(), portMsg.size());
 			Sleep(1);
 			mainListener.closeConnection();
