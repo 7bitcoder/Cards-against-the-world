@@ -9,9 +9,9 @@ MainThreadListener::MainThreadListener(SOCKET socket_, std::string lobbyId_)
 	lobbyId = lobbyId_;
 }
 
-int MainThreadListener::init()
+int MainThreadListener::createListenSocket()
 {
-	printf("startin thread\n");
+	printf("creating listen socket\n");
 	ListenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (ListenSocket == INVALID_SOCKET) {
 		printf("socket failed with error: %ld\n", WSAGetLastError());
@@ -22,7 +22,7 @@ int MainThreadListener::init()
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(0);
 	addr.sin_addr.s_addr = INADDR_ANY;
-	printf("binding with %d port thread\n", 0);
+	printf("binding listen socket with %d port thread\n", 0);
 	iResult = bind(ListenSocket, (struct sockaddr*) & addr, size);
 	if (iResult == SOCKET_ERROR) {
 		printf("bind failed with error: %d\n", WSAGetLastError());
@@ -40,7 +40,7 @@ int MainThreadListener::init()
 		WSACleanup();
 		return 0;
 	}
-	printf("po wyslaniu portu\n");
+	printf("after sending listen port %d\n", listenPort);
 	iResult = listen(ListenSocket, SOMAXCONN);
 	if (iResult == SOCKET_ERROR) {
 		printf("listen failed with error: %d\n", WSAGetLastError());
@@ -50,12 +50,10 @@ int MainThreadListener::init()
 	return listenPort;
 }
 
-bool MainThreadListener::validateLeader()
+bool MainThreadListener::acceptLeaderConnection()
 {
 	closesocket(oldSocket);
 	Sleep(1);
-	printf("listening with %d port thread\n", listenPort);
-
 	// Accept a client socket
 	printf("accepting with %d port thread\n", listenPort);
 	ClientSocket = accept(ListenSocket, NULL, NULL);
@@ -66,8 +64,6 @@ bool MainThreadListener::validateLeader()
 	}
 	// Wait until timeout or data received.
 	printf("accepted with %d port thread\n", listenPort);
-	printf("start\n");
-	shutdown(ClientSocket, SD_BOTH);
 	return true;
 }
 
