@@ -27,8 +27,8 @@ class chat
 {
 private:
 	const char* passCode = "a7dzRwQjnw5kW6uEnhx7";
-	char buff[1024];
-	char rcvbuff[1024];
+	char buff[LEN];
+	char rcvbuff[LEN];
 	std::map<SOCKET, client> clients;
 	fd_set fds;
 	SOCKET listenSocket;

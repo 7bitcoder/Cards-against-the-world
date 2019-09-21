@@ -80,7 +80,7 @@ int main(void) {
 				continue;
 			}
 			mut.lock();
-			if (mapaLobby.find(lobby) == mapaLobby.end() || !mapaLobby[lobby].chatPort || mapaLobby[lobby].lobbyPort) {
+			if (mapaLobby.find(lobby) == mapaLobby.end() || !mapaLobby[lobby].chatPort || !mapaLobby[lobby].lobbyPort) {
 				mut.unlock();
 				printf("could not find lobby\n");
 				mainListener.sendAll(error::couldNotFindLobby, strlen(error::couldNotFindLobby));

@@ -75,8 +75,8 @@ bool chat::computeNewClientData(SOCKET client)
 		return false;
 	}
 	printf("code is ok\n");
-	return true;
 	clients[client].nick = nickname;
+	return true;
 }
 bool chat::limitedResponseWait(int time, SOCKET socket)
 {
@@ -166,10 +166,10 @@ void chat::run()
 			}
 			else {//get message
 				ZeroMemory(rcvbuff, strlen(rcvbuff));
-				int bytesIn = recv(sock, rcvbuff, strlen(rcvbuff), 0);
+				int bytesIn = recv(sock, rcvbuff, LEN, 0);
 				printf("Message: %s\n", rcvbuff);
-				if (bytesIn <= 0) {
-					//disconnect(sock);
+				if (bytesIn <= 0 ) {
+					disconnect(sock);
 				}
 				else {
 					std::string msg = clients[sock].nick + ": " + rcvbuff;
