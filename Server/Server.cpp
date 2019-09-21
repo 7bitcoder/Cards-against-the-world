@@ -94,7 +94,7 @@ int main(void) {
 			std::string portMsg = std::to_string(newPort);
 			mainListener.sendAll(portMsg.c_str(), portMsg.size());
 			Sleep(1);
-			std::string portMsg = std::to_string(chatPort);
+			portMsg = std::to_string(chatPort);
 			mainListener.sendAll(portMsg.c_str(), portMsg.size());
 			Sleep(1);
 			mainListener.closeConnection();
@@ -157,7 +157,7 @@ int main(void) {
 	{
 		fd_set copy = master;
 		printf("socket wait\n");
-		int socketCount = select(0, &copy, nullptr, nullptr, nullptr);
+		int socketCount = sel ect(0, &copy, nullptr, nullptr, nullptr);
 		printf("after select /interval/interrupted\n");
 		for (int i = 0; i < socketCount; i++)
 		{

@@ -11,6 +11,7 @@ bool chat::disconnect(SOCKET socket)
 	closesocket(socket);
 	FD_CLR(socket, &fds);
 	clients.erase(socket);
+	return true;
 }
 chat::~chat() {
 	for (int i = 0; i < fds.fd_count; i++)
@@ -26,8 +27,9 @@ bool chat::broadCast(SOCKET socket, std::string msg)
 		SOCKET outSock = fds.fd_array[i];
 		if (outSock != socket && outSock != listenSocket)
 		{
-			if (!sendAll(outSock, msg.c_str(), msg.size()))
+			if (!sendAll(outSock, msg.c_str(), msg.size() + 1))
 				continue;
+			Sleep(1);
 		}
 	}
 	return true;
@@ -57,7 +59,6 @@ bool chat::computeNewClientData(SOCKET client)
 	ZeroMemory(&newLobby, sizeof(newLobby));
 	ZeroMemory(&nickname, sizeof(nickname));
 	ZeroMemory(&lobbyId, sizeof(lobbyId));
-	printf("all : %s\n", buff);
 	strncpy_s(code, buff, 20);
 	strncpy_s(newLobby, buff + 22, 1);
 	strncpy_s(nickname, buff + 24, 30);
@@ -69,11 +70,11 @@ bool chat::computeNewClientData(SOCKET client)
 	int cmp = strcmp(passCode, code);
 	if (cmp != 0)
 	{
-		printf("wrong code: %d", cmp);
+		printf("wrong code: %dn\n", cmp);
 		closesocket(client);
 		return false;
 	}
-	printf("code is ok");
+	printf("code is ok\n");
 	return true;
 	clients[client].nick = nickname;
 }
@@ -89,14 +90,14 @@ bool chat::limitedResponseWait(int time, SOCKET socket)
 	// Set up the struct timeval for the timeout.
 
 	// Wait until timeout or data received.
-	int iResult = select(0, &fds, NULL, NULL, &tv);
+	int iResult = select(0, &tmp, NULL, NULL, &tv);
 	if (iResult == SOCKET_ERROR) {
 		printf("select failed with error: %d\n", WSAGetLastError());
 		closesocket(socket);
 		return false;
 	}
 	else if (iResult == 0) {
-		printf("response time for code is is up");
+		printf("response time for code is is up\n");
 		closesocket(socket);
 		return false;
 	}
@@ -121,34 +122,41 @@ chat::chat(SOCKET socket_, std::string lobbyId_, std::string port_)
 }
 bool chat::acceptNewClient()
 {
+	printf("try to accept chat client\n");
 	SOCKET client = accept(listenSocket, nullptr, nullptr);
 	if (client == INVALID_SOCKET) {
 		printf("accept failed with error: %d\n", WSAGetLastError());
 		closesocket(client);
 		return false;
 	}
-	limitedResponseWait(5, client);
-	computeNewClientData(client);
+	if (!limitedResponseWait(5, client))
+		return false;
+	if (!computeNewClientData(client))
+		return false;
 	FD_SET(client, &fds);
 	std::string welcome = "Welcome to lobby: " + lobbyId;
 	printf("new user\n");
 	if (!sendAll( client, welcome.c_str(), welcome.size() + 1)) {
 		//TODO co zrobic ???
 	}
+	Sleep(1);
 	welcome = clients[client].nick + " joined lobby.";
 	if (!broadCast(client, welcome))
 	{
 		//??????
 	}
+	Sleep(1);
 	return true;
 }
 void chat::run()
 {
 	while (true) {
 		fd_set copy = fds;
-		printf("socket wait\n");
 		int socketCount = select(0, &copy, nullptr, nullptr, nullptr);
-		printf("after select /interval/interrupted\n");
+		if (socketCount == SOCKET_ERROR) {
+			printf("select failed with error: %d\n", WSAGetLastError());
+		}
+		printf("after xd\n");
 		for (int i = 0; i < socketCount; i++) {
 			printf("in for %d\n", i);
 			SOCKET sock = copy.fd_array[i];
@@ -161,7 +169,7 @@ void chat::run()
 				int bytesIn = recv(sock, rcvbuff, strlen(rcvbuff), 0);
 				printf("Message: %s\n", rcvbuff);
 				if (bytesIn <= 0) {
-					disconnect(sock);
+					//disconnect(sock);
 				}
 				else {
 					std::string msg = clients[sock].nick + ": " + rcvbuff;

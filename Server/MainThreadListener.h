@@ -15,7 +15,7 @@ public:
 	char recvbuf[DEFAULT_BUFLEN];
 	int recvbuflen = DEFAULT_BUFLEN;
 	MainThreadListener(SOCKET socket_, std::string lobbyId_);
-	int init();
-	bool validateLeader();
+	int createListenSocket();
+	bool acceptLeaderConnection();
 	~MainThreadListener();
 };

@@ -11,13 +11,13 @@ void ChatThread(SOCKET socket_, std::string lobbyId_)
 {
 	//main listener tylko init
 	MainThreadListener listener(socket_, lobbyId_);
-	int port = listener.init();
+	int port = listener.createListenSocket();
 	if (!port) { ; }//todo
 	std::string portStr = std::to_string(port);
 	mut.lock();
 	mapaLobby[lobbyId_].chatPort = port;
 	mut.unlock();
-	chat Chat(listener.listenPort, lobbyId_, portStr);
+	chat Chat(listener.ListenSocket, lobbyId_, portStr);
 	Chat.run();
 } 
 
@@ -26,12 +26,12 @@ void lobbyThread(SOCKET socket_, std::string lobbyId)//, std::mutex, std::map<st
 
 	MainThreadListener listener(socket_, lobbyId);
 	//init listener and connect to leader
-	int port = listener.init();
+	int port = listener.createListenSocket();
 	if (!port) { ; }//TODO
 	mut.lock();
 	mapaLobby[lobbyId].lobbyPort = port;
 	mut.unlock();
-	if (!listener.validateLeader()) { ; }//TODO
+	if (!listener.acceptLeaderConnection()) { ; }//TODO
 	std::thread chat(ChatThread, listener.ClientSocket, lobbyId);
 	while (true) { ; }
 	return;
