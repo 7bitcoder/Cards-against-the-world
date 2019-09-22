@@ -16,6 +16,7 @@ struct player
 {
 	int lobbyPort = 0;
 	int chatPort = 0;
+	bool lock = false;
 };
 extern std::mutex mut;
 extern std::map<std::string, player> mapaLobby;

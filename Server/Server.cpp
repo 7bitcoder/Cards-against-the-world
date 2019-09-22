@@ -17,6 +17,7 @@ namespace error {
 	const char lobbyNameIsIncorrect[] = "c";
 	const char couldNotFindLobby[] = "d";
 	const char ServerIsFull[] = "e";
+	const char lobbyNameIsLocked[] = "f";
 }
 
 int main(void) {
@@ -48,15 +49,14 @@ int main(void) {
 				mainListener.closeConnection();
 				continue;
 			}
-			mut.unlock();
 			if (lobbyStr.empty()) {
+				mut.unlock();
 				printf("Lobby name is incorrect\n");
 				mainListener.sendAll(error::lobbyNameIsIncorrect, strlen(error::lobbyNameIsIncorrect));
 				mainListener.wait();
 				mainListener.closeConnection();
 				continue;
 			}
-			mut.lock();
 			if (mapaLobby.size() < maxLobby) {
 				mut.unlock();
 				std::thread lobby(lobbyThread, mainListener.getNewClientSocket(), lobbyStr);
@@ -84,6 +84,14 @@ int main(void) {
 				mut.unlock();
 				printf("Could not find lobby\n");
 				mainListener.sendAll(error::couldNotFindLobby, strlen(error::couldNotFindLobby));
+				mainListener.wait();
+				mainListener.closeConnection();
+				continue;
+			}
+			if (mapaLobby[lobby].lock == true) {
+				mut.unlock();
+				printf("Lobby is locked\n");
+				mainListener.sendAll(error::lobbyNameIsLocked, strlen(error::lobbyNameIsLocked));
 				mainListener.wait();
 				mainListener.closeConnection();
 				continue;

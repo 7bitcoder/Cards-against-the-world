@@ -13,36 +13,48 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Pliki nagłówkowe\main">
+      <UniqueIdentifier>{da4912ce-2c95-4518-82f0-1963e300aa2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pliki źródłowe\main">
+      <UniqueIdentifier>{9c66dd29-ff8a-49bd-8750-8a0c8c4b062a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pliki źródłowe\lobby thread">
+      <UniqueIdentifier>{6c99c597-2254-42dd-b510-6c489ec21425}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pliki nagłówkowe\lobby thread">
+      <UniqueIdentifier>{19ed5b9a-1858-4780-99d4-cb8537ee0862}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
-      <Filter>Pliki źródłowe</Filter>
+      <Filter>Pliki źródłowe\main</Filter>
     </ClCompile>
     <ClCompile Include="tcpListener.cpp">
-      <Filter>Pliki źródłowe</Filter>
+      <Filter>Pliki źródłowe\main</Filter>
     </ClCompile>
     <ClCompile Include="lobbyThread.cpp">
-      <Filter>Pliki źródłowe</Filter>
+      <Filter>Pliki źródłowe\lobby thread</Filter>
     </ClCompile>
     <ClCompile Include="MainThreadListener.cpp">
-      <Filter>Pliki źródłowe</Filter>
+      <Filter>Pliki źródłowe\lobby thread</Filter>
     </ClCompile>
     <ClCompile Include="chat.cpp">
-      <Filter>Pliki źródłowe</Filter>
+      <Filter>Pliki źródłowe\lobby thread</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tcpListener.h">
-      <Filter>Pliki nagłówkowe</Filter>
+      <Filter>Pliki nagłówkowe\main</Filter>
     </ClInclude>
     <ClInclude Include="lobbyThread.h">
-      <Filter>Pliki nagłówkowe</Filter>
+      <Filter>Pliki nagłówkowe\lobby thread</Filter>
     </ClInclude>
     <ClInclude Include="MainThreadListener.h">
-      <Filter>Pliki nagłówkowe</Filter>
+      <Filter>Pliki nagłówkowe\lobby thread</Filter>
     </ClInclude>
     <ClInclude Include="chat.h">
-      <Filter>Pliki nagłówkowe</Filter>
+      <Filter>Pliki nagłówkowe\lobby thread</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
