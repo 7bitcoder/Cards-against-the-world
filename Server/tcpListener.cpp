@@ -36,11 +36,11 @@ bool tcpListener::checkData()
 	int cmp = strcmp(passCode, code);
 	if (cmp != 0)
 	{
-		printf("wrong code: %d", cmp);
+		printf("wrong code: %d\n", cmp);
 		closeConnection();
 		return false;
 	}
-	printf("code is ok");
+	printf("code is ok\n");
 	return true;
 }
 
@@ -79,7 +79,7 @@ bool tcpListener::run(){
 		return false;
 	}
 	else if (iResult == 0) {
-		printf("response time for code is is up");
+		printf("response time for code is is up\n");
 		closesocket(clientSocket);
 		return false;
 	}

@@ -14,6 +14,7 @@
 
 #pragma comment (lib, "Ws2_32.lib")
 #define LEN 1024
+
 class tcpListener
 {
 private:
@@ -39,5 +40,11 @@ public:
 	bool isNewLobby() { return newLobby[0] == 'y'; }
 	std::string getNickname() { return std::string(nickname); }
 	SOCKET getNewClientSocket() { return clientSocket; }
+	void wait() { // check if socket is ready to write
+		fd_set tmp;
+		FD_ZERO(&tmp);
+		FD_SET(clientSocket, &tmp);
+		int iResult = select(0, nullptr, &tmp, nullptr, nullptr);
+	}
 };
 

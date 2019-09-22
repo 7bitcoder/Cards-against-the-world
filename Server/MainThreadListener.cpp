@@ -33,7 +33,7 @@ int MainThreadListener::createListenSocket()
 	listenPort = ntohs(addr.sin_port);
 	freeaddrinfo(result);
 	std::string msg = std::to_string(listenPort);
-	int iResult = send(oldSocket, msg.c_str(), msg.size(), 0);
+	int iResult = send(oldSocket, msg.c_str(), msg.size() + 1, 0);
 	if (iResult == SOCKET_ERROR) {
 		printf("send failed with error: %d\n", WSAGetLastError());
 		closesocket(oldSocket);
@@ -53,7 +53,6 @@ int MainThreadListener::createListenSocket()
 bool MainThreadListener::acceptLeaderConnection()
 {
 	closesocket(oldSocket);
-	Sleep(1);
 	// Accept a client socket
 	printf("accepting with %d port thread\n", listenPort);
 	ClientSocket = accept(ListenSocket, NULL, NULL);

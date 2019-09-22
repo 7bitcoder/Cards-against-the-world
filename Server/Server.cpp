@@ -42,17 +42,17 @@ int main(void) {
 			mut.lock();
 			if (mapaLobby.find(lobbyStr) != mapaLobby.end() && mapaLobby[lobbyStr].chatPort && mapaLobby[lobbyStr].lobbyPort) {
 				mut.unlock();
-				printf("lobby is alredy chosen\n");
+				printf("Lobby is alredy chosen\n");
 				mainListener.sendAll(error::lobbyIsAlredyChosen, strlen(error::lobbyIsAlredyChosen));
-				Sleep(1);
+				mainListener.wait();
 				mainListener.closeConnection();
 				continue;
 			}
 			mut.unlock();
 			if (lobbyStr.empty()) {
-				printf("lobby name is incorrect\n");
+				printf("Lobby name is incorrect\n");
 				mainListener.sendAll(error::lobbyNameIsIncorrect, strlen(error::lobbyNameIsIncorrect));
-				Sleep(1);
+				mainListener.wait();
 				mainListener.closeConnection();
 				continue;
 			}
@@ -64,27 +64,27 @@ int main(void) {
 				continue;
 			}
 			mut.unlock();
-			printf("server is full\n");
+			printf("Server is full\n");
 			mainListener.sendAll(error::ServerIsFull, strlen(error::ServerIsFull));
-			Sleep(1);
+			mainListener.wait();
 			mainListener.closeConnection();
 
 		}
 		else {
 			std::string lobby = mainListener.getLobby();
 			if (lobby.empty()) {
-				printf("lobby name is incorrect\n");
+				printf("Lobby name is incorrect\n");
 				mainListener.sendAll(error::lobbyNameIsIncorrect, strlen(error::lobbyNameIsIncorrect));
-				Sleep(1);
+				mainListener.wait();
 				mainListener.closeConnection();
 				continue;
 			}
 			mut.lock();
 			if (mapaLobby.find(lobby) == mapaLobby.end() || !mapaLobby[lobby].chatPort || !mapaLobby[lobby].lobbyPort) {
 				mut.unlock();
-				printf("could not find lobby\n");
+				printf("Could not find lobby\n");
 				mainListener.sendAll(error::couldNotFindLobby, strlen(error::couldNotFindLobby));
-				Sleep(1);
+				mainListener.wait();
 				mainListener.closeConnection();
 				continue;
 			}
@@ -92,11 +92,11 @@ int main(void) {
 			int chatPort = mapaLobby[mainListener.getLobby()].chatPort;
 			mut.unlock();
 			std::string portMsg = std::to_string(newPort);
-			mainListener.sendAll(portMsg.c_str(), portMsg.size());
-			Sleep(1);
+			mainListener.sendAll(portMsg.c_str(), portMsg.size() + 1);
+			mainListener.wait();
 			portMsg = std::to_string(chatPort);
-			mainListener.sendAll(portMsg.c_str(), portMsg.size());
-			Sleep(1);
+			mainListener.sendAll(portMsg.c_str(), portMsg.size() + 1);
+			mainListener.wait();
 			mainListener.closeConnection();
 		}
 	}

@@ -1,5 +1,4 @@
-﻿  chat.cpp
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\chat.cpp(17): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\chat.cpp(25): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\chat.cpp(113): warning C4715: "chat::limitedResponseWait”: niewszystkie ścieżki kodu zwracają wartość
+﻿  MainThreadListener.cpp
+  tcpListener.cpp
+  Generowanie kodu...
   Server.vcxproj -> C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\Debug\Server.exe

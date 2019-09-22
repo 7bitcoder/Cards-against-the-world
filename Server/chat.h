@@ -44,6 +44,12 @@ public:
 	bool broadCast(SOCKET socket, std::string msg);
 	bool sendAll(SOCKET socket, const char* data, int length);
 	bool disconnect(SOCKET socket);
+	void wait(SOCKET socket) { // check if socket is ready to write
+		fd_set tmp;
+		FD_ZERO(&tmp);
+		FD_SET(socket, &tmp);
+		int iResult = select(0, nullptr, &tmp, nullptr, nullptr);
+	}
 };
 
 

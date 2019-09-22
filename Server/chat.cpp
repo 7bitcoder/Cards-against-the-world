@@ -29,7 +29,6 @@ bool chat::broadCast(SOCKET socket, std::string msg)
 		{
 			if (!sendAll(outSock, msg.c_str(), msg.size() + 1))
 				continue;
-			Sleep(1);
 		}
 	}
 	return true;
@@ -44,6 +43,7 @@ bool chat::sendAll(SOCKET socket, const char* data, int length)
 			printf("send failed with error: %d\n", WSAGetLastError());
 			return false;
 		}
+		wait(socket);
 		count += iResult;
 		length -= iResult;
 	}
@@ -139,13 +139,11 @@ bool chat::acceptNewClient()
 	if (!sendAll( client, welcome.c_str(), welcome.size() + 1)) {
 		//TODO co zrobic ???
 	}
-	Sleep(1);
 	welcome = clients[client].nick + " joined lobby.";
 	if (!broadCast(client, welcome))
 	{
 		//??????
 	}
-	Sleep(1);
 	return true;
 }
 void chat::run()
