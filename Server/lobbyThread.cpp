@@ -33,6 +33,7 @@ void lobbyThread(SOCKET socket_, std::string lobbyId)//, std::mutex, std::map<st
 	mut.unlock();
 	if (!listener.acceptLeaderConnection()) { ; }//TODO
 	std::thread chat(ChatThread, listener.ClientSocket, lobbyId);//TODO implement games states and lock lobby
+
 	while (true) { ; }
 	return;
 }
