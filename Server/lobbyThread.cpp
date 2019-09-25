@@ -31,6 +31,7 @@ void lobbyThread(SOCKET socket_, std::string lobbyId)//, std::mutex, std::map<st
 	mut.lock();
 	mapaLobby[lobbyId].lobbyPort = port;
 	mut.unlock();
+	//przeniesienie kodu z tworzenia listen socketa w chatThread
 	if (!listener.acceptLeaderConnection()) { ; }//TODO
 	std::thread chat(ChatThread, listener.ClientSocket, lobbyId);//TODO implement games states and lock lobby
 

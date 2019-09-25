@@ -80,7 +80,7 @@ bool chat::computeNewClientData(SOCKET client)
 }
 bool chat::limitedResponseWait(int time, SOCKET socket)
 {
-	TIMEVAL tv = { time,0 };
+	TIMEVAL tv = { 0, time };
 
 	// Set up the file descriptor set.
 	fd_set tmp;
@@ -129,7 +129,7 @@ bool chat::acceptNewClient()
 		closesocket(client);
 		return false;
 	}
-	if (!limitedResponseWait(5, client))
+	if (!limitedResponseWait(500000, client))
 		return false;
 	if (!computeNewClientData(client))
 		return false;

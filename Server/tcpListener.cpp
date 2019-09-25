@@ -1,6 +1,6 @@
 #include "tcpListener.h"
 #ifndef TIME_WAIT
-#define TIME_WAIT 60
+#define TIME_WAIT 500000
 #endif // !1
 
 
@@ -62,7 +62,7 @@ bool tcpListener::run(){
 		closesocket(clientSocket);
 		return false;
 	}
-	TIMEVAL tv = { TIME_WAIT,0 };
+	TIMEVAL tv = { 0 ,TIME_WAIT };
 
 	// Set up the file descriptor set.
 	fd_set fds;
