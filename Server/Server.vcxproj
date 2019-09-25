@@ -154,6 +154,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="chat.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="lobbyThread.cpp" />
     <ClCompile Include="MainThreadListener.cpp" />
     <ClCompile Include="Server.cpp" />
@@ -161,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="chat.h" />
+    <ClInclude Include="game.h" />
     <ClInclude Include="lobbyThread.h" />
     <ClInclude Include="MainThreadListener.h" />
     <ClInclude Include="tcpListener.h" />

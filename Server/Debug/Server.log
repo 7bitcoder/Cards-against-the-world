@@ -1,4 +1,7 @@
 ﻿  MainThreadListener.cpp
-  tcpListener.cpp
+  Server.cpp
+  lobbyThread.cpp
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\lobbyThread.cpp(9): warning C4005: "DEFAULT_BUFLEN": ponowna definicja makra
+  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\MainThreadListener.h(3): note: zobacz poprzednią definicję „DEFAULT_BUFLEN”
   Generowanie kodu...
   Server.vcxproj -> C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\Debug\Server.exe
