@@ -25,7 +25,7 @@ struct client
 
 class chat
 {
-private:
+protected:
 	const char* passCode = "a7dzRwQjnw5kW6uEnhx7";
 	char buff[LEN];
 	char rcvbuff[LEN];
