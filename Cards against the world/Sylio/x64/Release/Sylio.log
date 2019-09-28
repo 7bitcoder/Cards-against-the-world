@@ -1,0 +1,36 @@
+﻿  Background.cpp
+C:\Users\Sylwester\source\repos\Sylio\Sylio\Background.h(2): fatal error C1083: Nie można otworzyć pliku dołącz: 'SFML/Graphics.hpp': No such file or directory
+  Button.cpp
+C:\Users\Sylwester\source\repos\Sylio\Sylio\Button.h(2): fatal error C1083: Nie można otworzyć pliku dołącz: 'SFML/Graphics.hpp': No such file or directory
+  CheckBox.cpp
+C:\Users\Sylwester\source\repos\Sylio\Sylio\CheckBox.h(2): fatal error C1083: Nie można otworzyć pliku dołącz: 'SFML/Graphics.hpp': No such file or directory
+  gameBoard.cpp
+C:\Users\Sylwester\source\repos\Sylio\Sylio\Settings.h(6): fatal error C1083: Nie można otworzyć pliku dołącz: 'sfml/Graphics.hpp': No such file or directory
+  Player.cpp
+C:\Users\Sylwester\source\repos\Sylio\Sylio\Player.h(2): fatal error C1083: Nie można otworzyć pliku dołącz: 'SFML/Graphics.hpp': No such file or directory
+  players.cpp
+C:\Users\Sylwester\source\repos\Sylio\Sylio\Player.h(2): fatal error C1083: Nie można otworzyć pliku dołącz: 'SFML/Graphics.hpp': No such file or directory
+  Rounds.cpp
+C:\Users\Sylwester\source\repos\Sylio\Sylio\inputText.h(2): fatal error C1083: Nie można otworzyć pliku dołącz: 'SFML/Graphics.hpp': No such file or directory
+  setPlayer.cpp
+C:\Users\Sylwester\source\repos\Sylio\Sylio\setPlayer.h(2): fatal error C1083: Nie można otworzyć pliku dołącz: 'SFML/Graphics.hpp': No such file or directory
+  inputText.cpp
+C:\Users\Sylwester\source\repos\Sylio\Sylio\inputText.h(2): fatal error C1083: Nie można otworzyć pliku dołącz: 'SFML/Graphics.hpp': No such file or directory
+  List.cpp
+C:\Users\Sylwester\source\repos\Sylio\Sylio\List.h(2): fatal error C1083: Nie można otworzyć pliku dołącz: 'SFML/Graphics.hpp': No such file or directory
+  main.cpp
+C:\Users\Sylwester\source\repos\Sylio\Sylio\Settings.h(6): fatal error C1083: Nie można otworzyć pliku dołącz: 'sfml/Graphics.hpp': No such file or directory
+  menu.cpp
+C:\Users\Sylwester\source\repos\Sylio\Sylio\settings.h(6): fatal error C1083: Nie można otworzyć pliku dołącz: 'sfml/Graphics.hpp': No such file or directory
+  Music.cpp
+C:\Users\Sylwester\source\repos\Sylio\Sylio\Music.h(2): fatal error C1083: Nie można otworzyć pliku dołącz: 'SFML/Audio.hpp': No such file or directory
+  PopAlert.cpp
+C:\Users\Sylwester\source\repos\Sylio\Sylio\PopAlert.h(2): fatal error C1083: Nie można otworzyć pliku dołącz: 'SFML/Graphics.hpp': No such file or directory
+  Settings.cpp
+C:\Users\Sylwester\source\repos\Sylio\Sylio\settings.h(6): fatal error C1083: Nie można otworzyć pliku dołącz: 'sfml/Graphics.hpp': No such file or directory
+  Slider.cpp
+C:\Users\Sylwester\source\repos\Sylio\Sylio\Music.h(2): fatal error C1083: Nie można otworzyć pliku dołącz: 'SFML/Audio.hpp': No such file or directory
+  Sounds.cpp
+C:\Users\Sylwester\source\repos\Sylio\Sylio\Settings.h(6): fatal error C1083: Nie można otworzyć pliku dołącz: 'sfml/Graphics.hpp': No such file or directory
+  Trace.cpp
+C:\Users\Sylwester\source\repos\Sylio\Sylio\Trace.h(3): fatal error C1083: Nie można otworzyć pliku dołącz: 'SFML/Graphics.hpp': No such file or directory
