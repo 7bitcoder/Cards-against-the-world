@@ -4,14 +4,42 @@
 #include <string>
 #include"Settings.h"
 extern Settings setting;
+class Mark {
+private:
+
+	std::size_t begin;
+	sf::Text& text;
+	std::size_t lastUpdate;
+	std::size_t end;
+	sf::RectangleShape box;
+	sf::Vector2f dim;
+	sf::RenderWindow& window;
+public:
+	bool activated;
+	Mark(sf::Text& ref, sf::RenderWindow& win) : text(ref), window(win) { box.setFillColor(sf::Color::Blue);  activated = false; };
+	void setHeigh(float heigh_) { dim.y = heigh_; }
+	void clear() { dim.x = 0; box.setSize(dim); activated = false; };
+	void hook(std::size_t b) { begin = b, lastUpdate = b; box.setPosition(text.findCharacterPos(b)); }
+	void update(std::size_t e) {
+		if (lastUpdate == e) return;
+		activated = true;
+		end = e;
+		dim.x = text.findCharacterPos(end).x - box.getPosition().x;
+		box.setSize(dim);
+		lastUpdate = end;
+	}
+	void draw() { if (activated)window.draw(box); }
+	std::size_t getBeg() { return begin; }
+	std::size_t getEnd() { return end; }
+};
 class inputText
 {
 private:
 	enum buttonState { isPressed, isNotPressed };
 	enum positionState { isOn, isNotOn };
+	Mark mark;
 	sf::Text textOutput;
 	sf::Texture& box;
-	sf::RectangleShape blueMark;//blue mark when trying to copy;
 	sf::RectangleShape coursor;
 	sf::Sprite spriteBox;
 	sf::RenderWindow& window;
@@ -24,7 +52,6 @@ private:
 	bool clicked;
 	bool activated;
 	sf::Clock timer;
-	sf::Clock slowClock;
 	sf::String lastChar;
 	sf::String text;
 	positionState positionSt;
@@ -35,24 +62,27 @@ private:
 	void checkCoursorPosition();
 	void setCoursorPosition(std::size_t i);
 	void checkBlink();
-	void mark();
+	void findMark();
+	int checkSpecialCharacters(char32_t t);
+	void setTextPosition(int x, int y) { textOutput.setPosition(x, y);  textOutput.setScale(setting.xScale, setting.yScale); };
 public:
 	inputText(sf::RenderWindow& win, sf::Texture& box_, sf::SoundBuffer& click, int charLimit);
 	bool function(bool clear = false);
 	void checkState();
-	bool addChar(sf::String t);
+	bool addChar(sf::Event::KeyEvent h);
 	void setString(std::string y) { text = y; textOutput.setString(y); }
-	void draw() { window.draw(spriteBox); if (focused) window.draw(blueMark) ; window.draw(textOutput); if (blink) window.draw(coursor); }
+	void draw() { window.draw(spriteBox); mark.draw(); window.draw(textOutput); if (blink) window.draw(coursor); }
 	void setPosition(int x, int y);
-	void setTextPosition(int x, int y) { textOutput.setPosition(x, y);  textOutput.setScale(setting.xScale, setting.yScale); };
 	void setColor(sf::Color x = sf::Color::Black) { textOutput.setFillColor(x); }
 	void setFont(sf::Font& x) { textOutput.setFont(x); }
-	void setSize(int x) { textOutput.setCharacterSize(x); coursor.setSize(sf::Vector2f(2, x)); coursor.setFillColor(sf::Color(128,128,128,255)); blueMark.setSize(sf::Vector2f(0, x)); blueMark.setFillColor(sf::Color::Blue);
+	void setSize(int x) {
+		textOutput.setCharacterSize(x); coursor.setSize(sf::Vector2f(2, x)); coursor.setFillColor(sf::Color(128, 128, 128, 255)); mark.setHeigh(x);
 	}
 	sf::String& getText() { return text; }
 	void clear() { text.clear(); textOutput.setString(""); }
 	void setScale(double x, double y) { spriteBox.setScale(x, y); }
 	void setSoundVolume(double vol) { click.setVolume(vol * 100); }
 	~inputText();
+	char32_t translate(sf::Event::KeyEvent key);
 };
 

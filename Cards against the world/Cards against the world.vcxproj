@@ -172,6 +172,7 @@
     <ClCompile Include="Cards against the world.cpp" />
     <ClCompile Include="inputText.cpp" />
     <ClCompile Include="menu.cpp" />
+    <ClCompile Include="PopAlert.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="Sounds.cpp" />
   </ItemGroup>
@@ -179,6 +180,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="inputText.h" />
     <ClInclude Include="menu.h" />
+    <ClInclude Include="PopAlert.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="Sounds.h" />
   </ItemGroup>

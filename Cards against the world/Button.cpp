@@ -78,7 +78,6 @@ void Button::setTitle(std::string title_)
 	title.setScale(setting.xScale, setting.yScale);
 	title.setOrigin(title.getGlobalBounds().width / 2, 0);
 	title.setPosition(this->getPosition().x + this->getGlobalBounds().width / 2, this->getPosition().y + 8 * setting.yScale);
-	
 }
 Button::Button(sf::RenderWindow & win, sf::Texture & pres, sf::Texture & rel, sf::Texture & off, sf::SoundBuffer & click_, sf::SoundBuffer & switch_, sf::Font & font_) :
 	font(font_),

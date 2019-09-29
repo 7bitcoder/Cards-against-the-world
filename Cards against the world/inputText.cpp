@@ -2,7 +2,8 @@
 #include <iostream>
 
 
-inputText::inputText(sf::RenderWindow& win, sf::Texture& box_, sf::SoundBuffer& click_, int charLimit) : window(win), box(box_), click(click_)
+inputText::inputText(sf::RenderWindow& win, sf::Texture& box_, sf::SoundBuffer& click_, int charLimit) : window(win), box(box_), click(click_),
+mark(textOutput, win)
 {
 	limit = charLimit;
 	focused = false;
@@ -25,8 +26,8 @@ bool inputText::function(bool clear)
 		focused = true;
 		checkCoursorPosition();
 		timer.restart();
-		blueMark.setSize(sf::Vector2f(0, blueMark.getSize().y));
-		blueMark.setPosition(textOutput.findCharacterPos(coursorPosition));
+		mark.clear();
+		mark.hook(coursorPosition);
 		coursorLastPosition = coursorPosition;
 		blink = true;
 		clicked = true;
@@ -38,9 +39,10 @@ bool inputText::function(bool clear)
 	{
 		focused = false;
 		blink = false;
+		mark.clear();
 	}
 	if (clicked) {
-		mark();
+		findMark();
 	}
 	if (focused) {
 		checkBlink();
@@ -60,65 +62,156 @@ void inputText::checkState()
 	else
 		buttonSt = buttonState::isNotPressed;
 }
-bool inputText::addChar(sf::String h)//event.text.unicode)
-{
-	sf::String t = h[0];
-	static int counter = 0;
-	if (lastChar == t) {
-		std::cout << "taki sam\n";
-		if (counter < 2) {
-			if (slowClock.getElapsedTime().asSeconds() < 0.2)
-				return false;
-			else {
-				std::cout << "dalej\n";
-				slowClock.restart();
-				counter++;
-			}
-		}
-		else {
-			if (slowClock.getElapsedTime().asSeconds() < 0.02)
-				return false;
-			else
-				slowClock.restart();
-		}
-	}
-	else {
-		std::cout << "nowy: " << t.toAnsiString() << std::endl;
-		counter = 0;
-		slowClock.restart();
-	}
-	lastChar = t;
-	if (t == char(8))
-	{
-		if (!text.getSize())
-			return false;
-		coursorPosition--;
-		text.erase(coursorPosition, 1);
-		textOutput.setString(text);
-		setCoursorPosition(coursorPosition);
-
+bool inputText::addChar(sf::Event::KeyEvent h) {
+	char32_t t = translate(h);
+	int state = checkSpecialCharacters(t);
+	if (!state)
 		return false;
-	}
-	else if (t == char(10))
-	{
-		focused = false;
-		blink = false;
+	else if (state == 1) {
 		return true;
-	}
-	else if (t == char(127))
-	{
-		text.erase(coursorPosition, 1);
-		textOutput.setString(text);
-		return false;
 	}
 	if (text.getSize() < limit) {
 		text.insert(coursorPosition, t);
 		coursorPosition++;
 		textOutput.setString(text);
 		setCoursorPosition(coursorPosition);
-
 	}
 	return false;
+}
+int inputText::checkSpecialCharacters(char32_t t) {
+
+	if (!t) // zero
+		return false;
+	if (t == char32_t(1)) // ctr + v
+	{
+		if (mark.activated) {
+			auto beg = mark.getBeg();
+			auto end = mark.getEnd();
+			if (beg > end)
+				std::swap(beg, end);
+			text.erase(beg, end - beg);
+			setCoursorPosition(beg);
+			mark.clear();
+		}
+		sf::String clip = sf::Clipboard::getString();
+		text.insert(coursorPosition, clip);
+		auto size = clip.getSize();
+		if (text.getSize() > limit) {
+			text.erase(limit, text.getSize() - limit);
+		}
+		coursorPosition += clip.getSize();
+		if (coursorPosition > limit) {
+			coursorPosition = limit;
+		}
+		text.replace(char32_t(10), sf::String());//remove \n
+		textOutput.setString(text);
+		setCoursorPosition(coursorPosition);
+		return 0; //break
+	}
+	else if (t == char32_t(3)) // right arrow
+	{
+		mark.clear();
+		if (!coursorPosition)
+			return false;
+		coursorPosition--;
+		timer.restart();//to make it visible
+		blink = true;
+		setCoursorPosition(coursorPosition);
+		return 0;//go next
+	}
+	else if (t == char32_t(2)) // left arrow
+	{
+		mark.clear();
+		if (coursorPosition == text.getSize())
+			return false;
+		coursorPosition++;
+		timer.restart();
+		blink = true;
+		setCoursorPosition(coursorPosition);
+		return 0;
+	}
+	else if (t == char32_t(4)) // ctrl + c
+	{
+		auto beg = mark.getBeg();
+		auto end = mark.getEnd();
+		if (beg > end)
+			std::swap(beg, end);
+		sf::String cpl = text.substring(beg, end - beg);
+		sf::Clipboard::setString(cpl);
+		return 0;
+	}
+	else if (t == char32_t(5)) // ctrl + x
+	{
+		if (mark.activated) {
+			auto beg = mark.getBeg();
+			auto end = mark.getEnd();
+			if (beg > end)
+				std::swap(beg, end);
+			sf::String cpl = text.substring(beg, end - beg);
+			text.erase(beg, end - beg);
+			setCoursorPosition(beg);
+			sf::Clipboard::setString(cpl);
+			textOutput.setString(text);
+			mark.clear();
+		}
+		return 0;
+	}
+	else if (t == char32_t(8)) // backspace
+	{
+		if (mark.activated) {
+			auto beg = mark.getBeg();
+			auto end = mark.getEnd();
+			if (beg > end)
+				std::swap(beg, end);
+			text.erase(beg, end - beg);
+			setCoursorPosition(beg);
+			textOutput.setString(text);
+			mark.clear();
+			return 0;
+		}
+		if (!coursorPosition)
+			return 0;
+		coursorPosition--;
+		text.erase(coursorPosition, 1);
+		textOutput.setString(text);
+		setCoursorPosition(coursorPosition);
+		return 0;
+	}
+	else if (t == char32_t(10))//enter
+	{
+		focused = false;
+		blink = false;
+		clicked = false;
+		if (mark.activated) {
+			auto beg = mark.getBeg();
+			auto end = mark.getEnd();
+			if (beg > end)
+				std::swap(beg, end);
+			text.erase(beg, end - beg);
+			setCoursorPosition(beg);
+			textOutput.setString(text);
+		}
+		mark.clear();
+		return 1;
+	}
+	else if (t == char32_t(127)) // delete todo mabey
+	{
+		text.erase(coursorPosition, 1);
+		textOutput.setString(text);
+		return 0;
+	}
+	else if (mark.activated) {
+		auto beg = mark.getBeg();
+		auto end = mark.getEnd();
+		if (beg > end)
+			std::swap(beg, end);
+		text.erase(beg, end - beg);
+		setCoursorPosition(beg);
+		textOutput.setString(text);
+		mark.activated = false;
+		mark.clear();
+		return -1;
+	}
 }
 void inputText::setCoursorPosition(std::size_t i) {
 	coursorPosition = i;
@@ -127,8 +220,6 @@ void inputText::setCoursorPosition(std::size_t i) {
 
 bool inputText::isOnButton()
 {
-	//std::cout << sf::Mouse::getPosition(window).x << ' ' << sf::Mouse::getPosition(window).y << std::endl;
-	//std::cout << button.getGlobalBounds().left << ' ' << button.getGlobalBounds().top << ' '<< button.getGlobalBounds().height << ' ' << button.getGlobalBounds().width << std::endl;
 	if (sf::Mouse::getPosition(window).x > spriteBox.getGlobalBounds().left && sf::Mouse::getPosition(window).x < (spriteBox.getGlobalBounds().left + spriteBox.getGlobalBounds().width) && sf::Mouse::getPosition(window).y > spriteBox.getGlobalBounds().top && sf::Mouse::getPosition(window).y < (spriteBox.getGlobalBounds().top + spriteBox.getGlobalBounds().height))
 	{
 		return true;
@@ -138,18 +229,16 @@ bool inputText::isOnButton()
 void inputText::checkCoursorPosition()
 {
 	int mousePosition = sf::Mouse::getPosition().x;
-	std::cout << mousePosition << std::endl;
 	float min = abs(textOutput.findCharacterPos(0).x - mousePosition);
-	setCoursorPosition(0);
+	int minI = 0;
 	for (int i = 0; i <= text.getSize(); i++) {
-		std::cout << "poz: " << i << " " << textOutput.findCharacterPos(i).x << std::endl;
 		float val = abs(textOutput.findCharacterPos(i).x - mousePosition);
 		if (val < min) {
 			min = val;
-			std::cout << "tak: " << i << std::endl;
-			setCoursorPosition(i);
+			minI = i;
 		}
 	}
+	setCoursorPosition(minI);
 }
 void inputText::setPosition(int x, int y)
 {
@@ -164,16 +253,153 @@ void inputText::checkBlink()
 		blink = !blink;
 	}
 }
-void inputText::mark()
+void inputText::findMark()
 {
 	checkCoursorPosition();
-	int diff = coursorPosition - coursorLastPosition;
-	if (diff) {
-		blueMark.setSize(sf::Vector2f(textOutput.findCharacterPos(coursorPosition).x - blueMark.getPosition().x, blueMark.getSize().y));
-		coursorLastPosition = coursorPosition;
-	}
+	mark.update(coursorPosition);
 }
 inputText::~inputText()
 {
 }
 
+char32_t inputText::translate(sf::Event::KeyEvent key)
+{
+	switch (key.code)
+	{
+	case sf::Keyboard::Key::A:
+		return key.shift ? (key.alt ? U'¥' : U'A') : (key.alt ? U'¹' : U'a');
+	case sf::Keyboard::Key::B:
+		return key.shift ? U'B' : U'b';
+	case sf::Keyboard::Key::C:
+		return key.shift ? (key.alt ? U'Æ' : U'C') : (key.alt ? U'æ' : key.control ? char32_t(4) : U'c');
+	case sf::Keyboard::Key::D:
+		return key.shift ? U'D' : U'd';
+	case sf::Keyboard::Key::Q:
+		return key.shift ? U'Q' : U'q';
+	case sf::Keyboard::Key::E:
+		return key.shift ? (key.alt ? U'Ê' : U'E') : (key.alt ? U'ê' : U'e');
+	case sf::Keyboard::Key::F:
+		return key.shift ? U'F' : U'f';
+	case sf::Keyboard::Key::G:
+		return key.shift ? U'G' : U'g';
+	case sf::Keyboard::Key::H:
+		return key.shift ? U'H' : U'h';
+	case sf::Keyboard::Key::I:
+		return key.shift ? U'I' : U'i';
+	case sf::Keyboard::Key::J:
+		return key.shift ? U'J' : U'j';
+	case sf::Keyboard::Key::K:
+		return key.shift ? U'K' : U'k';
+	case sf::Keyboard::Key::L:
+		return key.shift ? (key.alt ? U'£' : U'L') : (key.alt ? U'³' : U'l');
+	case sf::Keyboard::Key::M:
+		return key.shift ? U'M' : U'm';
+	case sf::Keyboard::Key::N:
+		return key.shift ? (key.alt ? U'Ñ' : U'N') : (key.alt ? U'ñ' : U'n');
+	case sf::Keyboard::Key::O:
+		return key.shift ? (key.alt ? U'Ó' : U'O') : (key.alt ? U'ó' : U'o');
+	case sf::Keyboard::Key::P:
+		return key.shift ? U'P' : U'p';
+	case sf::Keyboard::Key::R:
+		return key.shift ? U'R' : U'r';
+	case sf::Keyboard::Key::S:
+		return key.shift ? (key.alt ? U'Œ' : U'S') : (key.alt ? U'œ' : U's');
+	case sf::Keyboard::Key::T:
+		return key.shift ? U'T' : U't';
+	case sf::Keyboard::Key::Y:
+		return key.shift ? U'Y' : U'y';
+	case sf::Keyboard::Key::W:
+		return key.shift ? U'W' : U'w';
+	case sf::Keyboard::Key::U:
+		return key.shift ? U'U' : U'u';
+	case sf::Keyboard::Key::X:
+		return key.shift ? (key.alt ? U'' : U'X') : (key.alt ? U'Ÿ' : key.control ? char32_t(5) : U'x');
+	case sf::Keyboard::Key::Z:
+		return key.shift ? (key.alt ? U'¯' : U'Z') : (key.alt ? U'¿' : U'z');
+	case sf::Keyboard::Key::V:
+		return key.shift ? U'V' : (key.control ? char32_t(1) : U'v');
+	case sf::Keyboard::Key::Add:
+		return '+';
+	case sf::Keyboard::Key::Space:
+		return ' ';
+	case sf::Keyboard::Key::BackSpace:
+		return '\b';
+	case sf::Keyboard::Key::BackSlash:
+		return '\\';
+	case sf::Keyboard::Key::Dash:
+		return '-';
+	case sf::Keyboard::Key::Comma:
+		return ',';
+	case sf::Keyboard::Key::Divide:
+		return '/';
+	case sf::Keyboard::Key::Equal:
+		return '=';
+	case sf::Keyboard::Key::Left:
+		return char32_t(3);
+	case sf::Keyboard::Key::Multiply:
+		return '*';
+	case sf::Keyboard::Key::Num0:
+		return '0';
+	case sf::Keyboard::Key::Num1:
+		return key.shift ? U'!' : U'1';
+	case sf::Keyboard::Key::Num2:
+		return key.shift ? U'@' : U'2';
+	case sf::Keyboard::Key::Num3:
+		return key.shift ? U'#' : U'3';
+	case sf::Keyboard::Key::Num4:
+		return key.shift ? U'$' : U'4';
+	case sf::Keyboard::Key::Num5:
+		return key.shift ? U'%' : U'5';
+	case sf::Keyboard::Key::Num6:
+		return key.shift ? U'^' : U'6';
+	case sf::Keyboard::Key::Num7:
+		return key.shift ? U'&' : U'7';
+	case sf::Keyboard::Key::Num8:
+		return key.shift ? U'*' : U'8';
+	case sf::Keyboard::Key::Num9:
+		return key.shift ? U'(' : U'9';
+	case sf::Keyboard::Key::Numpad0:
+		return key.shift ? U')' : U'0';
+	case sf::Keyboard::Key::Numpad1:
+		return '1';
+	case sf::Keyboard::Key::Numpad2:
+		return '2';
+	case sf::Keyboard::Key::Numpad3:
+		return '3';
+	case sf::Keyboard::Key::Numpad4:
+		return '4';
+	case sf::Keyboard::Key::Numpad5:
+		return '5';
+	case sf::Keyboard::Key::Numpad6:
+		return '6';
+	case sf::Keyboard::Key::Numpad7:
+		return '7';
+	case sf::Keyboard::Key::Numpad8:
+		return '8';
+	case sf::Keyboard::Key::Numpad9:
+		return '9';
+	case sf::Keyboard::Key::Right:
+		return char32_t(2);
+	case sf::Keyboard::Key::Slash:
+		return '/';
+	case sf::Keyboard::Key::Tilde:
+		return '~';
+	case sf::Keyboard::Key::Quote:
+		return '\'';
+	case sf::Keyboard::Key::SemiColon:
+		return ';';
+	case sf::Keyboard::Key::Subtract:
+		return '-';
+	case sf::Keyboard::Key::RBracket:
+		return ']';
+	case sf::Keyboard::Key::LBracket:
+		return '[';
+	case sf::Keyboard::Key::Period:
+		return '.';
+	case sf::Keyboard::Key::Enter:
+		return '\n';
+	default:
+		return 0;
+	}
+	return 0;
+}

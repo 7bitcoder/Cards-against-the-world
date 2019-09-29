@@ -39,6 +39,7 @@ public:
 	void draw() { window.draw(*this); window.draw(title); }
 	void normalization() { this->setTexture(offButton); }
 	bool isOnButton();
+	void setTextPosition(int x, int y) { title.setPosition(x, y); }
 	~Button();
 };
 

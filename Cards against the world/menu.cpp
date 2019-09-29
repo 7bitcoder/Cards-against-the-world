@@ -1,5 +1,6 @@
 #include "menu.h"
 #include "inputText.h"
+#include "PopAlert.h"
 
 Menu::Menu(sf::RenderWindow& win, std::string& ver_) : window(win), version(ver_)
 {
@@ -156,6 +157,7 @@ st Menu::ConnectToLobby()
 {
 	int linex = 1920 / 2;
 	int liney = 1080 / 2;
+	PopAlert alert(window, "asdasd", whiteBox, blockPressed, block, offButton, clickBuff, switchBuff, font);
 
 	inputText lobbyId(window, textBox, clickBuff, 20);
 	lobbyId.setString("Lobby id");
@@ -186,28 +188,40 @@ st Menu::ConnectToLobby()
 	goBack.setTitle("BACK");
 	goBack.setSoundVolume(setting.SoundVolume);
 	goBack.setColor(sf::Color::White);
-
+	bool allertFlag = false;
 	sf::Clock timer;
 	while (window.isOpen())
 	{
 		// check all the window's events that were triggered since the last iteration of the loop
 		sf::Event event;
+		event.type = sf::Event::GainedFocus;
 		do {
-			connect.checkState();
-			goBack.checkState();
-			if (nickname.function() && event.type == sf::Event::TextEntered) {
-				nickname.addChar(event.text.unicode);
+			if (!allertFlag) {
+				connect.checkState();
+				goBack.checkState();
+				if (nickname.function() && event.type == sf::Event::KeyPressed) {
+					nickname.addChar(event.key);
+				}
+				if (lobbyId.function() && event.type == sf::Event::KeyPressed) {
+					lobbyId.addChar(event.key);
+				}
+				else if (connect.buttonFunction()) {
+					alert.setText("load data error");//TO wyswietlanie texstu jak w czasie zrobienie klasy
+					allertFlag = true;
+					alert.show();
+				}
+				else if (goBack.buttonFunction())
+					return st::choseGameMode;
+				else;
 			}
-			if(lobbyId.function() && event.type == sf::Event::TextEntered) {
-				lobbyId.addChar(event.text.unicode);
+			else {
+				alert.checkState();
+				if (alert.function())
+				{
+					allertFlag = false;
+					alert.hide();
+				}
 			}
-			else if (connect.buttonFunction()) {
-				//setting.newLobby = false;
-				//return st::connectToLobby;
-			}
-			else if (goBack.buttonFunction())
-				return st::choseGameMode;
-			else;
 		} while (window.pollEvent(event));
 
 		window.clear(sf::Color::Black);
@@ -217,6 +231,7 @@ st Menu::ConnectToLobby()
 		lobbyId.draw();
 		connect.draw();
 		goBack.draw();
+		alert.draw();
 		window.display();
 	}
 }
