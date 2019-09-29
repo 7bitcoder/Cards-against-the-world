@@ -63,7 +63,7 @@ void inputText::checkState()
 		buttonSt = buttonState::isNotPressed;
 }
 bool inputText::addChar(sf::Event::KeyEvent h) {
-	char32_t t = translate(h);
+	wchar_t t = translate(h);
 	int state = checkSpecialCharacters(t);
 	if (!state)
 		return false;
@@ -78,11 +78,11 @@ bool inputText::addChar(sf::Event::KeyEvent h) {
 	}
 	return false;
 }
-int inputText::checkSpecialCharacters(char32_t t) {
+int inputText::checkSpecialCharacters(wchar_t t) {
 
 	if (!t) // zero
 		return false;
-	if (t == char32_t(1)) // ctr + v
+	if (t == wchar_t(1)) // ctr + v
 	{
 		if (mark.activated) {
 			auto beg = mark.getBeg();
@@ -103,12 +103,12 @@ int inputText::checkSpecialCharacters(char32_t t) {
 		if (coursorPosition > limit) {
 			coursorPosition = limit;
 		}
-		text.replace(char32_t(10), sf::String());//remove \n
+		text.replace(wchar_t(10), sf::String());//remove \n
 		textOutput.setString(text);
 		setCoursorPosition(coursorPosition);
 		return 0; //break
 	}
-	else if (t == char32_t(3)) // right arrow
+	else if (t == wchar_t(3)) // right arrow
 	{
 		mark.clear();
 		if (!coursorPosition)
@@ -119,7 +119,7 @@ int inputText::checkSpecialCharacters(char32_t t) {
 		setCoursorPosition(coursorPosition);
 		return 0;//go next
 	}
-	else if (t == char32_t(2)) // left arrow
+	else if (t == wchar_t(2)) // left arrow
 	{
 		mark.clear();
 		if (coursorPosition == text.getSize())
@@ -130,7 +130,7 @@ int inputText::checkSpecialCharacters(char32_t t) {
 		setCoursorPosition(coursorPosition);
 		return 0;
 	}
-	else if (t == char32_t(4)) // ctrl + c
+	else if (t == wchar_t(4)) // ctrl + c
 	{
 		auto beg = mark.getBeg();
 		auto end = mark.getEnd();
@@ -140,7 +140,7 @@ int inputText::checkSpecialCharacters(char32_t t) {
 		sf::Clipboard::setString(cpl);
 		return 0;
 	}
-	else if (t == char32_t(5)) // ctrl + x
+	else if (t == wchar_t(5)) // ctrl + x
 	{
 		if (mark.activated) {
 			auto beg = mark.getBeg();
@@ -156,7 +156,7 @@ int inputText::checkSpecialCharacters(char32_t t) {
 		}
 		return 0;
 	}
-	else if (t == char32_t(8)) // backspace
+	else if (t == wchar_t(8)) // backspace
 	{
 		if (mark.activated) {
 			auto beg = mark.getBeg();
@@ -177,7 +177,7 @@ int inputText::checkSpecialCharacters(char32_t t) {
 		setCoursorPosition(coursorPosition);
 		return 0;
 	}
-	else if (t == char32_t(10))//enter
+	else if (t == wchar_t(10))//enter
 	{
 		focused = false;
 		blink = false;
@@ -194,7 +194,7 @@ int inputText::checkSpecialCharacters(char32_t t) {
 		mark.clear();
 		return 1;
 	}
-	else if (t == char32_t(127)) // delete todo mabey
+	else if (t == wchar_t(127)) // delete todo mabey
 	{
 		text.erase(coursorPosition, 1);
 		textOutput.setString(text);
@@ -262,62 +262,62 @@ inputText::~inputText()
 {
 }
 
-char32_t inputText::translate(sf::Event::KeyEvent key)
+wchar_t inputText::translate(sf::Event::KeyEvent key)
 {
 	switch (key.code)
 	{
 	case sf::Keyboard::Key::A:
-		return key.shift ? (key.alt ? U'•' : U'A') : (key.alt ? U'π' : U'a');
+		return key.shift ? (key.alt ? L'•' : L'A') : (key.alt ? L'π' : L'a');
 	case sf::Keyboard::Key::B:
-		return key.shift ? U'B' : U'b';
+		return key.shift ? L'B' : L'b';
 	case sf::Keyboard::Key::C:
-		return key.shift ? (key.alt ? U'∆' : U'C') : (key.alt ? U'Ê' : key.control ? char32_t(4) : U'c');
+		return key.shift ? (key.alt ? L'∆' : L'C') : (key.alt ? L'Ê' : key.control ? char32_t(4) : L'c');
 	case sf::Keyboard::Key::D:
-		return key.shift ? U'D' : U'd';
+		return key.shift ? L'D' : L'd';
 	case sf::Keyboard::Key::Q:
-		return key.shift ? U'Q' : U'q';
+		return key.shift ? L'Q' : L'q';
 	case sf::Keyboard::Key::E:
-		return key.shift ? (key.alt ? U' ' : U'E') : (key.alt ? U'Í' : U'e');
+		return key.shift ? (key.alt ? L' ' : L'E') : (key.alt ? L'Í' : L'e');
 	case sf::Keyboard::Key::F:
-		return key.shift ? U'F' : U'f';
+		return key.shift ? L'F' : L'f';
 	case sf::Keyboard::Key::G:
-		return key.shift ? U'G' : U'g';
+		return key.shift ? L'G' : L'g';
 	case sf::Keyboard::Key::H:
-		return key.shift ? U'H' : U'h';
+		return key.shift ? L'H' : L'h';
 	case sf::Keyboard::Key::I:
-		return key.shift ? U'I' : U'i';
+		return key.shift ? L'I' : L'i';
 	case sf::Keyboard::Key::J:
-		return key.shift ? U'J' : U'j';
+		return key.shift ? L'J' : L'j';
 	case sf::Keyboard::Key::K:
-		return key.shift ? U'K' : U'k';
+		return key.shift ? L'K' : L'k';
 	case sf::Keyboard::Key::L:
-		return key.shift ? (key.alt ? U'£' : U'L') : (key.alt ? U'≥' : U'l');
+		return key.shift ? (key.alt ? L'£' : L'L') : (key.alt ? L'≥' : L'l');
 	case sf::Keyboard::Key::M:
-		return key.shift ? U'M' : U'm';
+		return key.shift ? L'M' : L'm';
 	case sf::Keyboard::Key::N:
-		return key.shift ? (key.alt ? U'—' : U'N') : (key.alt ? U'Ò' : U'n');
+		return key.shift ? (key.alt ? L'—' : L'N') : (key.alt ? L'Ò' : L'n');
 	case sf::Keyboard::Key::O:
-		return key.shift ? (key.alt ? U'”' : U'O') : (key.alt ? U'Û' : U'o');
+		return key.shift ? (key.alt ? L'”' : L'O') : (key.alt ? L'Û' : L'o');
 	case sf::Keyboard::Key::P:
-		return key.shift ? U'P' : U'p';
+		return key.shift ? L'P' : L'p';
 	case sf::Keyboard::Key::R:
-		return key.shift ? U'R' : U'r';
+		return key.shift ? L'R' : L'r';
 	case sf::Keyboard::Key::S:
-		return key.shift ? (key.alt ? U'å' : U'S') : (key.alt ? U'ú' : U's');
+		return key.shift ? (key.alt ? L'å' : L'S') : (key.alt ? L'ú' : L's');
 	case sf::Keyboard::Key::T:
-		return key.shift ? U'T' : U't';
+		return key.shift ? L'T' : L't';
 	case sf::Keyboard::Key::Y:
-		return key.shift ? U'Y' : U'y';
+		return key.shift ? L'Y' : L'y';
 	case sf::Keyboard::Key::W:
-		return key.shift ? U'W' : U'w';
+		return key.shift ? L'W' : L'w';
 	case sf::Keyboard::Key::U:
-		return key.shift ? U'U' : U'u';
+		return key.shift ? L'U' : L'u';
 	case sf::Keyboard::Key::X:
-		return key.shift ? (key.alt ? U'è' : U'X') : (key.alt ? U'ü' : key.control ? char32_t(5) : U'x');
+		return key.shift ? (key.alt ? L'è' : L'X') : (key.alt ? L'ü' : key.control ? wchar_t(5) : L'x');
 	case sf::Keyboard::Key::Z:
-		return key.shift ? (key.alt ? U'Ø' : U'Z') : (key.alt ? U'ø' : U'z');
+		return key.shift ? (key.alt ? L'Ø' : L'Z') : (key.alt ? L'ø' : L'z');
 	case sf::Keyboard::Key::V:
-		return key.shift ? U'V' : (key.control ? char32_t(1) : U'v');
+		return key.shift ? L'V' : (key.control ? wchar_t(1) : L'v');
 	case sf::Keyboard::Key::Add:
 		return '+';
 	case sf::Keyboard::Key::Space:
@@ -335,31 +335,31 @@ char32_t inputText::translate(sf::Event::KeyEvent key)
 	case sf::Keyboard::Key::Equal:
 		return '=';
 	case sf::Keyboard::Key::Left:
-		return char32_t(3);
+		return wchar_t(3);
 	case sf::Keyboard::Key::Multiply:
 		return '*';
 	case sf::Keyboard::Key::Num0:
 		return '0';
 	case sf::Keyboard::Key::Num1:
-		return key.shift ? U'!' : U'1';
+		return key.shift ? L'!' : L'1';
 	case sf::Keyboard::Key::Num2:
-		return key.shift ? U'@' : U'2';
+		return key.shift ? L'@' : L'2';
 	case sf::Keyboard::Key::Num3:
-		return key.shift ? U'#' : U'3';
+		return key.shift ? L'#' : L'3';
 	case sf::Keyboard::Key::Num4:
-		return key.shift ? U'$' : U'4';
+		return key.shift ? L'$' : L'4';
 	case sf::Keyboard::Key::Num5:
-		return key.shift ? U'%' : U'5';
+		return key.shift ? L'%' : L'5';
 	case sf::Keyboard::Key::Num6:
-		return key.shift ? U'^' : U'6';
+		return key.shift ? L'^' : L'6';
 	case sf::Keyboard::Key::Num7:
-		return key.shift ? U'&' : U'7';
+		return key.shift ? L'&' : L'7';
 	case sf::Keyboard::Key::Num8:
-		return key.shift ? U'*' : U'8';
+		return key.shift ? L'*' : L'8';
 	case sf::Keyboard::Key::Num9:
-		return key.shift ? U'(' : U'9';
+		return key.shift ? L'(' : L'9';
 	case sf::Keyboard::Key::Numpad0:
-		return key.shift ? U')' : U'0';
+		return key.shift ? L')' : L'0';
 	case sf::Keyboard::Key::Numpad1:
 		return '1';
 	case sf::Keyboard::Key::Numpad2:
@@ -379,7 +379,7 @@ char32_t inputText::translate(sf::Event::KeyEvent key)
 	case sf::Keyboard::Key::Numpad9:
 		return '9';
 	case sf::Keyboard::Key::Right:
-		return char32_t(2);
+		return wchar_t(2);
 	case sf::Keyboard::Key::Slash:
 		return '/';
 	case sf::Keyboard::Key::Tilde:

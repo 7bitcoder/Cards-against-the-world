@@ -200,10 +200,14 @@ st Menu::ConnectToLobby()
 				connect.checkState();
 				goBack.checkState();
 				if (nickname.function() && event.type == sf::Event::KeyPressed) {
-					nickname.addChar(event.key);
+					if (nickname.addChar(event.key)) {
+						std::wcout << nickname.getText().toWideString() << std::endl;
+					}
 				}
 				if (lobbyId.function() && event.type == sf::Event::KeyPressed) {
-					lobbyId.addChar(event.key);
+					if (lobbyId.addChar(event.key)) {
+						std::wcout << lobbyId.getText().toWideString() << std::endl;
+					}
 				}
 				else if (connect.buttonFunction()) {
 					alert.setText("load data error");//TO wyswietlanie texstu jak w czasie zrobienie klasy

@@ -63,7 +63,7 @@ private:
 	void setCoursorPosition(std::size_t i);
 	void checkBlink();
 	void findMark();
-	int checkSpecialCharacters(char32_t t);
+	int checkSpecialCharacters(wchar_t t);
 	void setTextPosition(int x, int y) { textOutput.setPosition(x, y);  textOutput.setScale(setting.xScale, setting.yScale); };
 public:
 	inputText(sf::RenderWindow& win, sf::Texture& box_, sf::SoundBuffer& click, int charLimit);
@@ -83,6 +83,6 @@ public:
 	void setScale(double x, double y) { spriteBox.setScale(x, y); }
 	void setSoundVolume(double vol) { click.setVolume(vol * 100); }
 	~inputText();
-	char32_t translate(sf::Event::KeyEvent key);
+	wchar_t translate(sf::Event::KeyEvent key);
 };
 
