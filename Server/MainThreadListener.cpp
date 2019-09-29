@@ -2,8 +2,8 @@
 
 
 extern std::mutex mut;
-extern std::map<std::string, player> mapaLobby;
-MainThreadListener::MainThreadListener(SOCKET socket_, std::string lobbyId_)
+extern std::map<std::u32string, player> mapaLobby;
+MainThreadListener::MainThreadListener(SOCKET socket_, std::u32string lobbyId_)
 {
 	oldSocket = socket_;
 	lobbyId = lobbyId_;

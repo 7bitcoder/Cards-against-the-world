@@ -33,9 +33,9 @@ protected:
 	fd_set fds;
 	SOCKET listenSocket;
 	std::string port;
-	std::string lobbyId;
+	std::u32string lobbyId;
 public:
-	chat(SOCKET socket_, std::string lobbyId_, std::string port_);
+	chat(SOCKET socket_, std::u32string lobbyId_, std::string port_);
 	~chat();
 	void run();
 	bool acceptNewClient();

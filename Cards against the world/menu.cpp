@@ -1,7 +1,7 @@
 #include "menu.h"
 #include "inputText.h"
 #include "PopAlert.h"
-
+#include"game.h"
 Menu::Menu(sf::RenderWindow& win, std::string& ver_) : window(win), version(ver_)
 {
 
@@ -210,6 +210,9 @@ st Menu::ConnectToLobby()
 					}
 				}
 				else if (connect.buttonFunction()) {
+					game gameLobby(window, lobbyId.getText(), nickname.getText());
+					if (!gameLobby.connect())
+						std::cout << "fail\n";
 					alert.setText("load data error");//TO wyswietlanie texstu jak w czasie zrobienie klasy
 					allertFlag = true;
 					alert.show();

@@ -9,7 +9,7 @@
 #include <thread>
 
 extern std::mutex mut;
-extern std::map<std::string, player> mapaLobby;
+extern std::map<std::u32string, player> mapaLobby;
 
 namespace error {
 	const char lobbyIsAlredyChosen[] = "a";
@@ -36,10 +36,10 @@ int main(void) {
 	while (true) {
 		if (!mainListener.run())
 			continue;
-		if (!mainListener.checkData()) //get data and check serure code
+		if (!mainListener.checkData()) //get data and check secure code
 			continue;
 		if (mainListener.isNewLobby()) {
-			std::string lobbyStr = mainListener.getLobby();
+			std::u32string lobbyStr = mainListener.getLobby();
 			mut.lock();
 			if (mapaLobby.find(lobbyStr) != mapaLobby.end() && mapaLobby[lobbyStr].chatPort && mapaLobby[lobbyStr].lobbyPort) {
 				mut.unlock();
@@ -71,7 +71,7 @@ int main(void) {
 
 		}
 		else {
-			std::string lobby = mainListener.getLobby();
+			std::u32string lobby = mainListener.getLobby();
 			if (lobby.empty()) {
 				printf("Lobby name is incorrect\n");
 				mainListener.sendAll(error::lobbyNameIsIncorrect, strlen(error::lobbyNameIsIncorrect));

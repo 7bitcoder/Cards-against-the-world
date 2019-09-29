@@ -1,7 +1,7 @@
-﻿  MainThreadListener.cpp
-  Server.cpp
-  lobbyThread.cpp
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\lobbyThread.cpp(9): warning C4005: "DEFAULT_BUFLEN": ponowna definicja makra
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\MainThreadListener.h(3): note: zobacz poprzednią definicję „DEFAULT_BUFLEN”
-  Generowanie kodu...
+﻿  tcpListener.cpp
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\tcpListener.cpp(47): warning C4477: „printf”: ciąg formatu „%s” wymaga argumentu typu „char *”, ale argument 1 ze zmienną liczbą argumentów ma typ „std::u32string”
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\tcpListener.cpp(48): warning C4477: „printf”: ciąg formatu „%s” wymaga argumentu typu „char *”, ale argument 1 ze zmienną liczbą argumentów ma typ „std::u32string”
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\tcpListener.cpp(49): warning C4477: „printf”: ciąg formatu „%s” wymaga argumentu typu „char *”, ale argument 1 ze zmienną liczbą argumentów ma typ „std::u32string”
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\tcpListener.cpp(50): warning C4477: „printf”: ciąg formatu „%s” wymaga argumentu typu „char *”, ale argument 1 ze zmienną liczbą argumentów ma typ „std::u32string”
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\tcpListener.cpp(37): warning C4101: "state": lokalna zmienna, do której nie istnieje odwołanie
   Server.vcxproj -> C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\Debug\Server.exe

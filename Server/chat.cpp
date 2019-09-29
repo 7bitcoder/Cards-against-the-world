@@ -111,7 +111,7 @@ bool chat::limitedResponseWait(int time, SOCKET socket)
 		return false;
 	}
 }
-chat::chat(SOCKET socket_, std::string lobbyId_, std::string port_)
+chat::chat(SOCKET socket_, std::u32string lobbyId_, std::string port_)
 {
 	printf("Creating chat object\n");
 	listenSocket = socket_;
@@ -122,7 +122,7 @@ chat::chat(SOCKET socket_, std::string lobbyId_, std::string port_)
 }
 bool chat::acceptNewClient()
 {
-	printf("try to accept chat client\n");
+	/*printf("try to accept chat client\n");
 	SOCKET client = accept(listenSocket, nullptr, nullptr);
 	if (client == INVALID_SOCKET) {
 		printf("accept failed with error: %d\n", WSAGetLastError());
@@ -134,17 +134,18 @@ bool chat::acceptNewClient()
 	if (!computeNewClientData(client))
 		return false;
 	FD_SET(client, &fds);
-	std::string welcome = "Welcome to lobby: " + lobbyId;
+	std::u32string welcome = "Welcome to lobby: " + lobbyId;
 	printf("new user\n");
-	if (!sendAll( client, welcome.c_str(), welcome.size() + 1)) {
+	//if (!sendAll( client, welcome.c_str(), welcome.size() + 1)) {
 		//TODO co zrobic ???
-	}
+	//}
 	welcome = clients[client].nick + " joined lobby.";
 	if (!broadCast(client, welcome))
 	{
 		//??????
 	}
-	return true;
+	return true;*/
+	return false;
 }
 void chat::run()
 {

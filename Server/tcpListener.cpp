@@ -1,8 +1,8 @@
 #include "tcpListener.h"
+#include <uchar.h>
 #ifndef TIME_WAIT
 #define TIME_WAIT 100
 #endif // !1
-
 
 bool tcpListener::sendAll(const char* data, int length)
 {
@@ -17,26 +17,40 @@ bool tcpListener::sendAll(const char* data, int length)
 	}
 	return true;
 }
-
+std::u32string tcpListener::decode(char * source, int limit) {
+	std::u32string str;
+	str.reserve(30);
+	mbstate_t p{};
+	char32_t x;
+	int length;
+	for (int i = 0; i < limit; i++) {
+		// initializing the function 
+		length = mbrtoc32(&x, source + i * 4, 4, &p);
+		if (!length)
+			break;
+		str.push_back(x);
+	}
+	return str;
+}
 bool tcpListener::checkData()
 {
+	mbstate_t state;
 	ZeroMemory(&code, sizeof(code));
 	ZeroMemory(&newLobby, sizeof(newLobby));
 	ZeroMemory(&nickname, sizeof(nickname));
 	ZeroMemory(&lobbyId, sizeof(lobbyId));
 	printf("all : %s\n", buff);
-	strncpy_s(code, buff, 20);
-	strncpy_s(newLobby, buff + 22, 1);
-	strncpy_s(nickname, buff + 24, 30);
-	strncpy_s(lobbyId, buff + 55, 30);
+	code = decode(buff, 20);
+	newLobby = decode( buff + 84, 1);
+	nickname = decode( buff + 92, 30);
+	lobbyId = decode( buff + 120, 30);
 	printf("%s\n", code);
 	printf("%s\n", newLobby);
 	printf("%s\n", nickname);
 	printf("%s\n", lobbyId);
-	int cmp = strcmp(passCode, code);
-	if (cmp != 0)
+	if (passCode != code)
 	{
-		printf("wrong code: %d\n", cmp);
+		printf("wrong code: \n");
 		closeConnection();
 		return false;
 	}
@@ -51,7 +65,7 @@ tcpListener::tcpListener(int port_, std::string ipv4)
 }
 
 tcpListener::~tcpListener() {}
-bool tcpListener::run(){
+bool tcpListener::run() {
 	printf("start servera\n");
 	int iResult;
 

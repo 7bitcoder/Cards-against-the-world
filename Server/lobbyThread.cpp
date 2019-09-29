@@ -4,10 +4,10 @@
 #include "chat.h"
 std::mutex mut;
 
-std::map<std::string, player> mapaLobby;
+std::map<std::u32string, player> mapaLobby;
 
 #define DEFAULT_BUFLEN 512
-void ChatThread(SOCKET socket_, std::string lobbyId_)
+void ChatThread(SOCKET socket_, std::u32string lobbyId_)
 {
 	//main listener tylko init
 	MainThreadListener listener(socket_, lobbyId_);
@@ -21,7 +21,7 @@ void ChatThread(SOCKET socket_, std::string lobbyId_)
 	Chat.run();
 } 
 
-void lobbyThread(SOCKET socket_, std::string lobbyId)//, std::mutex, std::map<std::string, int>)
+void lobbyThread(SOCKET socket_, std::u32string lobbyId)//, std::mutex, std::map<std::string, int>)
 {
 
 	MainThreadListener listener(socket_, lobbyId);

@@ -19,6 +19,6 @@ struct player
 	bool lock = false;
 };
 extern std::mutex mut;
-extern std::map<std::string, player> mapaLobby;
-void lobbyThread(SOCKET socket, std::string lobbyId);
+extern std::map<std::u32string, player> mapaLobby;
+void lobbyThread(SOCKET socket, std::u32string lobbyId);
 

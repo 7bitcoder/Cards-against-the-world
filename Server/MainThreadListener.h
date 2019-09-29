@@ -1,11 +1,11 @@
 #pragma once
 #include "lobbyThread.h"
-#define DEFAULT_BUFLEN 1024
+#define DEFAULT_BUFLEN 4024
 class MainThreadListener
 {
 public:
 	SOCKET oldSocket;
-	std::string lobbyId;
+	std::u32string lobbyId;
 	SOCKET ListenSocket = INVALID_SOCKET;
 	SOCKET ClientSocket = INVALID_SOCKET;
 	struct addrinfo* result = NULL;
@@ -14,7 +14,7 @@ public:
 	int iSendResult, iResult;
 	char recvbuf[DEFAULT_BUFLEN];
 	int recvbuflen = DEFAULT_BUFLEN;
-	MainThreadListener(SOCKET socket_, std::string lobbyId_);
+	MainThreadListener(SOCKET socket_, std::u32string lobbyId_);
 	int createListenSocket();
 	bool acceptLeaderConnection();
 	~MainThreadListener();
