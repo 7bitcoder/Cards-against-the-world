@@ -16,7 +16,7 @@
 #pragma comment (lib, "AdvApi32.lib")
 
 
-#define LEN 1024
+#define LEN 4024
 #define DEFAULT_PORT "3000"
 struct client
 {
@@ -26,7 +26,7 @@ struct client
 class chat
 {
 protected:
-	const char* passCode = "a7dzRwQjnw5kW6uEnhx7";
+	std::u32string passCode = "a7dzRwQjnw5kW6uEnhx7";
 	char buff[LEN];
 	char rcvbuff[LEN];
 	std::map<SOCKET, client> clients;
