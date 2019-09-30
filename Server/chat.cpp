@@ -4,7 +4,7 @@
 bool chat::disconnect(SOCKET socket)
 {
 	printf("plyer disconnected\n");
-	std::string msg = clients[socket].nick + " disconnected.";
+	std::u32string msg = clients[socket].nick + " disconnected.";
 	if (!broadCast(socket, msg)) {
 		//todo
 	}
@@ -20,7 +20,7 @@ chat::~chat() {
 		closesocket(socket);
 	}
 }
-bool chat::broadCast(SOCKET socket, std::string msg)
+bool chat::broadCast(SOCKET socket, std::u32string msg)
 {
 	for (int i = 0; i < fds.fd_count; i++)
 	{
