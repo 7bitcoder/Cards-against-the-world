@@ -31,7 +31,6 @@ int MainThreadListener::createListenSocket()
 	}
 	getsockname(ListenSocket, (struct sockaddr*) & addr, &size);
 	listenPort = ntohs(addr.sin_port);
-	freeaddrinfo(result);
 	std::string msg = std::to_string(listenPort);
 	int iResult = send(oldSocket, msg.c_str(), msg.size() + 1, 0);
 	if (iResult == SOCKET_ERROR) {

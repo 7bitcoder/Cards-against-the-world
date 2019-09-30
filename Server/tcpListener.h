@@ -3,40 +3,27 @@
 #define WIN32_LEAN_AND_MEAN
 #else
 #endif // !WIN32_LEAN_AND_MEAN
+#include "socketUtils.h"
 
-#include <windows.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string>
-
-
-#pragma comment (lib, "Ws2_32.lib")
-#define LEN 4024
-
-class tcpListener
+class tcpListener: public socketUtils
 {
 private:
-	std::u32string passCode = U"a7dzRwQjnw5kW6uEnhx7"; // "o6EA9s4XGw1pRCtvqg02stfvfAlp8p";
 	int port;
 	std::string ip;
 	SOCKET sock;
 	SOCKET clientSocket;
 	char buff[LEN];
-	int stop;
 	std::u32string code;
 	std::u32string newLobby;
 	std::u32string nickname;
 	std::u32string lobbyId;
 public:
-	bool sendAll(const char* data, int length);
-	std::u32string decode(char* source, int limit);
 	bool checkData();
 	tcpListener(int port, std::string ipv4 ="127.0.0.1");
 	~tcpListener();
 	bool init();
 	bool run();
+	void send(const char* buff, int len) { socketUtils::sendU(clientSocket, buff, len); }
 	void closeConnection() { closesocket(clientSocket); }
 	std::u32string getLobby() { return lobbyId; }
 	bool isNewLobby() { return newLobby[0] == U'y'; }

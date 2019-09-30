@@ -4,50 +4,14 @@
 #define TIME_WAIT 100
 #endif // !1
 
-bool tcpListener::sendAll(const char* data, int length)
-{
-	int count = 0;
-	while (count < length) {
-		int n = send(clientSocket, data + count, length, 0);
-		if (n == -1) {
-			return false;
-		}
-		count += n;
-		length -= n;
-	}
-	return true;
-}
-std::u32string tcpListener::decode(char * source, int limit) {
-	std::u32string str;
-	str.reserve(30);
-	mbstate_t p{};
-	char32_t x;
-	int length;
-	for (int i = 0; i < limit; i++) {
-		// initializing the function 
-		length = mbrtoc32(&x, source + i * 4, 4, &p);
-		if (!length)
-			break;
-		str.push_back(x);
-	}
-	return str;
-}
 bool tcpListener::checkData()
 {
 	mbstate_t state;
-	ZeroMemory(&code, sizeof(code));
-	ZeroMemory(&newLobby, sizeof(newLobby));
-	ZeroMemory(&nickname, sizeof(nickname));
-	ZeroMemory(&lobbyId, sizeof(lobbyId));
 	printf("all : %s\n", buff);
 	code = decode(buff, 20);
 	newLobby = decode( buff + 84, 1);
 	nickname = decode( buff + 92, 30);
 	lobbyId = decode( buff + 120, 30);
-	printf("%s\n", code);
-	printf("%s\n", newLobby);
-	printf("%s\n", nickname);
-	printf("%s\n", lobbyId);
 	if (passCode != code)
 	{
 		printf("wrong code: \n");

@@ -8,8 +8,6 @@ public:
 	std::u32string lobbyId;
 	SOCKET ListenSocket = INVALID_SOCKET;
 	SOCKET ClientSocket = INVALID_SOCKET;
-	struct addrinfo* result = NULL;
-	struct addrinfo hints;
 	int listenPort;
 	int iSendResult, iResult;
 	char recvbuf[DEFAULT_BUFLEN];

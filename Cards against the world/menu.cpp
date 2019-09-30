@@ -210,7 +210,7 @@ st Menu::ConnectToLobby()
 					}
 				}
 				else if (connect.buttonFunction()) {
-					game gameLobby(window, lobbyId.getText(), nickname.getText());
+					game gameLobby(window, lobbyId.getText(), nickname.getText(), setting.newLobby);
 					if (!gameLobby.connect())
 						std::cout << "fail\n";
 					alert.setText("load data error");//TO wyswietlanie texstu jak w czasie zrobienie klasy

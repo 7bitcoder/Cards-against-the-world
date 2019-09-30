@@ -1,6 +1,5 @@
 ﻿  game.cpp
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(18): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(23): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(46): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(37): warning C4715: "game::connect”: niewszystkie ścieżki kodu zwracają wartość
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(19): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(24): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(66): warning C4715: "game::connect”: niewszystkie ścieżki kodu zwracają wartość
   Cards against the world.vcxproj -> C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Debug\Cards against the world.exe

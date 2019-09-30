@@ -2,9 +2,10 @@
 #include <intrin.h>
 #include <winsock2.h>
 #include <uchar.h>
-
-game::game(sf::RenderWindow& win, sf::String lobbyId_, sf::String nick): window(win)
+#include <iostream>
+game::game(sf::RenderWindow& win, sf::String lobbyId_, sf::String nick, bool newlobby_): window(win)
 {
+	newLobby = newlobby_;
 	lobbyId = lobbyId_;
 	nickname = nick;
 }
@@ -25,34 +26,62 @@ ConnectErrors game::connect()
 	}
 	sendStr.insert(30, tmp);
 	int j = 0;
-	sf::Socket::Status status = socket.connect(address, portToConnect);
+	sf::Socket::Status status = entranceSocket.connect(address, portToConnect);
 	if (status != sf::Socket::Done)
 	{
 		return ConnectErrors::unableToRechServer;
 	}
-	if (!Send(sendStr))
+	if (!Send(sendStr, entranceSocket))
 	{
 		return ConnectErrors::unableToSendData;
 	}
+	std::size_t received;
+	// TCP socket:
+	if (entranceSocket.receive(buff, LEN, received) != sf::Socket::Done)
+	{
+		return ConnectErrors::unableToGetData;
+	}
+	int Lobbyport = atoi(buff);
+	std::cout << Lobbyport << std::endl;
+	status = lobbySocket.connect(address, Lobbyport);
+	if (status != sf::Socket::Done)
+	{
+		return ConnectErrors::unableToRechServer;
+	}
+	if (newLobby) {
+		if (lobbySocket.receive(buff, LEN, received) != sf::Socket::Done)
+		{
+			return ConnectErrors::unableToGetData;
+		}
+	}
+	else {
+		if (entranceSocket.receive(buff, LEN, received) != sf::Socket::Done)
+		{
+			return ConnectErrors::unableToGetData;
+		}
+	}
+	int chatPort = atoi(buff);
+	entranceSocket.disconnect();
+	status = chatSocket.connect(address, chatPort);
+	if (status != sf::Socket::Done)
+	{
+		return ConnectErrors::unableToRechServer;
+	}
+	if (!Send(sendStr, chatSocket))
+	{
+		return ConnectErrors::unableToSendData;
+	}
+	std::cout << "done\n";
 }
 
-bool game::Send(std::u32string s)
+bool game::Send(std::u32string s, sf::TcpSocket & socket)
 {
-	std::string sendStr(500, '\0');;
-	mbstate_t p{};
-	size_t length;
-	int j = 0;
-	char data[5] = { 0 };
-	for (int i = 0; i < s.size(); i++) {
-		// initializing the function 
-		length = c32rtomb(data, s[i], &p);
-		sendStr.insert(i * 4, data);
-	}
-	if (socket.send(sendStr.c_str(), 500) != sf::Socket::Done)
+	socketUtils::code(s, buff);
+	if (socket.send(buff, s.size() + 1) != sf::Socket::Done)
 	{
 		return false;
 	}
-	return false;
+	return true;
 }
 
 game::~game()

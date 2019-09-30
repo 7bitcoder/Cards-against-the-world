@@ -4,7 +4,7 @@
 bool chat::disconnect(SOCKET socket)
 {
 	printf("plyer disconnected\n");
-	std::u32string msg = clients[socket].nick + " disconnected.";
+	std::u32string msg = clients[socket].nick + U" disconnected.";
 	if (!broadCast(socket, msg)) {
 		//todo
 	}
@@ -22,55 +22,46 @@ chat::~chat() {
 }
 bool chat::broadCast(SOCKET socket, std::u32string msg)
 {
+	code(msg, buff);
 	for (int i = 0; i < fds.fd_count; i++)
 	{
 		SOCKET outSock = fds.fd_array[i];
 		if (outSock != socket && outSock != listenSocket)
 		{
-			if (!sendAll(outSock, msg.c_str(), msg.size() + 1))
+			if (!sendU(outSock, buff, msg.size() + 1))
 				continue;
 		}
 	}
 	return true;
 }
-bool chat::sendAll(SOCKET socket, const char* data, int length)
+bool chat::broadCast(SOCKET socket, char* buff, int len)
 {
-	int iResult;
-	int count = 0;
-	while (count < length) {
-		iResult = send(socket, data + count, length, 0);
-		if (iResult == SOCKET_ERROR) {
-			printf("send failed with error: %d\n", WSAGetLastError());
-			return false;
+	for (int i = 0; i < fds.fd_count; i++)
+	{
+		SOCKET outSock = fds.fd_array[i];
+		if (outSock != socket && outSock != listenSocket)
+		{
+			if (!sendU(outSock, buff, len))
+				continue;
 		}
-		wait(socket);
-		count += iResult;
-		length -= iResult;
 	}
 	return true;
 }
 bool chat::computeNewClientData(SOCKET client)
 {
-	char code[21] = { 0 };
-	char newLobby[2] = { 0 };
-	char nickname[31] = { 0 };
-	char lobbyId[31] = { 0 };
-	ZeroMemory(&code, sizeof(code));
-	ZeroMemory(&newLobby, sizeof(newLobby));
-	ZeroMemory(&nickname, sizeof(nickname));
-	ZeroMemory(&lobbyId, sizeof(lobbyId));
-	strncpy_s(code, buff, 20);
-	strncpy_s(newLobby, buff + 22, 1);
-	strncpy_s(nickname, buff + 24, 30);
-	strncpy_s(lobbyId, buff + 55, 30);
-	printf("%s\n", code);
-	printf("%s\n", newLobby);
-	printf("%s\n", nickname);
-	printf("%s\n", lobbyId);
-	int cmp = strcmp(passCode, code);
-	if (cmp != 0)
+	std::u32string code;
+	std::u32string newLobby;
+	std::u32string nickname;
+	std::u32string lobbyId;
+	mbstate_t state;
+	printf("all : %s\n", buff);
+	code = decode(buff, 20);
+	newLobby = decode(buff + 84, 1);
+	nickname = decode(buff + 92, 30);
+	lobbyId = decode(buff + 120, 30);
+	if (passCode != code)
 	{
-		printf("wrong code: %dn\n", cmp);
+		printf("wrong code: \n");
 		closesocket(client);
 		return false;
 	}
@@ -122,7 +113,7 @@ chat::chat(SOCKET socket_, std::u32string lobbyId_, std::string port_)
 }
 bool chat::acceptNewClient()
 {
-	/*printf("try to accept chat client\n");
+	printf("try to accept chat client\n");
 	SOCKET client = accept(listenSocket, nullptr, nullptr);
 	if (client == INVALID_SOCKET) {
 		printf("accept failed with error: %d\n", WSAGetLastError());
@@ -134,18 +125,18 @@ bool chat::acceptNewClient()
 	if (!computeNewClientData(client))
 		return false;
 	FD_SET(client, &fds);
-	std::u32string welcome = "Welcome to lobby: " + lobbyId;
+	std::u32string welcome = U"Welcome to lobby: " + lobbyId;
 	printf("new user\n");
-	//if (!sendAll( client, welcome.c_str(), welcome.size() + 1)) {
+	code(welcome, buff);
+	if (!sendU( client, buff , welcome.size() + 1)) {
 		//TODO co zrobic ???
-	//}
-	welcome = clients[client].nick + " joined lobby.";
+	}
+	welcome = clients[client].nick + U" joined lobby.";
 	if (!broadCast(client, welcome))
 	{
 		//??????
 	}
-	return true;*/
-	return false;
+	return true;
 }
 void chat::run()
 {
@@ -171,8 +162,7 @@ void chat::run()
 					disconnect(sock);
 				}
 				else {
-					std::string msg = clients[sock].nick + ": " + rcvbuff;
-					if (!broadCast(sock, msg)) {
+					if (!broadCast(sock, rcvbuff, bytesIn)) {
 						//todo
 					}
 				}

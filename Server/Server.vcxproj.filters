@@ -45,6 +45,9 @@
     <ClCompile Include="game.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
+    <ClCompile Include="socketUtils.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tcpListener.h">
@@ -60,6 +63,9 @@
       <Filter>Pliki nagłówkowe\lobby thread</Filter>
     </ClInclude>
     <ClInclude Include="game.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="socketUtils.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
   </ItemGroup>

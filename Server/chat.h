@@ -1,32 +1,17 @@
+
+
 #pragma once
-#define WIN32_LEAN_AND_MEAN
-
-#include <windows.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string>
-#include <iostream>
-#include <map>
-
-// Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
-#pragma comment (lib, "Ws2_32.lib")
-#pragma comment (lib, "Mswsock.lib")
-#pragma comment (lib, "AdvApi32.lib")
-
-
-#define LEN 4024
+#include"socketUtils.h"
+#include<map>
 #define DEFAULT_PORT "3000"
 struct client
 {
 	std::u32string nick;
 };
 
-class chat
+class chat: public socketUtils
 {
 protected:
-	std::u32string passCode = "a7dzRwQjnw5kW6uEnhx7";
 	char buff[LEN];
 	char rcvbuff[LEN];
 	std::map<SOCKET, client> clients;
@@ -41,8 +26,8 @@ public:
 	bool acceptNewClient();
 	bool limitedResponseWait(int time, SOCKET socket);
 	bool computeNewClientData(SOCKET client);
-	bool broadCast(SOCKET socket, std::string msg);
-	bool sendAll(SOCKET socket, const char* data, int length);
+	bool broadCast(SOCKET socket, std::u32string msg);
+	bool broadCast(SOCKET socket, char* buff, int len);
 	bool disconnect(SOCKET socket);
 	void wait(SOCKET socket) { // check if socket is ready to write
 		fd_set tmp;

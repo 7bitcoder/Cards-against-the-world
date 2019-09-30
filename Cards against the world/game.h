@@ -1,8 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
-enum ConnectErrors {unableToRechServer,unableToSendData, lobbyIsAlredyChosen, noPortsAreAvailable, lobbyNameIsIncorrect, couldNotFindLobby, ServerIsFull, lobbyNameIsLocked, connected };
-class game
+#include "socketUtils.h"
+#define LEN 4000
+enum ConnectErrors {unableToRechServer,unableToSendData, unableToGetData, lobbyIsAlredyChosen, noPortsAreAvailable, lobbyNameIsIncorrect, couldNotFindLobby, ServerIsFull, lobbyNameIsLocked, connected };
+class game:public socketUtils
 {
 private:
 	unsigned short portToConnect = 3000;
@@ -11,12 +13,15 @@ private:
 	sf::RenderWindow& window;
 	sf::String lobbyId;
 	sf::String nickname;
-	sf::TcpSocket socket;
-	char sendbuff[4000];
+	sf::TcpSocket entranceSocket;
+	sf::TcpSocket lobbySocket;
+	sf::TcpSocket chatSocket;
+	char buff[LEN];
+	bool newLobby;
 public:
-	game(sf::RenderWindow& win, sf::String lobbyId, sf::String nick);
+	game(sf::RenderWindow& win, sf::String lobbyId, sf::String nick, bool newlobby);
 	ConnectErrors connect();
-	bool Send(std::u32string s);
+	bool Send(std::u32string s, sf::TcpSocket& socket);
 	~game();
 };
 

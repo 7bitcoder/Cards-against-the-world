@@ -168,6 +168,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Server\socketUtils.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Cards against the world.cpp" />
     <ClCompile Include="game.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="Sounds.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Server\socketUtils.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="inputText.h" />
