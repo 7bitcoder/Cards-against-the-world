@@ -20,7 +20,7 @@
 #define DEFAULT_PORT "3000"
 struct client
 {
-	std::string nick;
+	std::u32string nick;
 };
 
 class chat
