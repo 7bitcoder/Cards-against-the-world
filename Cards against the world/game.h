@@ -21,7 +21,9 @@ private:
 public:
 	game(sf::RenderWindow& win, sf::String lobbyId, sf::String nick, bool newlobby);
 	ConnectErrors connect();
-	bool Send(std::u32string s, sf::TcpSocket& socket);
+	bool Send(std::u32string s, sf::TcpSocket& socket, bool addSize = false);
+	std::u32string Receive(sf::TcpSocket& socket);
 	~game();
+	void test();
 };
 

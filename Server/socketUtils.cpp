@@ -15,13 +15,39 @@ bool socketUtils::sendU(SOCKET socket, const char* data, int length)
 	int count = 0;
 	while (count < length) {
 		int n = send(socket, data + count, length, 0);
-		if (n == -1) {
+		if (n == SOCKET_ERROR) {
 			return false;
 		}
 		count += n;
 		length -= n;
 	}
 	return true;
+}
+int socketUtils::receive(SOCKET socket, char* data, int length)
+{
+	int count = 0;
+	while (count < length) {
+		int n = recv(socket, data + count, length, 0);
+		if (n == SOCKET_ERROR) {
+			return false;
+		}
+		count += n;
+		length -= n;
+	}
+	return true;
+}
+bool socketUtils::sendLen(SOCKET socket, const char* data, int length)
+{
+	return false;
+}
+int socketUtils::receiveLen(SOCKET socket, char* data, int max)
+{
+	if (!receive(socket, data, 2))
+		return -1;
+	int len = getMessageLen(data) * 4;
+	if(!receive(socket, data + 2, len))
+		return -1;
+	return len + 2;
 }
 std::u32string socketUtils::decode(char* pos, int limit, int reserve) {
 	std::u32string str;
@@ -32,7 +58,7 @@ std::u32string socketUtils::decode(char* pos, int limit, int reserve) {
 	int length;
 	for (int i = 0; i < limit || tillEnd; i++) {
 		length = mbrtoc32(&x, pos + i * 4, 4, &p);
-		if (!length)
+		if (!length && tillEnd)
 			break;
 		str.push_back(x);
 	}

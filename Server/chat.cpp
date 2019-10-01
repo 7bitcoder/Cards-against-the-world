@@ -128,9 +128,9 @@ bool chat::acceptNewClient()
 	std::u32string welcome = U"Welcome to lobby: " + lobbyId;
 	printf("new user\n");
 	code(welcome, buff);
-	if (!sendU( client, buff , welcome.size() + 1)) {
+	//if (!sendU( client, buff , welcome.size() + 1)) {
 		//TODO co zrobic ???
-	}
+	//}
 	welcome = clients[client].nick + U" joined lobby.";
 	if (!broadCast(client, welcome))
 	{
@@ -156,13 +156,14 @@ void chat::run()
 			}
 			else {//get message
 				ZeroMemory(rcvbuff, strlen(rcvbuff));
-				int bytesIn = recv(sock, rcvbuff, LEN, 0);
+				int len = receiveLen(sock, rcvbuff, LEN);
 				printf("Message: %s\n", rcvbuff);
-				if (bytesIn <= 0 ) {
+				if (len <= 0 ) {
 					disconnect(sock);
 				}
+				
 				else {
-					if (!broadCast(sock, rcvbuff, bytesIn)) {
+					if (!broadCast(sock, rcvbuff, len)) {
 						//todo
 					}
 				}

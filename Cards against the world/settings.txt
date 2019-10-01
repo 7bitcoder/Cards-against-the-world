@@ -1,0 +1,4 @@
+Game settings:
+Sound volume: 1
+Music volume: 1
+Default music track: 1

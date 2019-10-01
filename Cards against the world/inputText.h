@@ -70,7 +70,7 @@ public:
 	bool function(bool clear = false);
 	void checkState();
 	bool addChar(sf::Event::KeyEvent h);
-	void setString(std::string y) { text = y; textOutput.setString(y); }
+	void setString(sf::String y) { text = y; textOutput.setString(y); }
 	void draw() { window.draw(spriteBox); mark.draw(); window.draw(textOutput); if (blink) window.draw(coursor); }
 	void setPosition(int x, int y);
 	void setColor(sf::Color x = sf::Color::Black) { textOutput.setFillColor(x); }

@@ -39,7 +39,7 @@
     <ClCompile Include="game.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="..\Server\socketUtils.cpp">
+    <ClCompile Include="socketUtils.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,7 +65,7 @@
     <ClInclude Include="game.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="..\Server\socketUtils.h">
+    <ClInclude Include="socketUtils.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
   </ItemGroup>
