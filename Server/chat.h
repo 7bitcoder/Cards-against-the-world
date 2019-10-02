@@ -7,6 +7,9 @@
 struct client
 {
 	std::u32string nick;
+	char buff[LEN];
+	int all;
+	int received;
 };
 
 class chat: public socketUtils
