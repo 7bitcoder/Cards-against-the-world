@@ -28,7 +28,7 @@ bool chat::broadCast(SOCKET socket, std::u32string msg)
 		SOCKET outSock = fds.fd_array[i];
 		if (outSock != socket && outSock != listenSocket)
 		{
-			if (!sendU(outSock, buff, msg.size() + 1))
+			if (!sendRaw(outSock, buff, msg.size()))
 				continue;
 		}
 	}
@@ -41,7 +41,7 @@ bool chat::broadCast(SOCKET socket, char* buff, int len)
 		SOCKET outSock = fds.fd_array[i];
 		if (outSock != socket && outSock != listenSocket)
 		{
-			if (!sendU(outSock, buff, len))
+			if (!sendRaw(outSock, buff, len))
 				continue;
 		}
 	}
@@ -53,6 +53,7 @@ bool chat::computeNewClientData(SOCKET client)
 	std::u32string newLobby;
 	std::u32string nickname;
 	std::u32string lobbyId;
+	char * buff = this->buff + 4;
 	mbstate_t state;
 	printf("all : %s\n", buff);
 	code = decode(buff, 20);
@@ -94,7 +95,12 @@ bool chat::limitedResponseWait(int time, SOCKET socket)
 	}
 	printf("start\n");
 	ZeroMemory(&buff, sizeof(buff));
-	iResult = recv(socket, buff, LEN, 0);
+	char playerId;
+	char coding;
+	int len = getMessagePrefix(rcvBuff, coding, plyerId)
+	if(!receiveLen(socket, buff + 4, len, 1))
+		return false;
+	if(iresult
 	if (iResult <= 0)
 	{
 		printf("receive failed with error: %d\n", WSAGetLastError());
@@ -127,10 +133,11 @@ bool chat::acceptNewClient()
 	FD_SET(client, &fds);
 	std::u32string welcome = U"Welcome to lobby: " + lobbyId;
 	printf("new user\n");
-	code(welcome, buff);
-	//if (!sendU( client, buff , welcome.size() + 1)) {
+	addMessagePrefix(buff, welcome.size()*4, 1, 0);
+	code(welcome, buff + 4);
+	if (!sendRaw( client, buff , welcome.size())) {
 		//TODO co zrobic ???
-	//}
+	}
 	welcome = clients[client].nick + U" joined lobby.";
 	if (!broadCast(client, welcome))
 	{
@@ -156,14 +163,45 @@ void chat::run()
 			}
 			else {//get message
 				ZeroMemory(rcvbuff, strlen(rcvbuff));
-				int len = receiveLen(sock, rcvbuff, LEN);
+				if(!clients[sock].received) {
+					int i = recv(socket, clients[sock].buff, 4, 0);
+					if(i!= 4) //TODO
+						disconnect(sock);
+					char coding, playerId;
+					clients[sock].all = getMessagePreffix(clients[sock].buff, coding, playerId)
+					i = recv(socket, clients[sock].buff + 4, clients[sock].all , 0);
+					if (i <= 0 ) {
+					disconnect(sock);
+					}
+					if(i != clients[sock].all) {
+						clients[sock].received = i;
+						continue;//!!!!!+ 4
+					}
+					else
+						clients[sock].received = 0;
+					
+				}
+				else{
+					int i = recv(socket, buff + clients[sock].received + 4, clients[sock].all - clients[sock].received , 0);
+					if (i <= 0 ) {
+						disconnect(sock);
+					}
+					if(i + clients[sock].received < clients[sock].all) {
+						clients[sock].received += i;
+						continue;
+					}
+					else {
+						clients[sock].received = 0;
+						clients[sock].all = 0;
+					}
+				}
 				printf("Message: %s\n", rcvbuff);
 				if (len <= 0 ) {
 					disconnect(sock);
 				}
 				
 				else {
-					if (!broadCast(sock, rcvbuff, len)) {
+					if (!broadCast(sock, clients[sock].buff, clients[sock].all + 4)) {
 						//todo
 					}
 				}
