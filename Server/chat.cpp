@@ -192,7 +192,6 @@ void chat::run()
 					}
 					else {
 						clients[sock].received = 0;
-						clients[sock].all = 0;
 					}
 				}
 				printf("Message: %s\n", rcvbuff);
@@ -204,6 +203,7 @@ void chat::run()
 					if (!broadCast(sock, clients[sock].buff, clients[sock].all + 4)) {
 						//todo
 					}
+					clients[sock].all = 0;
 				}
 			}
 		}
