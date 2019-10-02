@@ -47,6 +47,20 @@ bool chat::broadCast(SOCKET socket, char* buff, int len)
 	}
 	return true;
 }
+bool chat::sendRaw(SOCKET socket, const char* data, int length)
+{
+        int count = 0;
+        while (count < length) {
+		wait(socket);
+                int n = send(socket, data + count, length, 0);
+                if (n == SOCKET_ERROR) {
+                        return false;
+                }
+                count += n;
+                length -= n;
+        }
+        return true;
+}
 bool chat::computeNewClientData(SOCKET client)
 {
 	std::u32string code;
