@@ -2,13 +2,12 @@
 #include <iostream>
 
 
-inputText::inputText(sf::RenderWindow& win, sf::Texture& box_, sf::SoundBuffer& click_, int charLimit) : window(win), box(box_), click(click_),
+inputText::inputText(sf::RenderWindow& win, sf::SoundBuffer& click_, int charLimit) : window(win), click(click_),
 mark(textOutput, win)
 {
 	limit = charLimit;
 	focused = false;
 	coursorPosition = 0;
-	spriteBox.setTexture(box);
 	blink = false;
 	clicked = false;
 	activated = false;
@@ -220,10 +219,8 @@ void inputText::setCoursorPosition(std::size_t i) {
 
 bool inputText::isOnButton()
 {
-	if (sf::Mouse::getPosition(window).x > spriteBox.getGlobalBounds().left && sf::Mouse::getPosition(window).x < (spriteBox.getGlobalBounds().left + spriteBox.getGlobalBounds().width) && sf::Mouse::getPosition(window).y > spriteBox.getGlobalBounds().top && sf::Mouse::getPosition(window).y < (spriteBox.getGlobalBounds().top + spriteBox.getGlobalBounds().height))
-	{
+	if (sf::Mouse::getPosition(window).x > pos.x && sf::Mouse::getPosition(window).x < pos.x + size.x && sf::Mouse::getPosition(window).y > pos.y && sf::Mouse::getPosition(window).y < pos.y + size.y)
 		return true;
-	}
 	return false;
 }
 void inputText::checkCoursorPosition()
@@ -242,7 +239,6 @@ void inputText::checkCoursorPosition()
 }
 void inputText::setPosition(int x, int y)
 {
-	spriteBox.setPosition(x, y);
 	setTextPosition(x + 10, y + 10);
 	coursor.setPosition(x + 10, y + 10);
 }

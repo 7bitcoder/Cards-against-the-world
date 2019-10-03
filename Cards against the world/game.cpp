@@ -170,18 +170,28 @@ void game::test()
 	int linex = 1920 / 2;
 	int liney = 1080 / 2;
 
-	inputText lobbyId(window, textBox, clickBuff, 20);
+	sf::Sprite textBox1, textBox2;
+
+	textBox1.setTexture(textBox);
+	textBox1.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney - 100) * setting.yScale);
+	textBox1.setScale(1.8 * setting.xScale, 1 * setting.yScale);
+
+	textBox2.setTexture(textBox);
+	textBox2.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney)* setting.yScale);
+	textBox2.setScale(1.8 * setting.xScale, 1 * setting.yScale);
+
+	inputText lobbyId(window, clickBuff, 20);
+	lobbyId.setBounds(sf::Vector2f(textBox1.getGlobalBounds().left, textBox1.getGlobalBounds().top), sf::Vector2f(textBox1.getGlobalBounds().width, textBox1.getGlobalBounds().height));
 	lobbyId.setString("Lobby id");
 	lobbyId.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney - 100) * setting.yScale);
-	lobbyId.setScale(1.8 * setting.xScale, 1 * setting.yScale);
 	lobbyId.setColor();
 	lobbyId.setFont(font);
 	lobbyId.setSize(25);
 
-	inputText nickname(window, textBox, clickBuff, 20);
+	inputText nickname(window, clickBuff, 20);
+	nickname.setBounds(sf::Vector2f(textBox2.getGlobalBounds().left, textBox2.getGlobalBounds().top), sf::Vector2f(textBox2.getGlobalBounds().width, textBox2.getGlobalBounds().height));
 	nickname.setString("Nickname");
 	nickname.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney)* setting.yScale);
-	nickname.setScale(1.8 * setting.xScale, 1 * setting.yScale);
 	nickname.setColor();
 	nickname.setFont(font);
 	nickname.setSize(25);
@@ -243,8 +253,9 @@ void game::test()
 		} while (window.pollEvent(event));
 
 		window.clear(sf::Color::Black);
-
 		window.draw(background);
+		window.draw(textBox1);
+		window.draw(textBox2);
 		nickname.draw();
 		lobbyId.draw();
 		connect.draw();

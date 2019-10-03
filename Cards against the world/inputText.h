@@ -39,12 +39,12 @@ private:
 	enum positionState { isOn, isNotOn };
 	Mark mark;
 	sf::Text textOutput;
-	sf::Texture& box;
 	sf::RectangleShape coursor;
-	sf::Sprite spriteBox;
 	sf::RenderWindow& window;
 	std::size_t coursorPosition;
 	std::size_t coursorLastPosition;
+	sf::Vector2f size;
+	sf::Vector2f pos;
 	int limit;
 	sf::Sound click;
 	bool focused;
@@ -66,12 +66,13 @@ private:
 	int checkSpecialCharacters(wchar_t t);
 	void setTextPosition(int x, int y) { textOutput.setPosition(x, y);  textOutput.setScale(setting.xScale, setting.yScale); };
 public:
-	inputText(sf::RenderWindow& win, sf::Texture& box_, sf::SoundBuffer& click, int charLimit);
+	inputText(sf::RenderWindow& win, sf::SoundBuffer& click, int charLimit);
+	void setBounds(sf::Vector2f pos_, sf::Vector2f size_) { pos = pos_; size = size_; }
 	bool function(bool clear = false);
 	void checkState();
 	bool addChar(sf::Event::KeyEvent h);
 	void setString(sf::String y) { text = y; textOutput.setString(y); }
-	void draw() { window.draw(spriteBox); mark.draw(); window.draw(textOutput); if (blink) window.draw(coursor); }
+	void draw() { mark.draw(); window.draw(textOutput); if (blink) window.draw(coursor); }
 	void setPosition(int x, int y);
 	void setColor(sf::Color x = sf::Color::Black) { textOutput.setFillColor(x); }
 	void setFont(sf::Font& x) { textOutput.setFont(x); }
@@ -80,7 +81,6 @@ public:
 	}
 	sf::String& getText() { return text; }
 	void clear() { text.clear(); textOutput.setString(""); }
-	void setScale(double x, double y) { spriteBox.setScale(x, y); }
 	void setSoundVolume(double vol) { click.setVolume(vol * 100); }
 	~inputText();
 	wchar_t translate(sf::Event::KeyEvent key);

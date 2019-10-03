@@ -170,6 +170,7 @@
   <ItemGroup>
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Cards against the world.cpp" />
+    <ClCompile Include="chat.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="inputText.cpp" />
     <ClCompile Include="menu.cpp" />
@@ -180,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
+    <ClInclude Include="chat.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="inputText.h" />
     <ClInclude Include="menu.h" />
