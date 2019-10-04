@@ -65,6 +65,7 @@ private:
 	void findMark();
 	int checkSpecialCharacters(wchar_t t);
 	void setTextPosition(int x, int y) { textOutput.setPosition(x, y);  textOutput.setScale(setting.xScale, setting.yScale); };
+	wchar_t translate(sf::Event::KeyEvent key);
 public:
 	inputText(sf::RenderWindow& win, sf::SoundBuffer& click, int charLimit);
 	void setBounds(sf::Vector2f pos_, sf::Vector2f size_) { pos = pos_; size = size_; }
@@ -83,6 +84,6 @@ public:
 	void clear() { text.clear(); textOutput.setString(""); }
 	void setSoundVolume(double vol) { click.setVolume(vol * 100); }
 	~inputText();
-	wchar_t translate(sf::Event::KeyEvent key);
+
 };
 
