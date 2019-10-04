@@ -7,6 +7,7 @@ private:
 	std::vector<sf::Text> container;
 	const std::vector<sf::Text*> visible;
 	sf::RenderWindow& window;
+	sf::RectangleShape top;
 	sf::RectangleShape box;
 	sf::RectangleShape inputBox;
 	sf::RectangleShape rightSide;
@@ -18,11 +19,11 @@ public:
 	void checkState();
 	bool addChar(sf::Event::KeyEvent h);//inputteext wrappers
 	bool function(bool clear = false);
-	void draw();
+	void draw() { window.draw(box); window.draw(top); window.draw(inputBox); };
 	void operator<<(std::u32string string);//text compute
 	void computeText();//divide text to fit in container
-	chat(sf::RenderWindow& win, sf::SoundBuffer& click_, int charLimit, int charSize, int chatlines);
-	void setValues(sf::Vector2i position, int charSize, int chatlines, int widen);
+	chat(sf::RenderWindow& win, sf::SoundBuffer& click_, int charLimit);
+	void setValues(sf::Vector2f position, int charSize, int chatlines, int widen);
 	void setPosision(int x, int y);
 	~chat();
 };

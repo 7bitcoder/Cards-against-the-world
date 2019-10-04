@@ -5,6 +5,7 @@
 #include <iostream>
 #include "inputText.h"
 #include "Button.h"
+#include "chat.h"
 game::game(sf::RenderWindow& win, sf::String lobbyId_, sf::String nick, bool newlobby_) : window(win)
 {
 	newLobby = newlobby_;
@@ -209,6 +210,9 @@ void game::test()
 	goBack.setTitle("BACK");
 	goBack.setSoundVolume(setting.SoundVolume);
 	goBack.setColor(sf::Color::White);
+
+	chat Chat(window,clickBuff,100);
+	Chat.setValues(sf::Vector2f(50, 50), 20, 15, 600);
 	bool allertFlag = false;
 	sf::Clock timer;
 	while (window.isOpen())
@@ -254,6 +258,7 @@ void game::test()
 
 		window.clear(sf::Color::Black);
 		window.draw(background);
+		Chat.draw();
 		window.draw(textBox1);
 		window.draw(textBox2);
 		nickname.draw();
