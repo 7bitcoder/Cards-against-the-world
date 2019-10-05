@@ -69,7 +69,7 @@ private:
 public:
 	inputText(sf::RenderWindow& win, sf::SoundBuffer& click, int charLimit);
 	void setBounds(sf::Vector2f pos_, sf::Vector2f size_) { pos = pos_; size = size_; }
-	bool function(bool clear = false);
+	bool function();
 	void checkState();
 	bool addChar(sf::Event::KeyEvent h);
 	void setString(sf::String y) { text = y; textOutput.setString(y); }
@@ -78,11 +78,12 @@ public:
 	void setColor(sf::Color x = sf::Color::Black) { textOutput.setFillColor(x); }
 	void setFont(sf::Font& x) { textOutput.setFont(x); }
 	void setSize(int x) {
-		textOutput.setCharacterSize(x); coursor.setSize(sf::Vector2f(2, x)); coursor.setFillColor(sf::Color(128, 128, 128, 255)); mark.setHeigh(x);
+		textOutput.setCharacterSize(x); coursor.setSize(sf::Vector2f(2, x)); coursor.setFillColor(sf::Color(128, 128, 128, 255)); mark.setHeigh(x); 
 	}
 	sf::String& getText() { return text; }
-	void clear() { text.clear(); textOutput.setString(""); }
+	void clear() { text.clear(); textOutput.setString(""); coursorPosition = coursorLastPosition = 0; }
 	void setSoundVolume(double vol) { click.setVolume(vol * 100); }
+	void reset() { clear(); focused = true;  setCoursorPosition(0); }
 	~inputText();
 
 };

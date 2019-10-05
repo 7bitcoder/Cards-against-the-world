@@ -171,39 +171,6 @@ void game::test()
 	int linex = 1920 / 2;
 	int liney = 1080 / 2;
 
-	sf::Sprite textBox1, textBox2;
-
-	textBox1.setTexture(textBox);
-	textBox1.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney - 100) * setting.yScale);
-	textBox1.setScale(1.8 * setting.xScale, 1 * setting.yScale);
-
-	textBox2.setTexture(textBox);
-	textBox2.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney)* setting.yScale);
-	textBox2.setScale(1.8 * setting.xScale, 1 * setting.yScale);
-
-	inputText lobbyId(window, clickBuff, 20);
-	lobbyId.setBounds(sf::Vector2f(textBox1.getGlobalBounds().left, textBox1.getGlobalBounds().top), sf::Vector2f(textBox1.getGlobalBounds().width, textBox1.getGlobalBounds().height));
-	lobbyId.setString("Lobby id");
-	lobbyId.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney - 100) * setting.yScale);
-	lobbyId.setColor();
-	lobbyId.setFont(font);
-	lobbyId.setSize(25);
-
-	inputText nickname(window, clickBuff, 20);
-	nickname.setBounds(sf::Vector2f(textBox2.getGlobalBounds().left, textBox2.getGlobalBounds().top), sf::Vector2f(textBox2.getGlobalBounds().width, textBox2.getGlobalBounds().height));
-	nickname.setString("Nickname");
-	nickname.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney)* setting.yScale);
-	nickname.setColor();
-	nickname.setFont(font);
-	nickname.setSize(25);
-
-	Button connect(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
-	connect.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney + 100) * setting.yScale);
-	connect.setScale(1.8 * setting.xScale, 1 * setting.yScale);
-	connect.setTitle("SEND");
-	connect.setSoundVolume(setting.SoundVolume);
-	connect.setColor(sf::Color::White);
-
 	Button goBack(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
 	goBack.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney + 200) * setting.yScale);
 	goBack.setScale(1.8 * setting.xScale, 1 * setting.yScale);
@@ -211,8 +178,8 @@ void game::test()
 	goBack.setSoundVolume(setting.SoundVolume);
 	goBack.setColor(sf::Color::White);
 
-	chat Chat(window,clickBuff,100);
-	Chat.setValues(sf::Vector2f(50, 50), 20, 15, 600);
+	chat Chat(window, clickBuff, 150, 20, font);
+	Chat.setValues(sf::Vector2f(20, 450), 20, 600);
 	bool allertFlag = false;
 	sf::Clock timer;
 	while (window.isOpen())
@@ -222,48 +189,39 @@ void game::test()
 		event.type = sf::Event::GainedFocus;
 		do {
 			chatSocket.setBlocking(false);
-			connect.checkState();
 			goBack.checkState();
-			if (nickname.function() && event.type == sf::Event::KeyPressed) {
-				if (nickname.addChar(event.key)) {
-					std::wcout << nickname.getText().toWideString() << std::endl;
-				}
+			Chat.checkSideBarState();
+			if (Chat.function() && event.type == sf::Event::KeyPressed) {
+				Chat.addChar(event.key);
 			}
-			if (lobbyId.function() && event.type == sf::Event::KeyPressed) {
-				if (lobbyId.addChar(event.key)) {
-					std::wcout << lobbyId.getText().toWideString() << std::endl;
-				}
-			}
-			else if (connect.buttonFunction()) {
+			else if (false) {
 				std::u32string tmp;
-				auto basic = lobbyId.getText();
+				/*auto basic = lobbyId.getText();
 				for (int i = 0; i < basic.getSize(); i++) {
 					tmp.push_back(basic[i]);
 				}
-				Send(tmp, chatSocket, true);
+				Send(tmp, chatSocket, true);*/
+			}
+			else if (event.type == sf::Event::MouseWheelScrolled) {
+				Chat.scrolled(event.mouseWheelScroll.delta);
 			}
 			else if (goBack.buttonFunction())
 				return;
 			else;
 			std::size_t received;
 			std::u32string str = Receive(chatSocket);
-			if (str != std::u32string())
+			/*if (str != std::u32string())
 			{
 				sf::String out;
 				for (auto& x : str)
 					out += x;
 				nickname.setString(out);
-			}
+			}*/
 		} while (window.pollEvent(event));
 
 		window.clear(sf::Color::Black);
 		window.draw(background);
 		Chat.draw();
-		window.draw(textBox1);
-		window.draw(textBox2);
-		nickname.draw();
-		lobbyId.draw();
-		connect.draw();
 		goBack.draw();
 		window.display();
 	}

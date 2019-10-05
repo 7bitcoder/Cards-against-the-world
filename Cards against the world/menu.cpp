@@ -171,7 +171,7 @@ st Menu::ConnectToLobby()
 	inputText lobbyId(window, clickBuff, 20);
 	lobbyId.setBounds(sf::Vector2f(textBox1.getGlobalBounds().left, textBox1.getGlobalBounds().top), sf::Vector2f(textBox1.getGlobalBounds().width, textBox1.getGlobalBounds().height));
 	lobbyId.setString("Lobby id");
-	lobbyId.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney - 100) * setting.yScale);
+	lobbyId.setPosition((linex - 190 * 1.8 / 2) * setting.xScale + 10, (liney - 100) * setting.yScale + 10);
 	lobbyId.setColor();
 	lobbyId.setFont(font);
 	lobbyId.setSize(25);
@@ -179,7 +179,7 @@ st Menu::ConnectToLobby()
 	inputText nickname(window, clickBuff, 20);
 	nickname.setBounds(sf::Vector2f(textBox2.getGlobalBounds().left, textBox2.getGlobalBounds().top), sf::Vector2f(textBox2.getGlobalBounds().width, textBox2.getGlobalBounds().height));
 	nickname.setString("Nickname");
-	nickname.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney) * setting.yScale);
+	nickname.setPosition((linex - 190 * 1.8 / 2) * setting.xScale + 10, (liney) * setting.yScale + 10);
 	nickname.setColor();
 	nickname.setFont(font);
 	nickname.setSize(25);

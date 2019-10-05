@@ -12,7 +12,7 @@ mark(textOutput, win)
 	clicked = false;
 	activated = false;
 }
-bool inputText::function(bool clear)
+bool inputText::function()
 {
 	checkState();
 	if (clicked == false && positionSt == positionState::isOn && buttonSt == buttonState::isPressed && lastButtonSt == buttonState::isNotPressed)
@@ -239,8 +239,8 @@ void inputText::checkCoursorPosition()
 }
 void inputText::setPosition(int x, int y)
 {
-	setTextPosition(x + 10, y + 10);
-	coursor.setPosition(x + 10, y + 10);
+	setTextPosition(x, y);
+	coursor.setPosition(x, y + 3);
 }
 void inputText::checkBlink()
 {

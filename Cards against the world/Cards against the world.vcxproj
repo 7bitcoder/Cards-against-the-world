@@ -132,6 +132,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\Sylwester\Desktop\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -176,6 +177,7 @@
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="PopAlert.cpp" />
     <ClCompile Include="Settings.cpp" />
+    <ClCompile Include="Slider.cpp" />
     <ClCompile Include="socketUtils.cpp" />
     <ClCompile Include="Sounds.cpp" />
   </ItemGroup>
@@ -187,6 +189,7 @@
     <ClInclude Include="menu.h" />
     <ClInclude Include="PopAlert.h" />
     <ClInclude Include="Settings.h" />
+    <ClInclude Include="Slider.h" />
     <ClInclude Include="socketUtils.h" />
     <ClInclude Include="Sounds.h" />
   </ItemGroup>
