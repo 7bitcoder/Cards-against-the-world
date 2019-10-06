@@ -23,6 +23,7 @@ private:
 	sf::Font & font;
 	inputText textBar;
 	sf::Text test;
+	sf::String textToSend;
 	bool moveUp();
 	bool moveDown();
 	void reset();
@@ -40,6 +41,7 @@ public:
 	bool function() { return textBar.function(); }
 	void draw();
 	void scrolled(int delta);
+	std::u32string getText() { std::u32string tmp; for (auto x : textToSend) tmp += x; return tmp; }
 	void operator<<(sf::String string) { sf::String input = string; computeText(input); };//text compute
 	void operator<<(std::u32string string) {};//text compute
 	~chat();

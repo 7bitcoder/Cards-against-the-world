@@ -71,7 +71,9 @@ void chat::checkState()
 bool chat::addChar(sf::Event::KeyEvent h)
 {
 	if (textBar.addChar(h)) {
-		this->operator<<(textBar.getText());
+
+		textToSend = textBar.getText();
+		this->operator<<(textToSend);
 		textBar.reset();
 		return true;
 	}

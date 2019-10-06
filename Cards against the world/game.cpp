@@ -83,6 +83,10 @@ ConnectErrors game::connect()
 	{
 		return ConnectErrors::unableToSendData;
 	}
+	if (!receive(chatSocket, rec, coding, playerID))
+	{
+		return ConnectErrors::unableToGetData;
+	}
 	std::cout << "done\n";
 }
 
@@ -193,15 +197,13 @@ void game::test()
 			goBack.checkState();
 			Chat.checkSideBarState();
 			if (Chat.function() && event.type == sf::Event::KeyPressed) {
-				Chat.addChar(event.key);
-			}
-			else if (false) {
-				std::u32string tmp;
-				/*auto basic = lobbyId.getText();
-				for (int i = 0; i < basic.getSize(); i++) {
-					tmp.push_back(basic[i]);
+				if (Chat.addChar(event.key)) {
+					if (!Send(Chat.getText(), chatSocket))
+					{
+						;//TODO
+					}
 				}
-				Send(tmp, chatSocket, true);*/
+
 			}
 			else if (event.type == sf::Event::MouseWheelScrolled) {
 				Chat.scrolled(event.mouseWheelScroll.delta);
@@ -209,15 +211,20 @@ void game::test()
 			else if (goBack.buttonFunction())
 				return;
 			else;
-			/*std::size_t received;
-			std::u32string str = receive(chatSocket);
-			if (str != std::u32string())
+			std::size_t received;
+			std::u32string str;
+			char coding = 0, playerID;
+			if (!receive(chatSocket, str, coding, playerID))
+			{
+				;//todo
+			}
+			if (coding == 1)
 			{
 				sf::String out;
 				for (auto& x : str)
 					out += x;
-				nickname.setString(out);
-			}*/
+				Chat << out;
+			}
 		} while (window.pollEvent(event));
 
 		window.clear(sf::Color::Black);

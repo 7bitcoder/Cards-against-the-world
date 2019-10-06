@@ -7,7 +7,7 @@ bool chat::disconnect(SOCKET socket)
 	std::u32string msg = clients[socket].nick + U" disconnected.";
 	if (!broadCast(socket, msg)) {
 		//todo
-	}
+	} //TODO add command code 
 	closesocket(socket);
 	FD_CLR(socket, &fds);
 	clients.erase(socket);
@@ -22,14 +22,16 @@ chat::~chat() {
 }
 bool chat::broadCast(SOCKET socket, std::u32string msg)
 {
-	code(msg, buff);
+	addMessagePrefix(buff, msg.size() * 4, 1, 0);
+	code(msg, buff + 4);
 	for (int i = 0; i < fds.fd_count; i++)
 	{
 		SOCKET outSock = fds.fd_array[i];
 		if (outSock != socket && outSock != listenSocket)
 		{
-			if (!sendLen(outSock, buff, msg.size()))
-				continue;
+			if (!sendLen(outSock, buff, msg.size() * 4 + 4)) {
+				//TODO co zrobic ???
+			}
 		}
 	}
 	return true;
@@ -75,7 +77,7 @@ bool chat::limitedResponseWait(int time, SOCKET socket)
 	ZeroMemory(&buff, sizeof(buff));
 	char playerId;
 	char coding;
-	if(!receiveLen(socket, buff, coding, playerId))
+	if (!receiveLen(socket, buff, coding, playerId))
 		return false;
 	if (coding == 2)
 		return false; //TODO
@@ -107,7 +109,7 @@ bool chat::acceptNewClient()
 	printf("new user\n");
 	addMessagePrefix(buff, welcome.size() * 4, 1, 0);
 	code(welcome, buff + 4);
-	if (!sendLen(client, buff, welcome.size())) {
+	if (!sendLen(client, buff, welcome.size() * 4 + 4)) {
 		//TODO co zrobic ???
 	}
 	welcome = clients[client].nick + U" joined lobby.";
@@ -140,8 +142,8 @@ void chat::run()
 					if (i != 4) //TODO
 						disconnect(sock);
 					char coding, playerId;
-					clients[sock].all = getMessagePreffix(clients[sock].buff, coding, playerId)
-						i = recv(socket, clients[sock].buff + 4, clients[sock].all, 0);
+					clients[sock].all = getMessagePrefix(clients[sock].buff, coding, playerId);
+					i = recv(sock, clients[sock].buff + 4, clients[sock].all, 0);
 					if (i <= 0) {
 						disconnect(sock);
 					}
@@ -154,7 +156,7 @@ void chat::run()
 
 				}
 				else {
-					int i = recv(socket, buff + clients[sock].received + 4, clients[sock].all - clients[sock].received, 0);
+					int i = recv(sock, buff + clients[sock].received + 4, clients[sock].all - clients[sock].received, 0);
 					if (i <= 0) {
 						disconnect(sock);
 					}
@@ -166,12 +168,7 @@ void chat::run()
 						clients[sock].received = 0;
 					}
 				}
-				printf("Message: %s\n", rcvbuff);
-				if (len <= 0) {
-					disconnect(sock);
-				}
-
-				else {
+				if (!clients[sock].received) {
 					if (!broadCast(sock, clients[sock].buff, clients[sock].all + 4)) {
 						//todo
 					}
@@ -181,3 +178,4 @@ void chat::run()
 		}
 	}
 }
+
