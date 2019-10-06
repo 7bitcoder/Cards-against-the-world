@@ -60,28 +60,34 @@ void Slider::checkState()
 }
 int Slider::sliderFunction()
 {
-	int x;
-	double diff, newPos;
+	double x, pos;
+	int dif;
 	switch (state)
 	{
 	case pointnerState::isClickedOn:
 		click.play();
-		pressBegin = sf::Mouse::getPosition().y;
-		pressScrollPos = this->getPosition().y;
+		pressBegin = sf::Mouse::getPosition(window).y;
 		break;
 	case pointnerState::isPressed:
-		x = sf::Mouse::getPosition().y - pressBegin;
-		newPos = pressScrollPos + x;
-		if (newPos < bounds.x)
-			newPos = bounds.x;
-		if (newPos > bounds.y)
-			newPos = bounds.y;
-		diff = bounds.y - newPos;
-		actualval = round(diff / Step);
-		if (actualval != oldVal)
-		{
-			oldVal = actualval;
-			return actualval - oldVal;
+		pos = sf::Mouse::getPosition(window).y;
+		x = pos - pressBegin;
+		if (x > Step && delta < maxDelta) {//go down;
+			dif = x / Step;
+			if (delta + dif > maxDelta)
+				dif = maxDelta - delta;
+			delta += dif;
+			setPos();
+			pressBegin += dif * Step;
+			return -dif;
+		}
+		else if (x < -Step && delta > 0) {//go up
+			dif = -x / Step;
+			if (delta - dif < 0)
+				dif = delta;
+			delta -= dif;
+			setPos();
+			pressBegin -= dif * Step;
+			return dif;
 		}
 		break;
 	default:
@@ -90,14 +96,13 @@ int Slider::sliderFunction()
 	return 0;
 }
 
-Slider::Slider(sf::RenderWindow& win, sf::SoundBuffer& click_) : window(win), click(click_)
+Slider::Slider(sf::RenderWindow & win, sf::SoundBuffer & click_) : window(win), click(click_)
 {
 	state = pointnerState::isNotOn;
 	isAlredyOnButton = false;
 	mouseAlredyPressed = false;
 	isAlredyOut = false;
-	actualval = oldVal = 0;
-
+	delta = 0;
 };
 
 Slider::~Slider()

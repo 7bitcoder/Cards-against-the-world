@@ -1,7 +1,7 @@
 
 
 #pragma once
-#include"socketUtils.h"
+#include"serverUtils.h"
 #include<map>
 #define DEFAULT_PORT "3000"
 struct client
@@ -12,7 +12,7 @@ struct client
 	int received;
 };
 
-class chat: public socketUtils
+class chat: public serverUtils
 {
 protected:
 	char buff[LEN];

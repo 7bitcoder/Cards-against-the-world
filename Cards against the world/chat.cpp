@@ -5,40 +5,43 @@ void chat::scrolled(int delta)
 	if (scrollable && box.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(window)))) {
 		while (delta) {
 			if (delta > 0) {
-				moveDown();
+				if (moveDown())
+					scroll.move(true);
 				delta--;
 			}
 			else if (delta < 0) {
-				moveUp();
+				if (moveUp())
+					scroll.move(false);//up
 				delta++;
 			}
 		}
 	}
 }
-void chat::moveUp()
+
+bool chat::moveUp()
 {
 	if (visible.back() == container.size() - 1)
-		return;
+		return false;
 	int i;
 	for (i = 0; i < visible.size() - 1; i++) {
 		visible[i] = visible[i + 1];
 	}
 	visible[i]++;
 	setContainerPositions();
-	scroll.move(true);//up
+	return true;
 }
 
-void chat::moveDown()
+bool chat::moveDown()
 {
 	if (visible.front() == 0)
-		return;
+		return false;
 	int i;
 	for (i = visible.size() - 1; i > 0; i--) {
 		visible[i] = visible[i - 1];
 	}
 	visible[i]--;
 	setContainerPositions();
-	scroll.move(false);
+	return true;
 }
 
 void chat::reset()
@@ -121,12 +124,16 @@ void chat::addTime(sf::String & string)
 		timeVal.tm_min = 0;
 		timeVal.tm_sec = 0;
 	}
+	std::string tmp;
 	sf::String time = "[";
-	time += std::to_string(timeVal.tm_hour);
+	tmp = std::to_string(timeVal.tm_hour);
+	time += tmp.size() == 1 ? tmp.insert(0, "0") : tmp;
 	time += ':';
-	time += std::to_string(timeVal.tm_min);
+	tmp = std::to_string(timeVal.tm_min);
+	time += tmp.size() == 1 ? tmp.insert(0, "0") : tmp;
 	time += ':';
-	time += std::to_string(timeVal.tm_sec);
+	tmp = std::to_string(timeVal.tm_sec);
+	time += tmp.size() == 1 ? tmp.insert(0, "0") : tmp;
 	time += "]";
 	string.insert(0, time);
 }
@@ -139,11 +146,23 @@ void chat::checkSideBarState()
 		if (!diff)
 			return;
 		else {
-			scrolled(diff);
+			move(diff);
 		}
 	}
 }
-
+void chat::move(int delta)
+{
+	while (delta) {
+		if (delta > 0) {
+			moveDown();
+			delta--;
+		}
+		else if (delta < 0) {
+			moveUp();
+			delta++;
+		}
+	}
+}
 void chat::computeScrollBarSize()
 {
 	double height = box.getSize().y;
@@ -152,9 +171,9 @@ void chat::computeScrollBarSize()
 	if (diff > 30)
 		scroll.setSize(sf::Vector2f(charSize_, diff));
 	double diff2 = height - scroll.getSize().y;
-	scroll.setStep( diff2 / (container.size() - visible.size()));
+	scroll.setStep(diff2 / (container.size() - visible.size()));
 	double downBound = rightSide.getPosition().y + diff2;
-	scroll.setDownBound(downBound);
+	scroll.setMaxDelta(container.size() - visible.size());
 	scroll.reset();
 }
 
@@ -184,10 +203,6 @@ void chat::setValues(sf::Vector2f position, int charSize, int widen)
 	box.setOutlineThickness(charSize);
 	sf::Vector2f topp(position.x - outline, position.y - charSize);
 
-	top.setPosition(topp);
-	top.setSize(sf::Vector2f(widen + 2 * outline, charSize));
-	top.setFillColor(sf::Color(195, 195, 195, 255));
-
 	inputBox.setPosition(sf::Vector2f(position.x, position.y + outline + box.getSize().y));
 	inputBox.setSize(sf::Vector2f(widen, charSize + 10));
 	inputBox.setFillColor(sf::Color(240, 240, 240, 255));
@@ -210,17 +225,18 @@ void chat::setValues(sf::Vector2f position, int charSize, int widen)
 	textBar.setColor();
 	textBar.setFont(font);
 	textBar.setSize(charSize);
+	textBar.setBounds(inputLeftTerm.getPosition().x, inputRightTerm.getPosition().x);
 
 	rightSide.setSize(sf::Vector2f(charSize, box.getSize().y)); // init scroll
 	rightSide.setPosition(sf::Vector2f(position.x + box.getSize().x - charSize, position.y));
-	rightSide.setFillColor(sf::Color(195, 195, 195, 255));
+	rightSide.setFillColor(sf::Color(205, 205, 205, 255));
 
 	scroll.setSize(sf::Vector2f(charSize, box.getSize().y)); // init scroll
 	scroll.setPosition(sf::Vector2f(position.x + box.getSize().x - charSize, position.y));
 	scroll.setFillColor(sf::Color(127, 127, 127, 255));
 
 	scroll.setXcoord(rightSide.getPosition().x);
-	scroll.setUpBound(rightSide.getPosition().y);
+	scroll.setOrigin(rightSide.getPosition().y);
 	for (int i = 0; i < visible.size(); i++) {
 		containerPositions.push_back(sf::Vector2f(3 + position.x, position.y + i * (charSize + 5)));
 	}
@@ -228,7 +244,6 @@ void chat::setValues(sf::Vector2f position, int charSize, int widen)
 void chat::draw()
 {
 	window.draw(box);
-	window.draw(top);
 	for (auto x : visible) {
 		if (x != -1)
 			window.draw(container[x]);

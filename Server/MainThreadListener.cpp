@@ -32,9 +32,10 @@ int MainThreadListener::createListenSocket()
 	getsockname(ListenSocket, (struct sockaddr*) & addr, &size);
 	listenPort = ntohs(addr.sin_port);
 	std::string msg = std::to_string(listenPort);
-	int iResult = send(oldSocket, msg.c_str(), msg.size() + 1, 0);
-	if (iResult == SOCKET_ERROR) {
-		printf("send failed with error: %d\n", WSAGetLastError());
+	addMessagePrefix(recvbuf, msg.size(), 0, 0);
+	strcpy_s(recvbuf + 4, LEN, msg.c_str());
+	if (!sendLen(oldSocket, recvbuf, msg.size() + 4)) {
+		printf("send failed with error:\n");
 		closesocket(oldSocket);
 		WSACleanup();
 		return 0;

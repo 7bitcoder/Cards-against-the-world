@@ -8,10 +8,10 @@ bool tcpListener::checkData()
 {
 	mbstate_t state;
 	printf("all : %s\n", buff);
-	code = decode(buff, 20);
-	newLobby = decode( buff + 84, 1);
-	nickname = decode( buff + 92, 30);
-	lobbyId = decode( buff + 120, 30);
+	code = decode(buff + 4, 20);
+	newLobby = decode(buff + 88, 1);
+	nickname = decode(buff + 96, 30);
+	lobbyId = decode(buff + 124, 30);
 	if (passCode != code)
 	{
 		printf("wrong code: \n");
@@ -21,7 +21,6 @@ bool tcpListener::checkData()
 	printf("code is ok\n");
 	return true;
 }
-
 tcpListener::tcpListener(int port_, std::string ipv4)
 	: port(port_), ip(ipv4) {
 	sock = INVALID_SOCKET;
@@ -63,7 +62,8 @@ bool tcpListener::run() {
 	}
 	printf("start\n");
 	ZeroMemory(&buff, sizeof(buff));
-	iResult = recv(clientSocket, buff, LEN, 0);
+	char coding, playerId;
+	iResult = receiveLen(clientSocket, buff, coding, playerId);
 	if (iResult <= 0)
 	{
 		printf("receive failed with error: %d\n", WSAGetLastError());
@@ -72,7 +72,16 @@ bool tcpListener::run() {
 	}
 	return true;
 }
-
+void tcpListener::send(const char* dat, int len, char error) {
+	if (error) {
+		serverUtils::addMessagePrefix(buff, 0 , error, dat[0]);
+		serverUtils::sendLen(clientSocket, buff, 4);
+		return;
+	}
+	serverUtils::addMessagePrefix(buff, len , error, 0);
+	strcpy_s(buff + 4, LEN - 4, dat);
+	serverUtils::sendLen(clientSocket, buff, len + 4);
+}
 bool tcpListener::init()
 {
 	int iResult;

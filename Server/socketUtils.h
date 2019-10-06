@@ -22,21 +22,9 @@ protected:
 public:
 	socketUtils();
 	~socketUtils();
-	void addMessageLen(char* pos, uint16_t nmb) {
-		mbstate_t state{};
-		nmb = htons(nmb);
-		memcpy(pos, (char*)& nmb, 2);
-	}
-	uint16_t getMessageLen(char* pos) {
-		char16_t ch; mbstate_t state{};
-		uint16_t* ptr = (uint16_t*)pos;
-		return ntohs(*ptr);
-	}
-	bool sendU(SOCKET socket, const char* data, int length);
-	bool sendLen(SOCKET socket, const char* data, int length);
-	int receive(SOCKET socket, char* data, int lenght);
-	int receiveLen(SOCKET socket, char* data, int max);
+	void addMessagePrefix(char* pos, uint16_t nmb, char coding, char playerId);// coding 0 - normal, 1 unidoce, rest custom, playerId 0 server 1 braodcast rest player id
+	uint16_t getMessagePrefix(char* pos, char& coding, char& playerId);
 	std::u32string decode(char* begData, int limit = 0, int reserve = 30);//decode from rcvbuff
 	int code(const std::u32string& string, char* pos); //return bytes writed //code in buff
-
 };
+

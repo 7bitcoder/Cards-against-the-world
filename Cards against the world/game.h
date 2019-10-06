@@ -3,10 +3,11 @@
 #include <SFML/Network.hpp>
 #include "socketUtils.h"
 #define LEN 4000
-enum ConnectErrors {unableToRechServer,unableToSendData, unableToGetData, lobbyIsAlredyChosen, noPortsAreAvailable, lobbyNameIsIncorrect, couldNotFindLobby, ServerIsFull, lobbyNameIsLocked, connected };
-class game:public socketUtils
+enum ConnectErrors { unableToRechServer, unableToSendData, unableToGetData, lobbyIsAlredyChosen, noPortsAreAvailable, lobbyNameIsIncorrect, couldNotFindLobby, ServerIsFull, lobbyNameIsLocked, connected };
+class game :public socketUtils
 {
 private:
+	std::map<char, sf::String> players;
 	unsigned short portToConnect = 3000;
 	sf::IpAddress address = "127.0.0.1";
 	std::u32string code = U"a7dzRwQjnw5kW6uEnhx7";
@@ -18,11 +19,12 @@ private:
 	sf::TcpSocket chatSocket;
 	char buff[LEN];
 	bool newLobby;
+	char playerId;
 public:
 	game(sf::RenderWindow& win, sf::String lobbyId, sf::String nick, bool newlobby);
 	ConnectErrors connect();
-	bool Send(std::u32string s, sf::TcpSocket& socket, bool addSize = false);
-	std::u32string Receive(sf::TcpSocket& socket);
+	bool Send(std::u32string s, sf::TcpSocket& socket);
+	bool receive(sf::TcpSocket& socket, std::u32string& data, char& coding, char& playerId);
 	~game();
 	void test();
 };

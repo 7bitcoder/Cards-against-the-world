@@ -3,9 +3,9 @@
 #define WIN32_LEAN_AND_MEAN
 #else
 #endif // !WIN32_LEAN_AND_MEAN
-#include "socketUtils.h"
+#include "serverUtils.h"
 
-class tcpListener: public socketUtils
+class tcpListener : public serverUtils
 {
 private:
 	int port;
@@ -19,11 +19,12 @@ private:
 	std::u32string lobbyId;
 public:
 	bool checkData();
-	tcpListener(int port, std::string ipv4 ="127.0.0.1");
+	bool sendRaw(SOCKET socket, const char* data, int length);
+	tcpListener(int port, std::string ipv4 = "127.0.0.1");
 	~tcpListener();
 	bool init();
 	bool run();
-	void send(const char* buff, int len) { socketUtils::sendU(clientSocket, buff, len); }
+	void send(const char* dat, int len, char error);
 	void closeConnection() { closesocket(clientSocket); }
 	std::u32string getLobby() { return lobbyId; }
 	bool isNewLobby() { return newLobby[0] == U'y'; }

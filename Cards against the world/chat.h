@@ -14,7 +14,6 @@ private:
 	std::vector<sf::Text> container;
 	std::vector<int> visible;
 	sf::RenderWindow& window;
-	sf::RectangleShape top;
 	sf::RectangleShape box;
 	sf::RectangleShape inputBox;
 	sf::RectangleShape rightSide;
@@ -24,13 +23,14 @@ private:
 	sf::Font & font;
 	inputText textBar;
 	sf::Text test;
-	void moveUp();
-	void moveDown();
+	bool moveUp();
+	bool moveDown();
 	void reset();
 	void setContainerPositions();
 	void computeText(sf::String& string);//divide text to fit in container
 	void addTime(sf::String& string);
 	void computeScrollBarSize();
+	void move(int delta);
 public:
 	chat(sf::RenderWindow& win, sf::SoundBuffer& click_, int charLimit, int chatlines, sf::Font& font_);
 	void setValues(sf::Vector2f position, int charSize, int widen);

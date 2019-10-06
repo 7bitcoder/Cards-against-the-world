@@ -28,7 +28,7 @@ bool chat::broadCast(SOCKET socket, std::u32string msg)
 		SOCKET outSock = fds.fd_array[i];
 		if (outSock != socket && outSock != listenSocket)
 		{
-			if (!sendRaw(outSock, buff, msg.size()))
+			if (!sendLen(outSock, buff, msg.size()))
 				continue;
 		}
 	}
@@ -41,25 +41,11 @@ bool chat::broadCast(SOCKET socket, char* buff, int len)
 		SOCKET outSock = fds.fd_array[i];
 		if (outSock != socket && outSock != listenSocket)
 		{
-			if (!sendRaw(outSock, buff, len))
+			if (!sendLen(outSock, buff, len))
 				continue;
 		}
 	}
 	return true;
-}
-bool chat::sendRaw(SOCKET socket, const char* data, int length)
-{
-        int count = 0;
-        while (count < length) {
-		wait(socket);
-                int n = send(socket, data + count, length, 0);
-                if (n == SOCKET_ERROR) {
-                        return false;
-                }
-                count += n;
-                length -= n;
-        }
-        return true;
 }
 bool chat::computeNewClientData(SOCKET client)
 {
@@ -67,13 +53,12 @@ bool chat::computeNewClientData(SOCKET client)
 	std::u32string newLobby;
 	std::u32string nickname;
 	std::u32string lobbyId;
-	char * buff = this->buff + 4;
 	mbstate_t state;
 	printf("all : %s\n", buff);
-	code = decode(buff, 20);
-	newLobby = decode(buff + 84, 1);
-	nickname = decode(buff + 92, 30);
-	lobbyId = decode(buff + 120, 30);
+	code = decode(buff + 4, 20);
+	newLobby = decode(buff + 88, 1);
+	nickname = decode(buff + 96, 30);
+	lobbyId = decode(buff + 124, 30);
 	if (passCode != code)
 	{
 		printf("wrong code: \n");
@@ -86,41 +71,14 @@ bool chat::computeNewClientData(SOCKET client)
 }
 bool chat::limitedResponseWait(int time, SOCKET socket)
 {
-	TIMEVAL tv = { time, 0 };
-
-	// Set up the file descriptor set.
-	fd_set tmp;
-	FD_ZERO(&tmp);
-	FD_SET(socket, &tmp);
-
-	// Set up the struct timeval for the timeout.
-
-	// Wait until timeout or data received.
-	int iResult = select(0, &tmp, NULL, NULL, &tv);
-	if (iResult == SOCKET_ERROR) {
-		printf("select failed with error: %d\n", WSAGetLastError());
-		closesocket(socket);
-		return false;
-	}
-	else if (iResult == 0) {
-		printf("response time for code is is up\n");
-		closesocket(socket);
-		return false;
-	}
 	printf("start\n");
 	ZeroMemory(&buff, sizeof(buff));
 	char playerId;
 	char coding;
-	int len = getMessagePrefix(rcvBuff, coding, plyerId)
-	if(!receiveLen(socket, buff + 4, len, 1))
+	if(!receiveLen(socket, buff, coding, playerId))
 		return false;
-	if(iresult
-	if (iResult <= 0)
-	{
-		printf("receive failed with error: %d\n", WSAGetLastError());
-		closesocket(socket);
-		return false;
-	}
+	if (coding == 2)
+		return false; //TODO
 }
 chat::chat(SOCKET socket_, std::u32string lobbyId_, std::string port_)
 {
@@ -147,9 +105,9 @@ bool chat::acceptNewClient()
 	FD_SET(client, &fds);
 	std::u32string welcome = U"Welcome to lobby: " + lobbyId;
 	printf("new user\n");
-	addMessagePrefix(buff, welcome.size()*4, 1, 0);
+	addMessagePrefix(buff, welcome.size() * 4, 1, 0);
 	code(welcome, buff + 4);
-	if (!sendRaw( client, buff , welcome.size())) {
+	if (!sendLen(client, buff, welcome.size())) {
 		//TODO co zrobic ???
 	}
 	welcome = clients[client].nick + U" joined lobby.";
@@ -177,30 +135,30 @@ void chat::run()
 			}
 			else {//get message
 				ZeroMemory(rcvbuff, strlen(rcvbuff));
-				if(!clients[sock].received) {
-					int i = recv(socket, clients[sock].buff, 4, 0);
-					if(i!= 4) //TODO
+				if (!clients[sock].received) {
+					int i = recv(sock, clients[sock].buff, 4, 0);
+					if (i != 4) //TODO
 						disconnect(sock);
 					char coding, playerId;
 					clients[sock].all = getMessagePreffix(clients[sock].buff, coding, playerId)
-					i = recv(socket, clients[sock].buff + 4, clients[sock].all , 0);
-					if (i <= 0 ) {
-					disconnect(sock);
+						i = recv(socket, clients[sock].buff + 4, clients[sock].all, 0);
+					if (i <= 0) {
+						disconnect(sock);
 					}
-					if(i != clients[sock].all) {
+					if (i != clients[sock].all) {
 						clients[sock].received = i;
 						continue;//!!!!!+ 4
 					}
 					else
 						clients[sock].received = 0;
-					
+
 				}
-				else{
-					int i = recv(socket, buff + clients[sock].received + 4, clients[sock].all - clients[sock].received , 0);
-					if (i <= 0 ) {
+				else {
+					int i = recv(socket, buff + clients[sock].received + 4, clients[sock].all - clients[sock].received, 0);
+					if (i <= 0) {
 						disconnect(sock);
 					}
-					if(i + clients[sock].received < clients[sock].all) {
+					if (i + clients[sock].received < clients[sock].all) {
 						clients[sock].received += i;
 						continue;
 					}
@@ -209,10 +167,10 @@ void chat::run()
 					}
 				}
 				printf("Message: %s\n", rcvbuff);
-				if (len <= 0 ) {
+				if (len <= 0) {
 					disconnect(sock);
 				}
-				
+
 				else {
 					if (!broadCast(sock, clients[sock].buff, clients[sock].all + 4)) {
 						//todo

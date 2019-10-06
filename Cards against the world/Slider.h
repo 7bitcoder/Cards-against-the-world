@@ -12,26 +12,27 @@ private:
 	bool isAlredyOnButton;
 	bool mouseAlredyPressed;
 	bool isAlredyOut;
-	int oldVal;
-	int actualval;
-	sf::Vector2f bounds;
+	int delta;
+	int maxDelta;
+	double origin;
 	double X;
 	double Step;
-	int pressBegin;
+	double pressBegin;
 	float pressScrollPos;
-	void setPos() { this->setPosition(X, bounds.y - actualval*Step); }
+	void setPos() { this->setPosition(X, origin + delta*Step); }
+	void setSideBarPos(double d) { this->setPosition(X, d); }
 public:
 	void setStep(double s) { Step = s; }
+	void setMaxDelta(int m) { maxDelta = m; }
 	void checkState();
 	int sliderFunction();
-	void setDownBound(double down) { bounds.y = down; }
-	void setUpBound(double up) { bounds.x = up; }
+	void setOrigin(double down) { origin = down; }
 	Slider(sf::RenderWindow& win, sf::SoundBuffer& click_);
 	void setXcoord(float x) { X = x; }
 	void setSoundVolume(double v) { click.setVolume(v * 100); }
-	double getValue() { return actualval; }
-	void move(bool up) { actualval += up ? -1 : 1; oldVal = actualval; setPos(); }
-	void reset() { this->setPosition(X, bounds.y); actualval = oldVal = 0; };
+	double getValue() { return delta; }
+	void move(bool up) { delta += up ? -1 : 1; setPos(); }
+	void reset() { delta = maxDelta; setPos(); };
 	~Slider();
 };
 

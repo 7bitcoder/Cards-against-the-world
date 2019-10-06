@@ -1,7 +1,5 @@
 #include "socketUtils.h"
 
-
-
 socketUtils::socketUtils()
 {
 }
@@ -10,44 +8,19 @@ socketUtils::socketUtils()
 socketUtils::~socketUtils()
 {
 }
-bool socketUtils::sendU(SOCKET socket, const char* data, int length)
-{
-	int count = 0;
-	while (count < length) {
-		int n = send(socket, data + count, length, 0);
-		if (n == SOCKET_ERROR) {
-			return false;
-		}
-		count += n;
-		length -= n;
-	}
-	return true;
+void socketUtils::addMessagePrefix(char* pos, uint16_t nmb, char coding, char playerId) {
+	mbstate_t state{};
+	pos[0] = coding;
+	nmb = htons(nmb);
+	memcpy(pos + 1, (char*)& nmb, 2);
+	pos[3] = playerId;
 }
-int socketUtils::receive(SOCKET socket, char* data, int length)
-{
-	int count = 0;
-	while (count < length) {
-		int n = recv(socket, data + count, length, 0);
-		if (n == SOCKET_ERROR) {
-			return false;
-		}
-		count += n;
-		length -= n;
-	}
-	return true;
-}
-bool socketUtils::sendLen(SOCKET socket, const char* data, int length)
-{
-	return false;
-}
-int socketUtils::receiveLen(SOCKET socket, char* data, int max)
-{
-	if (!receive(socket, data, 2))
-		return -1;
-	int len = getMessageLen(data) * 4;
-	if(!receive(socket, data + 2, len))
-		return -1;
-	return len + 2;
+uint16_t socketUtils::getMessagePrefix(char* pos, char& coding, char& playerId) {
+	coding = pos[0];
+	playerId = pos[3];
+	char16_t ch; mbstate_t state{};
+	uint16_t* ptr = (uint16_t*)(pos + 1);
+	return ntohs(*ptr);
 }
 std::u32string socketUtils::decode(char* pos, int limit, int reserve) {
 	std::u32string str;
@@ -79,7 +52,3 @@ int socketUtils::code(const std::u32string& string, char* pos) {
 	clear(pos + i * 4);
 	return (++i) * 4;
 }
-
-
-
-

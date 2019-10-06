@@ -45,6 +45,7 @@ private:
 	std::size_t coursorLastPosition;
 	sf::Vector2f size;
 	sf::Vector2f pos;
+	sf::Vector2f bounds;
 	int limit;
 	sf::Sound click;
 	bool focused;
@@ -53,6 +54,7 @@ private:
 	bool activated;
 	sf::Clock timer;
 	sf::String lastChar;
+	sf::String realText;
 	sf::String text;
 	positionState positionSt;
 	positionState lastPositionSt;
@@ -65,6 +67,7 @@ private:
 	void findMark();
 	int checkSpecialCharacters(wchar_t t);
 	void setTextPosition(int x, int y) { textOutput.setPosition(x, y);  textOutput.setScale(setting.xScale, setting.yScale); };
+	void checkBounds();
 	wchar_t translate(sf::Event::KeyEvent key);
 public:
 	inputText(sf::RenderWindow& win, sf::SoundBuffer& click, int charLimit);
@@ -84,6 +87,7 @@ public:
 	void clear() { text.clear(); textOutput.setString(""); coursorPosition = coursorLastPosition = 0; }
 	void setSoundVolume(double vol) { click.setVolume(vol * 100); }
 	void reset() { clear(); focused = true;  setCoursorPosition(0); }
+	void setBounds(float left, float right) { bounds.x = left; bounds.y = right; }
 	~inputText();
 
 };

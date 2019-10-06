@@ -158,6 +158,8 @@
     <ClCompile Include="lobbyThread.cpp" />
     <ClCompile Include="MainThreadListener.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="serverUtils.cpp" />
+    <ClCompile Include="severRawUtils.cpp" />
     <ClCompile Include="socketUtils.cpp" />
     <ClCompile Include="tcpListener.cpp" />
   </ItemGroup>
@@ -166,6 +168,8 @@
     <ClInclude Include="game.h" />
     <ClInclude Include="lobbyThread.h" />
     <ClInclude Include="MainThreadListener.h" />
+    <ClInclude Include="serverUtils.h" />
+    <ClInclude Include="severRawUtils.h" />
     <ClInclude Include="socketUtils.h" />
     <ClInclude Include="tcpListener.h" />
   </ItemGroup>

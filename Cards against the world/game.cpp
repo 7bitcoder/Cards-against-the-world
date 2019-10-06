@@ -17,7 +17,10 @@ ConnectErrors game::connect()
 {
 	std::u32string sendStr(100, '\0');
 	sendStr.insert(0, code);
-	sendStr.insert(21, U"y");
+	if (newLobby)
+		sendStr.insert(21, U"y");
+	else
+		sendStr.insert(21, U"n");
 	std::u32string tmp;
 	for (int i = 0; i < nickname.getSize(); i++) {
 		tmp.push_back(nickname[i]);
@@ -34,17 +37,21 @@ ConnectErrors game::connect()
 	{
 		return ConnectErrors::unableToRechServer;
 	}
-	if (!Send(sendStr, entranceSocket, false))
+	if (!Send(sendStr, entranceSocket))
 	{
 		return ConnectErrors::unableToSendData;
 	}
-	std::size_t received;
 	// TCP socket:
-	if (entranceSocket.receive(buff, LEN, received) != sf::Socket::Done)
+	char coding = 1;
+	char playerID;
+	std::u32string rec;
+	if (!receive(entranceSocket, rec, coding, playerID))
 	{
 		return ConnectErrors::unableToGetData;
 	}
-	int Lobbyport = atoi(buff);
+	if (coding != 0)
+		int j = 2; //TODO return b³¹d polaczenia z serverem 
+	int Lobbyport = atoi(buff + 4);
 	std::cout << Lobbyport << std::endl;
 	status = lobbySocket.connect(address, Lobbyport);
 	if (status != sf::Socket::Done)
@@ -52,18 +59,20 @@ ConnectErrors game::connect()
 		return ConnectErrors::unableToRechServer;
 	}
 	if (newLobby) {
-		if (lobbySocket.receive(buff, LEN, received) != sf::Socket::Done)
+		if (!receive(lobbySocket, rec, coding, playerID))
 		{
 			return ConnectErrors::unableToGetData;
 		}
 	}
 	else {
-		if (entranceSocket.receive(buff, LEN, received) != sf::Socket::Done)
+		if (!receive(entranceSocket, rec, coding, playerID))
 		{
 			return ConnectErrors::unableToGetData;
 		}
 	}
-	int chatPort = atoi(buff);
+	if (coding != 0)
+		int j = 2; //TODO return b³¹d polaczenia z serverem 
+	int chatPort = atoi(buff + 4);
 	entranceSocket.disconnect();
 	status = chatSocket.connect(address, chatPort);
 	if (status != sf::Socket::Done)
@@ -77,40 +86,37 @@ ConnectErrors game::connect()
 	std::cout << "done\n";
 }
 
-bool game::Send(std::u32string s, sf::TcpSocket& socket, bool addSize)
+bool game::Send(std::u32string s, sf::TcpSocket& socket)
 {
-	int offset = 0;
-	if (addSize) {
-		int len = s.size();
-		addMessageLen(buff, len);
-
-		offset = 2;
-	}
-	socketUtils::code(s, buff + offset);
-	if (socket.send(buff, s.size() * 4 + ++offset) != sf::Socket::Done)
+	int len = s.size() * 4;
+	addMessagePrefix(buff, len, 1, playerId);
+	socketUtils::code(s, buff + 4);
+	if (socket.send(buff, len + 5) != sf::Socket::Done)
 	{
 		return false;
 	}
 	return true;
 }
-std::u32string game::Receive(sf::TcpSocket& socket)
+bool game::receive(sf::TcpSocket& socket, std::u32string& data, char& coding, char& playerId)
 {
 	std::size_t received;
-	if (socket.receive(buff, 2, received) != sf::Socket::Done)
+	if (socket.receive(buff, 4, received) != sf::Socket::Done)
 	{
-		return std::u32string();
+		return false;
 	}
-	int length = getMessageLen(buff) * 4;
+	int length = getMessagePrefix(buff, coding, playerId);
 	int count = 0;
 	while (count < length) {
-		if (socket.receive(buff + count, length, received) != sf::Socket::Done)
+		if (socket.receive(buff + 4 + count, length, received) != sf::Socket::Done)
 		{
-			return std::u32string();
+			return false;
 		}
 		count += received;
 		length -= received;
 	}
-	return decode(buff, length);
+	if (coding == 1)
+		data = decode(buff + 4, length);
+	return true;
 }
 game::~game()
 {
@@ -124,9 +130,7 @@ void game::test()
 	sf::Font font2;
 	sf::SoundBuffer clickBuff;
 	sf::SoundBuffer switchBuff;
-	sf::Texture base;
 	//sf::Sprite background;
-	sf::Texture mar;
 	sf::Texture block;
 	sf::Texture blockPressed;
 	sf::Texture offButton;
@@ -164,9 +168,6 @@ void game::test()
 	if (!whiteBox.loadFromFile("PNG/grey_panel.png"))
 		throw std::exception("png file missing");
 
-	if (!mar.loadFromFile("PNG/grey_sliderRight.png"))
-		throw std::exception("png file missing");
-
 	background.setTexture(backgroundTexture);
 	int linex = 1920 / 2;
 	int liney = 1080 / 2;
@@ -178,7 +179,7 @@ void game::test()
 	goBack.setSoundVolume(setting.SoundVolume);
 	goBack.setColor(sf::Color::White);
 
-	chat Chat(window, clickBuff, 150, 20, font);
+	chat Chat(window, clickBuff, 150, 12, font);
 	Chat.setValues(sf::Vector2f(20, 450), 20, 600);
 	bool allertFlag = false;
 	sf::Clock timer;
@@ -208,9 +209,9 @@ void game::test()
 			else if (goBack.buttonFunction())
 				return;
 			else;
-			std::size_t received;
-			std::u32string str = Receive(chatSocket);
-			/*if (str != std::u32string())
+			/*std::size_t received;
+			std::u32string str = receive(chatSocket);
+			if (str != std::u32string())
 			{
 				sf::String out;
 				for (auto& x : str)

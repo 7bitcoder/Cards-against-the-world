@@ -77,6 +77,13 @@ bool inputText::addChar(sf::Event::KeyEvent h) {
 	}
 	return false;
 }
+void inputText::checkBounds()
+{
+	/*if (coursor.getPosition().x > bounds.x)
+		shiftLeft();
+	else if(cour)*/
+}
+
 int inputText::checkSpecialCharacters(wchar_t t) {
 
 	if (!t) // zero
@@ -257,6 +264,7 @@ void inputText::findMark()
 inputText::~inputText()
 {
 }
+
 
 wchar_t inputText::translate(sf::Event::KeyEvent key)
 {

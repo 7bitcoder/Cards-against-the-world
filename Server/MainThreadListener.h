@@ -1,7 +1,8 @@
 #pragma once
 #include "lobbyThread.h"
+#include "serverUtils.h"
 #define DEFAULT_BUFLEN 4024
-class MainThreadListener
+class MainThreadListener: public serverUtils
 {
 public:
 	SOCKET oldSocket;
