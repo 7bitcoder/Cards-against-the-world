@@ -17,6 +17,8 @@ bool serverUtils::sendLen(SOCKET socket, const char* data, int length)
 	while (count < length) {
 		int n = send(socket, data + count, length, 0);
 		if (n == SOCKET_ERROR) {
+			printf("send failed with error: %d\n", WSAGetLastError());
+			closesocket(socket);
 			return false;
 		}
 		count += n;
@@ -24,9 +26,9 @@ bool serverUtils::sendLen(SOCKET socket, const char* data, int length)
 	}
 	return true;
 }
-int serverUtils::receiveTime(SOCKET socket, char* data, int length, int time)
+int serverUtils::receiveTime(SOCKET socket, char* data, int length, int sec, int uSec)
 {
-	TIMEVAL tv = { time, 0 };
+	TIMEVAL tv = { sec, uSec };
 
 	// Set up the file descriptor set.
 	int count = 0;
@@ -41,13 +43,20 @@ int serverUtils::receiveTime(SOCKET socket, char* data, int length, int time)
 			return false;
 		}
 		else if (iResult == 0) {
-			printf("response time for code is is up\n");
+			printf("response time for data is is up\n");
 			closesocket(socket);
 			return false;
 		}
 
 		int n = recv(socket, data + count, length, 0);
 		if (n == SOCKET_ERROR) {
+			printf("receiving data failed with code :%d\n", WSAGetLastError());
+			closesocket(socket);
+			return false;
+		} 
+		else if( !n ){
+			printf("client closed connection" );
+			closesocket(socket);
 			return false;
 		}
 		count += n;
@@ -55,12 +64,12 @@ int serverUtils::receiveTime(SOCKET socket, char* data, int length, int time)
 	}
 	return true;
 }
-int serverUtils::receiveLen(SOCKET socket, char* data, char& coding, char& playerId)
+int serverUtils::receiveLen(SOCKET socket, char* data, char& coding, char& playerId, int sec, int uSec)
 {
-	if (!receiveTime(socket, data, 4, 1))
+	if (!receiveTime(socket, data, 4, sec, uSec))
 		return -1;
 	int len = getMessagePrefix(data, coding, playerId);
-	if (!receiveTime(socket, data + 4, len, 1))
+	if (!receiveTime(socket, data + 4, len, sec, uSec))
 		return -1;
 	return len + 4;
 }
