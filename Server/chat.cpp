@@ -77,7 +77,7 @@ bool chat::limitedResponseWait(int time, SOCKET socket)
 	ZeroMemory(&buff, sizeof(buff));
 	char playerId;
 	char coding;
-	if (!receiveLen(socket, buff, coding, playerId))
+	if (!receiveLen(socket, buff, coding, playerId, 2, 0))//wait 2 sec
 		return false;
 	if (coding == 2)
 		return false; //TODO
@@ -126,6 +126,7 @@ void chat::run()
 		int socketCount = select(0, &copy, nullptr, nullptr, nullptr);
 		if (socketCount == SOCKET_ERROR) {
 			printf("select failed with error: %d\n", WSAGetLastError());
+			continue;
 		}
 		printf("after xd\n");
 		for (int i = 0; i < socketCount; i++) {
@@ -133,7 +134,7 @@ void chat::run()
 			SOCKET sock = copy.fd_array[i];
 			if (sock == listenSocket) {
 				if (!acceptNewClient())
-					return;
+					continue;
 			}
 			else {//get message
 				ZeroMemory(rcvbuff, strlen(rcvbuff));
