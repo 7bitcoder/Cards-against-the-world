@@ -15,22 +15,24 @@ game::game(sf::RenderWindow& win, sf::String lobbyId_, sf::String nick, bool new
 
 ConnectErrors game::connect()
 {
-	std::u32string sendStr(100, '\0');
-	sendStr.insert(0, code);
+	std::u32string sendStr;
+	sendStr += code + U'\0';
 	if (newLobby)
-		sendStr.insert(21, U"y");
+		sendStr += U'y';
 	else
-		sendStr.insert(21, U"n");
+		sendStr += U'n';
 	std::u32string tmp;
 	for (int i = 0; i < nickname.getSize(); i++) {
 		tmp.push_back(nickname[i]);
 	}
-	sendStr.insert(23, tmp);
+	sendStr += U'\0';
+	sendStr += tmp;
+	while (sendStr.size() < 54) sendStr.push_back(U'\0');
 	tmp.clear();
 	for (int i = 0; i < lobbyId.getSize(); i++) {
 		tmp.push_back(lobbyId[i]);
 	}
-	sendStr.insert(30, tmp);
+	sendStr += tmp + U'\0';
 	int j = 0;
 	sf::Socket::Status status = entranceSocket.connect(address, portToConnect);
 	if (status != sf::Socket::Done)
@@ -83,10 +85,6 @@ ConnectErrors game::connect()
 	{
 		return ConnectErrors::unableToSendData;
 	}
-	if (!receive(chatSocket, rec, coding, playerID))
-	{
-		return ConnectErrors::unableToGetData;
-	}
 	std::cout << "done\n";
 }
 
@@ -95,7 +93,7 @@ bool game::Send(std::u32string s, sf::TcpSocket& socket)
 	int len = s.size() * 4;
 	addMessagePrefix(buff, len, 1, playerId);
 	socketUtils::code(s, buff + 4);
-	if (socket.send(buff, len + 5) != sf::Socket::Done)
+	if (socket.send(buff, len + 4) != sf::Socket::Done)
 	{
 		return false;
 	}
@@ -109,6 +107,7 @@ bool game::receive(sf::TcpSocket& socket, std::u32string& data, char& coding, ch
 		return false;
 	}
 	int length = getMessagePrefix(buff, coding, playerId);
+	int len = length/4;
 	int count = 0;
 	while (count < length) {
 		if (socket.receive(buff + 4 + count, length, received) != sf::Socket::Done)
@@ -119,7 +118,7 @@ bool game::receive(sf::TcpSocket& socket, std::u32string& data, char& coding, ch
 		length -= received;
 	}
 	if (coding == 1)
-		data = decode(buff + 4, length);
+		data = decode(buff + 4, len);
 	return true;
 }
 game::~game()
@@ -187,13 +186,13 @@ void game::test()
 	Chat.setValues(sf::Vector2f(20, 450), 20, 600);
 	bool allertFlag = false;
 	sf::Clock timer;
+	chatSocket.setBlocking(false);
 	while (window.isOpen())
 	{
 		// check all the window's events that were triggered since the last iteration of the loop
 		sf::Event event;
 		event.type = sf::Event::GainedFocus;
 		do {
-			chatSocket.setBlocking(false);
 			goBack.checkState();
 			Chat.checkSideBarState();
 			if (Chat.function() && event.type == sf::Event::KeyPressed) {

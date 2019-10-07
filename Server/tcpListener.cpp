@@ -10,8 +10,8 @@ bool tcpListener::checkData()
 	printf("all : %s\n", buff);
 	code = decode(buff + 4, 20);
 	newLobby = decode(buff + 88, 1);
-	nickname = decode(buff + 96, 30);
-	lobbyId = decode(buff + 124, 30);
+	nickname = decode(buff + 96, 0);
+	lobbyId = decode(buff + 220, 0);
 	if (passCode != code)
 	{
 		printf("wrong code: \n");

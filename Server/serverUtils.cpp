@@ -73,3 +73,9 @@ int serverUtils::receiveLen(SOCKET socket, char* data, char& coding, char& playe
 		return -1;
 	return len + 4;
 }
+void serverUtils::waitToReadyForWrite(SOCKET socket) { // check if socket is ready to write
+	fd_set tmp;
+	FD_ZERO(&tmp);
+	FD_SET(socket, &tmp);
+	int iResult = select(0, nullptr, &tmp, nullptr, nullptr);
+}

@@ -1,5 +1,5 @@
 #include "chat.h"
-
+#include <vector>
 
 bool chat::disconnect(SOCKET socket)
 {
@@ -24,6 +24,7 @@ bool chat::broadCast(SOCKET socket, std::u32string msg)
 {
 	addMessagePrefix(buff, msg.size() * 4, 1, 0);
 	code(msg, buff + 4);
+	std::vector<SOCKET> toDelete;
 	for (int i = 0; i < fds.fd_count; i++)
 	{
 		SOCKET outSock = fds.fd_array[i];
@@ -31,21 +32,33 @@ bool chat::broadCast(SOCKET socket, std::u32string msg)
 		{
 			if (!sendLen(outSock, buff, msg.size() * 4 + 4)) {
 				//TODO co zrobic ???
+				toDelete.push_back(outSock);
 			}
 		}
+	}
+	for (auto& x : toDelete)
+	{
+		FD_CLR(x, &fds);
+		clients.erase(x);
 	}
 	return true;
 }
 bool chat::broadCast(SOCKET socket, char* buff, int len)
 {
+	std::vector<SOCKET> toDelete;
 	for (int i = 0; i < fds.fd_count; i++)
 	{
 		SOCKET outSock = fds.fd_array[i];
 		if (outSock != socket && outSock != listenSocket)
 		{
 			if (!sendLen(outSock, buff, len))
-				continue;
+				toDelete.push_back(outSock);
 		}
+	}
+	for (auto& x : toDelete)
+	{
+		FD_CLR(x, &fds);
+		clients.erase(x);
 	}
 	return true;
 }
@@ -59,8 +72,8 @@ bool chat::computeNewClientData(SOCKET client)
 	printf("all : %s\n", buff);
 	code = decode(buff + 4, 20);
 	newLobby = decode(buff + 88, 1);
-	nickname = decode(buff + 96, 30);
-	lobbyId = decode(buff + 124, 30);
+	nickname = decode(buff + 96, 0);
+	lobbyId = decode(buff + 220, 0);
 	if (passCode != code)
 	{
 		printf("wrong code: \n");
@@ -77,10 +90,15 @@ bool chat::limitedResponseWait(int time, SOCKET socket)
 	ZeroMemory(&buff, sizeof(buff));
 	char playerId;
 	char coding;
-	if (!receiveLen(socket, buff, coding, playerId, 2, 0))//wait 2 sec
+	int iResult = receiveLen(socket, buff, coding, playerId, 2, 0);//wait 2 sec
+	if (iResult <= 0)
+	{
+		printf("receive failed with error: %d\n", WSAGetLastError());
 		return false;
+	}
 	if (coding == 2)
 		return false; //TODO
+	return true;
 }
 chat::chat(SOCKET socket_, std::u32string lobbyId_, std::string port_)
 {

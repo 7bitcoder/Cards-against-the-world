@@ -19,19 +19,18 @@ private:
 	std::u32string lobbyId;
 public:
 	bool checkData();
-	bool sendRaw(SOCKET socket, const char* data, int length);
 	tcpListener(int port, std::string ipv4 = "127.0.0.1");
 	~tcpListener();
 	bool init();
 	bool run();
-	void send(const char* dat, int len, char error);
+	bool send(const char* dat, int len, char error);
 	void closeConnection() { closesocket(clientSocket); }
 	std::u32string getLobby() { return lobbyId; }
 	bool isNewLobby() { return newLobby[0] == U'y'; }
 	std::u32string getNickname() { return nickname; }
 	SOCKET getNewClientSocket() { return clientSocket; }
 	void wait() { // check if socket is ready to write
-		wait(clientSocket);
+		waitToReadyForWrite(clientSocket);
 	}
 };
 

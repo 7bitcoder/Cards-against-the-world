@@ -52,9 +52,3 @@ int socketUtils::code(const std::u32string& string, char* pos) {
 	clear(pos + i * 4);
 	return (++i) * 4;
 }
-void socketUtils::waitToReadyForWrite(SOCKET socket) { // check if socket is ready to write
-		fd_set tmp;
-		FD_ZERO(&tmp);
-		FD_SET(clientSocket, &tmp);
-		int iResult = select(0, nullptr, &tmp, nullptr, nullptr);
-	}
