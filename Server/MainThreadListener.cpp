@@ -36,8 +36,6 @@ int MainThreadListener::createListenSocket()
 	strcpy_s(recvbuf + 4, LEN, msg.c_str());
 	if (!sendLen(oldSocket, recvbuf, msg.size() + 4)) {
 		printf("send failed with error:\n");
-		closesocket(oldSocket);
-		WSACleanup();
 		return 0;
 	}
 	printf("after sending listen port %d\n", listenPort);
@@ -45,7 +43,7 @@ int MainThreadListener::createListenSocket()
 	if (iResult == SOCKET_ERROR) {
 		printf("listen failed with error: %d\n", WSAGetLastError());
 		closesocket(ListenSocket);
-		return false;
+		return 0;
 	}
 	return listenPort;
 }
