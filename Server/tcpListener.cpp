@@ -36,51 +36,35 @@ bool tcpListener::run() {
 	clientSocket = accept(sock, NULL, NULL);
 	if (clientSocket == INVALID_SOCKET) {
 		printf("accept failed with error: %d\n", WSAGetLastError());
-		closesocket(clientSocket);
-		return false;
-	}
-	TIMEVAL tv = { TIME_WAIT ,0 };
-
-	// Set up the file descriptor set.
-	fd_set fds;
-	FD_ZERO(&fds);
-	FD_SET(clientSocket, &fds);
-
-	// Set up the struct timeval for the timeout.
-
-	// Wait until timeout or data received.
-	iResult = select(0, &fds, NULL, NULL, &tv);
-	if (iResult == SOCKET_ERROR) {
-		printf("select failed with error: %d\n", WSAGetLastError());
-		closesocket(clientSocket);
-		return false;
-	}
-	else if (iResult == 0) {
-		printf("response time for code is is up\n");
-		closesocket(clientSocket);
+		closeConnection();
 		return false;
 	}
 	printf("start\n");
 	ZeroMemory(&buff, sizeof(buff));
 	char coding, playerId;
-	iResult = receiveLen(clientSocket, buff, coding, playerId);
+	iResult = receiveLen(clientSocket, buff, coding, playerId, 1, 0);//1sec 0 uSec
 	if (iResult <= 0)
 	{
 		printf("receive failed with error: %d\n", WSAGetLastError());
-		closesocket(clientSocket);
 		return false;
 	}
 	return true;
 }
-void tcpListener::send(const char* dat, int len, char error) {
+bool tcpListener::send(const char* dat, int len, char error) {
 	if (error) {
 		serverUtils::addMessagePrefix(buff, 0 , error, dat[0]);
-		serverUtils::sendLen(clientSocket, buff, 4);
-		return;
+		if(serverUtils::sendLen(clientSocket, buff, 4)){
+			wait();
+			closeConnection();
+		}
+		return false;
 	}
 	serverUtils::addMessagePrefix(buff, len , error, 0);
 	strcpy_s(buff + 4, LEN - 4, dat);
-	serverUtils::sendLen(clientSocket, buff, len + 4);
+	if(!serverUtils::sendLen(clientSocket, buff, len + 4)){
+		return false; 
+	}
+	return true;
 }
 bool tcpListener::init()
 {
