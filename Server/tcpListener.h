@@ -31,10 +31,7 @@ public:
 	std::u32string getNickname() { return nickname; }
 	SOCKET getNewClientSocket() { return clientSocket; }
 	void wait() { // check if socket is ready to write
-		fd_set tmp;
-		FD_ZERO(&tmp);
-		FD_SET(clientSocket, &tmp);
-		int iResult = select(0, nullptr, &tmp, nullptr, nullptr);
+		wait(clientSocket);
 	}
 };
 
