@@ -32,12 +32,6 @@ public:
 	bool broadCast(SOCKET socket, std::u32string msg);
 	bool broadCast(SOCKET socket, char* buff, int len);
 	bool disconnect(SOCKET socket);
-	void wait(SOCKET socket) { // check if socket is ready to write
-		fd_set tmp;
-		FD_ZERO(&tmp);
-		FD_SET(socket, &tmp);
-		int iResult = select(0, nullptr, &tmp, nullptr, nullptr);
-	}
 };
 
 
