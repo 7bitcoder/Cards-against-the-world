@@ -41,7 +41,7 @@ std::u32string socketUtils::decode(char* pos, int limit, int reserve) {
 int socketUtils::code(const std::u32string& string, char* pos) {
 	mbstate_t p{};
 	int size = string.size();
-	if (size + 2 > LEN || !size)
+	if (size + 4 > LEN || !size)
 		return 0;//error
 	size_t length;
 	int i;
@@ -52,3 +52,9 @@ int socketUtils::code(const std::u32string& string, char* pos) {
 	clear(pos + i * 4);
 	return (++i) * 4;
 }
+void socketUtils::waitToReadyForWrite(SOCKET socket) { // check if socket is ready to write
+		fd_set tmp;
+		FD_ZERO(&tmp);
+		FD_SET(clientSocket, &tmp);
+		int iResult = select(0, nullptr, &tmp, nullptr, nullptr);
+	}
