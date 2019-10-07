@@ -9,7 +9,7 @@ class game :public socketUtils
 private:
 	std::map<char, sf::String> players;
 	unsigned short portToConnect = 3000;
-	sf::IpAddress address = "127.0.0.1";
+	sf::IpAddress address = "127.0.0.1";//"3.229.14.134";
 	std::u32string code = U"a7dzRwQjnw5kW6uEnhx7";
 	sf::RenderWindow& window;
 	sf::String lobbyId;
