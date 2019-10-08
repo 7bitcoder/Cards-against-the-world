@@ -13,7 +13,7 @@ game::game(sf::RenderWindow& win, sf::String lobbyId_, sf::String nick, bool new
 	nickname = nick;
 }
 
-ConnectErrors game::connect()
+message::code game::connect()
 {
 	std::u32string sendStr;
 	sendStr += code + U'\0';
@@ -37,11 +37,11 @@ ConnectErrors game::connect()
 	sf::Socket::Status status = entranceSocket.connect(address, portToConnect);
 	if (status != sf::Socket::Done)
 	{
-		return ConnectErrors::unableToRechServer;
+		return message::unableToRechServer;
 	}
 	if (!Send(sendStr, entranceSocket))
 	{
-		return ConnectErrors::unableToSendData;
+		return message::unableToSendData;
 	}
 	// TCP socket:
 	char coding = 1;
@@ -49,43 +49,54 @@ ConnectErrors game::connect()
 	std::u32string rec;
 	if (!receive(entranceSocket, rec, coding, playerID))
 	{
-		return ConnectErrors::unableToGetData;
+		return message::unableToGetData;
 	}
-	if (coding != 0)
-		int j = 2; //TODO return b³¹d polaczenia z serverem 
+	if (coding != 0) {
+	//TODO return bÂ³Â¹d polaczenia z serverem 
+		entranceSocket.closeConnection(); // dodaj wszÄ™dzie
+		if(coding == 2)//error
+			return playerID; //error code;
+		else
+			return message::unKnownError;		
+	}
 	int Lobbyport = atoi(buff + 4);
 	std::cout << Lobbyport << std::endl;
 	status = lobbySocket.connect(address, Lobbyport);
 	if (status != sf::Socket::Done)
 	{
-		return ConnectErrors::unableToRechServer;
+		return message::unableToRechServer;
 	}
 	if (newLobby) {
 		if (!receive(lobbySocket, rec, coding, playerID))
 		{
-			return ConnectErrors::unableToGetData;
+			return message::unableToGetData;
 		}
 	}
 	else {
 		if (!receive(entranceSocket, rec, coding, playerID))
 		{
-			return ConnectErrors::unableToGetData;
+			return message::unableToGetData;
 		}
 	}
-	if (coding != 0)
-		int j = 2; //TODO return b³¹d polaczenia z serverem 
+	if (coding != 0){
+		entranceSocket.closeConnection(); // dodaj wszÄ™dzie
+		if(coding == 2)//error
+			return playerID; //error code;
+		else
+			return message::unKnownError;
+	}
 	int chatPort = atoi(buff + 4);
 	entranceSocket.disconnect();
 	status = chatSocket.connect(address, chatPort);
 	if (status != sf::Socket::Done)
 	{
-		return ConnectErrors::unableToRechServer;
+		return message::unableToRechServer;
 	}
 	if (!Send(sendStr, chatSocket))
 	{
-		return ConnectErrors::unableToSendData;
+		return message::unableToSendData;
 	}
-	std::cout << "done\n";
+	return message::connected;
 }
 
 bool game::Send(std::u32string s, sf::TcpSocket& socket)
