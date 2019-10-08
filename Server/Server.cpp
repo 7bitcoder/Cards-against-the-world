@@ -12,12 +12,12 @@ extern std::mutex mut;
 extern std::map<std::u32string, player> mapaLobby;
 
 namespace error {
-	const char lobbyIsAlredyChosen[] = "a";
-	const char noPortsAreAvailable[] = "b";
-	const char lobbyNameIsIncorrect[] = "c";
-	const char couldNotFindLobby[] = "d";
-	const char ServerIsFull[] = "e";
-	const char lobbyNameIsLocked[] = "f";
+	const char lobbyIsAlredyChosen = 1;
+	const char noPortsAreAvailable = 2
+	const char lobbyNameIsIncorrect = 3;
+	const char couldNotFindLobby = 4;
+	const char ServerIsFull = 5;
+	const char lobbyNameIsLocked = 6;
 }
 
 int main(void) {
@@ -29,8 +29,6 @@ int main(void) {
 		printf("WSAStartup failed with error: %d\n", iResult);
 		return false;
 	}
-	char error = 2;
-	char normal = 0;
 	tcpListener mainListener(3000);
 	if (!mainListener.init())
 		return 0;
@@ -45,13 +43,13 @@ int main(void) {
 			if (mapaLobby.find(lobbyStr) != mapaLobby.end() && mapaLobby[lobbyStr].chatPort && mapaLobby[lobbyStr].lobbyPort) {
 				mut.unlock();
 				printf("Lobby is alredy chosen\n");
-				mainListener.send(error::lobbyIsAlredyChosen, strlen(error::lobbyIsAlredyChosen), error);
+				mainListener.send(error::lobbyIsAlredyChosen);
 				continue;
 			}
 			if (lobbyStr.empty()) {
 				mut.unlock();
 				printf("Lobby name is incorrect\n");
-				mainListener.send(error::lobbyNameIsIncorrect, strlen(error::lobbyNameIsIncorrect), error);
+				mainListener.send(error::lobbyNameIsIncorrect);
 				continue;
 			}
 			if (mapaLobby.size() < maxLobby) {
@@ -62,38 +60,38 @@ int main(void) {
 			}
 			mut.unlock();
 			printf("Server is full\n");
-			mainListener.send(error::ServerIsFull, strlen(error::ServerIsFull), error);
+			mainListener.send(error::ServerIsFull);
 
 		}
 		else {
 			std::u32string lobby = mainListener.getLobby();
 			if (lobby.empty()) {
 				printf("Lobby name is incorrect\n");
-				mainListener.send(error::lobbyNameIsIncorrect, strlen(error::lobbyNameIsIncorrect), error);
+				mainListener.send(error::lobbyNameIsIncorrect);
 				continue;
 			}
 			mut.lock();
 			if (mapaLobby.find(lobby) == mapaLobby.end() || !mapaLobby[lobby].chatPort || !mapaLobby[lobby].lobbyPort) {
 				mut.unlock();
 				printf("Could not find lobby\n");
-				mainListener.send(error::couldNotFindLobby, strlen(error::couldNotFindLobby), error);
+				mainListener.send(error::couldNotFindLobby);
 				continue;
 			}
 			if (mapaLobby[lobby].lock == true) {
 				mut.unlock();
 				printf("Lobby is locked\n");
-				mainListener.send(error::lobbyNameIsLocked, strlen(error::lobbyNameIsLocked), error);
+				mainListener.send(error::lobbyNameIsLocked);
 				continue;
 			}
 			int newPort = mapaLobby[mainListener.getLobby()].lobbyPort;
 			int chatPort = mapaLobby[mainListener.getLobby()].chatPort;
 			mut.unlock();
 			std::string portMsg = std::to_string(newPort);
-			if(!mainListener.send(portMsg.c_str(), portMsg.size(), normal))
+			if(!mainListener.send(portMsg.c_str(), portMsg.size()))
 				continue;
 			mainListener.wait();
 			portMsg = std::to_string(chatPort);
-			if(!mainListener.send(portMsg.c_str(), portMsg.size(), normal))
+			if(!mainListener.send(portMsg.c_str(), portMsg.size()))
 				continue;
 			mainListener.wait();
 			mainListener.closeConnection();
