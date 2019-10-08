@@ -51,18 +51,18 @@ bool tcpListener::run() {
 	return true;
 }
 bool tcpListener::send(const char* dat, int len, char error) {
-	if (error) {
-		serverUtils::addMessagePrefix(buff, 0 , error, dat[0]);
-		if(serverUtils::sendLen(clientSocket, buff, 4)){
-			wait();
-			closeConnection();
-		}
-		return false;
-	}
-	serverUtils::addMessagePrefix(buff, len , error, 0);
+	serverUtils::addMessagePrefix(buff, len , 0, 0);//code normal raw data czyli porty
 	strcpy_s(buff + 4, LEN - 4, dat);
 	if(!serverUtils::sendLen(clientSocket, buff, len + 4)){
 		return false; 
+	}
+	return true;
+}
+bool send(const char error) {
+	serverUtils::addMessagePrefix(buff, 0 , 2, dat[0]);//2 error
+	if(serverUtils::sendLen(clientSocket, buff, 4)){
+		wait();
+		closeConnection();
 	}
 	return true;
 }
