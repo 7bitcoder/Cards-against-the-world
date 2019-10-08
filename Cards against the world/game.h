@@ -5,7 +5,7 @@
 #define LEN 4000
 
 
-namespace error {
+namespace message {
 	const char unKnownError = 0;
 	const char lobbyIsAlredyChosen = 1;
 	const char noPortsAreAvailable = 2
