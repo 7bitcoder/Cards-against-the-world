@@ -220,12 +220,17 @@ st Menu::ConnectToLobby()
 				}
 				else if (connect.buttonFunction()) {
 					game gameLobby(window, lobbyId.getText(), nickname.getText(), setting.newLobby);
-					if (!gameLobby.connect())
+					auto msg = gameLobby.connect();
+					if (msg == message::connected) {
+						//ok play
 						std::cout << "fail\n";
 						gameLobby.test();
-					alert.setText("load data error");//TO wyswietlanie texstu jak w czasie zrobienie klasy
-					allertFlag = true;
-					alert.show();
+					}
+					else {
+						alert.setText(message::getConnectError(msg));//TO wyswietlanie texstu jak w czasie zrobienie klasy
+						allertFlag = true;
+						alert.show();
+					}
 				}
 				else if (goBack.buttonFunction())
 					return st::choseGameMode;
