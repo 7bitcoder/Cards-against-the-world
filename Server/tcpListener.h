@@ -23,7 +23,8 @@ public:
 	~tcpListener();
 	bool init();
 	bool run();
-	bool send(const char* dat, int len, char error);
+	bool send(const char* dat, int len);
+	bool send(const char error);
 	void closeConnection() { closesocket(clientSocket); }
 	std::u32string getLobby() { return lobbyId; }
 	bool isNewLobby() { return newLobby[0] == U'y'; }
