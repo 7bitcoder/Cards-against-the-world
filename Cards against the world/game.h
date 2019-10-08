@@ -3,7 +3,37 @@
 #include <SFML/Network.hpp>
 #include "socketUtils.h"
 #define LEN 4000
-enum ConnectErrors { unableToRechServer, unableToSendData, unableToGetData, lobbyIsAlredyChosen, noPortsAreAvailable, lobbyNameIsIncorrect, couldNotFindLobby, ServerIsFull, lobbyNameIsLocked, connected };
+
+
+namespace error {
+	const char unKnownError = 0;
+	const char lobbyIsAlredyChosen = 1;
+	const char noPortsAreAvailable = 2
+	const char lobbyNameIsIncorrect = 3;
+	const char couldNotFindLobby = 4;
+	const char ServerIsFull = 5;
+	const char lobbyNameIsLocked = 6;//server end
+	const char unableToRechServer = 7;
+	const char unableToSendData = 8;
+	const char unableToGetData = 9;
+	const char connected = 10;
+	namespace {//private
+	const std::vector<std::string> connectionError { 
+		"Unknown error", 
+		"Lobby is already chosen" ,
+		"No ports are available on server",
+		"Lobby name is incorrect",
+		"Cund not find lobby",
+		"Server is full",
+		"Lobby name is locked"  };//7
+	}
+	std::string getConnectError(char error) {
+	if(error < 1 || error >= errorVector.size())
+	return errorVector[0];
+	return errorVector[error];
+	}
+}
+
 class game :public socketUtils
 {
 private:
