@@ -237,6 +237,13 @@ void game::test()
 				out += x;
 			Chat << out;
 		}
+		/*tutaj funkcja -> sprawdzenie atomica jesli set to 
+		mutex lock i odczytaj dane w kolejki mutex unlock
+
+		
+		kod wątku pobierania danyc spij na oczekiwaniu danych jesli nadejdą to compute getprefix itd
+		lock mutex wbij do kolejki i set flat bool atomic unlock mutex
+		*/
 		window.clear(sf::Color::Black);
 		window.draw(background);
 		Chat.draw();
