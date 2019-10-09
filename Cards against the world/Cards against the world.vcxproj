@@ -175,6 +175,7 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="inputText.cpp" />
     <ClCompile Include="menu.cpp" />
+    <ClCompile Include="messages.cpp" />
     <ClCompile Include="PopAlert.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="Slider.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="game.h" />
     <ClInclude Include="inputText.h" />
     <ClInclude Include="menu.h" />
+    <ClInclude Include="messages.h" />
     <ClInclude Include="PopAlert.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="Slider.h" />

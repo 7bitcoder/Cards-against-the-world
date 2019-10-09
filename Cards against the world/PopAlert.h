@@ -20,7 +20,8 @@ public:
 	void draw() {
 		if (drawable) { window.draw(box); window.draw(text); ok.draw(); }
 	}
-	void setText(std::string text_) { text.setString(text_); }
+	void setText(std::string text_) { text.setString(text_); text.setOrigin(text.getGlobalBounds().width / 2, 0); text.setPosition((box.getPosition().x) * setting.xScale, (box.getPosition().y - 50) * setting.yScale);
+	}
 	~PopAlert();
 };
 

@@ -13,7 +13,7 @@ extern std::map<std::u32string, player> mapaLobby;
 
 namespace error {
 	const char lobbyIsAlredyChosen = 1;
-	const char noPortsAreAvailable = 2
+	const char noPortsAreAvailable = 2;
 	const char lobbyNameIsIncorrect = 3;
 	const char couldNotFindLobby = 4;
 	const char ServerIsFull = 5;

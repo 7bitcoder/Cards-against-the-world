@@ -19,7 +19,7 @@ PopAlert::PopAlert(sf::RenderWindow& win_, std::string text_, sf::Texture& box_,
 	ok.setPosition((box.getPosition().x - ok.getGlobalBounds().width/2)* setting.xScale, (box.getPosition().y + 40)*setting.yScale);
 	ok.setSoundVolume(setting.SoundVolume);
 	ok.setScale(setting.xScale, setting.yScale);
-	text.setPosition((box.getPosition().x - 50)*setting.xScale, (box.getPosition().y -50)*setting.yScale);
+	text.setPosition((box.getPosition().x - 100)*setting.xScale, (box.getPosition().y -50)*setting.yScale);
 	text.setLineSpacing(1);
 	ok.setTitle("OK");
 	ok.setColor(sf::Color::White);

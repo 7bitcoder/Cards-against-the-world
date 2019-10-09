@@ -52,8 +52,7 @@ message::code game::connect()
 		return message::unableToGetData;
 	}
 	if (coding != 0) {
-	//TODO return b³¹d polaczenia z serverem 
-		entranceSocket.closeConnection(); // dodaj wszędzie
+		entranceSocket.disconnect(); // dodaj wszędzie
 		if(coding == 2)//error
 			return playerID; //error code;
 		else
@@ -79,7 +78,7 @@ message::code game::connect()
 		}
 	}
 	if (coding != 0){
-		entranceSocket.closeConnection(); // dodaj wszędzie
+		entranceSocket.disconnect(); // dodaj wszędzie
 		if(coding == 2)//error
 			return playerID; //error code;
 		else
@@ -222,21 +221,22 @@ void game::test()
 				return;
 			else;
 			std::size_t received;
-			std::u32string str;
-			char coding = 0, playerID;
-			if (!receive(chatSocket, str, coding, playerID))
-			{
-				;//todo
-			}
-			if (coding == 1)
-			{
-				sf::String out;
-				for (auto& x : str)
-					out += x;
-				Chat << out;
-			}
-		} while (window.pollEvent(event));
 
+
+		} while (window.pollEvent(event));
+		std::u32string str;
+		char coding = 0, playerID;
+		if (!receive(chatSocket, str, coding, playerID))
+		{
+			;//todo
+		}
+		if (coding == 1)
+		{
+			sf::String out;
+			for (auto& x : str)
+				out += x;
+			Chat << out;
+		}
 		window.clear(sf::Color::Black);
 		window.draw(background);
 		Chat.draw();
