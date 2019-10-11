@@ -6,11 +6,13 @@
 #define LEN 4000
 
 
-
+struct player {
+	sf::String nick;
+};
 class game :public socketUtils
 {
 private:
-	std::map<char, sf::String> players;
+	std::map<int, player> players;//0 listen rest players up to 8
 	unsigned short portToConnect = 3000;
 	sf::IpAddress address = "127.0.0.1";//"3.229.14.134";
 	std::u32string code = U"a7dzRwQjnw5kW6uEnhx7";
@@ -27,6 +29,7 @@ public:
 	game(sf::RenderWindow& win, sf::String lobbyId, sf::String nick, bool newlobby);
 	message::code connect();
 	bool Send(std::u32string s, sf::TcpSocket& socket);
+	int getCommand(sf::TcpSocket& socket, std::u32string& data, char& coding, char& playerId);
 	bool receive(sf::TcpSocket& socket, std::u32string& data, char& coding, char& playerId);
 	~game();
 	void test();

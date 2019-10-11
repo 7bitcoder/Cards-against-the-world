@@ -28,7 +28,7 @@ private:
 	bool moveDown();
 	void reset();
 	void setContainerPositions();
-	void computeText(sf::String& string);//divide text to fit in container
+	void computeText(sf::String& string, sf::Color col);//divide text to fit in container
 	void addTime(sf::String& string);
 	void computeScrollBarSize();
 	void move(int delta);
@@ -42,7 +42,7 @@ public:
 	void draw();
 	void scrolled(int delta);
 	std::u32string getText() { std::u32string tmp; for (auto x : textToSend) tmp += x; return tmp; }
-	void operator<<(sf::String string) { sf::String input = string; computeText(input); };//text compute
+	void send(sf::String string, sf::Color col) { sf::String input = string; computeText(input, col); };//text compute
 	void operator<<(std::u32string string) {};//text compute
 	~chat();
 };

@@ -73,7 +73,7 @@ bool chat::addChar(sf::Event::KeyEvent h)
 	if (textBar.addChar(h)) {
 
 		textToSend = textBar.getText();
-		this->operator<<(textToSend);
+		this->send(textToSend, sf::Color::Black);
 		textBar.reset();
 		return true;
 	}
@@ -81,7 +81,7 @@ bool chat::addChar(sf::Event::KeyEvent h)
 }
 
 
-void chat::computeText(sf::String & string)
+void chat::computeText(sf::String & string, sf::Color color)
 {
 	if (container.size() > 200)
 		container.erase(container.begin(), container.begin() + 50);
@@ -106,7 +106,7 @@ void chat::computeText(sf::String & string)
 			end = i;
 		end++;
 		container.push_back(sf::Text(string.substring(beg, end - beg), font, charSize_));
-		container.back().setFillColor(sf::Color::Black);
+		container.back().setFillColor(color);
 		beg = end;
 	}
 	reset();

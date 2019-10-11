@@ -53,10 +53,10 @@ message::code game::connect()
 	}
 	if (coding != 0) {
 		entranceSocket.disconnect(); // dodaj wszędzie
-		if(coding == 2)//error
+		if (coding == 2)//error
 			return playerID; //error code;
 		else
-			return message::unKnownError;		
+			return message::unKnownError;
 	}
 	int Lobbyport = atoi(buff + 4);
 	std::cout << Lobbyport << std::endl;
@@ -77,9 +77,9 @@ message::code game::connect()
 			return message::unableToGetData;
 		}
 	}
-	if (coding != 0){
+	if (coding != 0) {
 		entranceSocket.disconnect(); // dodaj wszędzie
-		if(coding == 2)//error
+		if (coding == 2)//error
 			return playerID; //error code;
 		else
 			return message::unKnownError;
@@ -95,10 +95,50 @@ message::code game::connect()
 	{
 		return message::unableToSendData;
 	}
+
+	//get id or start game in main lobby thread
+	if (newLobby) {
+		playerId = 1;
+		Send(U"1", lobbySocket);//synh with serv
+	}
+	else {
+		std::size_t received;
+		if (!Send(sendStr, lobbySocket))
+		{
+			return message::unableToSendData;
+		}
+		if (lobbySocket.receive(buff, 4, received) != sf::Socket::Done)
+		{
+			return message::unableToGetData;
+		}
+		int data = getMessagePrefix(buff, coding, playerId);
+		if (coding != 3 && playerID != 3) {//get id
+			lobbySocket.disconnect();
+			return message::unableToGetData;
+		}
+		playerId = data;
+		//get all info about others players 
+		if (lobbySocket.receive(buff, 4, received) != sf::Socket::Done)
+		{
+			return message::unableToGetData;
+		}
+		data = getMessagePrefix(buff, coding, playerId);
+		if (coding != 3 && playerID != 1) {//get id
+			lobbySocket.disconnect();
+			return message::unableToGetData;
+		}
+		while (data--) {
+			if (!receive(lobbySocket, rec, coding, playerID)) {
+				players[playerID].nick.clear();
+				for (auto x : rec)
+					players[playerID].nick += x;
+			}
+		}
+	}
 	return message::connected;
 }
 
-bool game::Send(std::u32string s, sf::TcpSocket& socket)
+bool game::Send(std::u32string s, sf::TcpSocket & socket)
 {
 	int len = s.size() * 4;
 	addMessagePrefix(buff, len, 1, playerId);
@@ -109,7 +149,16 @@ bool game::Send(std::u32string s, sf::TcpSocket& socket)
 	}
 	return true;
 }
-bool game::receive(sf::TcpSocket& socket, std::u32string& data, char& coding, char& playerId)
+int game::getCommand(sf::TcpSocket& socket, std::u32string& data, char& coding, char& playerId)
+{
+	std::size_t received;
+	if (socket.receive(buff, 4, received) != sf::Socket::Done)
+	{
+		return 0;
+	}
+	return getMessagePrefix(buff, coding, playerId);
+}
+bool game::receive(sf::TcpSocket & socket, std::u32string & data, char& coding, char& playerId)
 {
 	std::size_t received;
 	if (socket.receive(buff, 4, received) != sf::Socket::Done)
@@ -117,7 +166,7 @@ bool game::receive(sf::TcpSocket& socket, std::u32string& data, char& coding, ch
 		return false;
 	}
 	int length = getMessagePrefix(buff, coding, playerId);
-	int len = length/4;
+	int len = length / 4;
 	int count = 0;
 	while (count < length) {
 		if (socket.receive(buff + 4 + count, length, received) != sf::Socket::Done)
@@ -197,6 +246,10 @@ void game::test()
 	bool allertFlag = false;
 	sf::Clock timer;
 	chatSocket.setBlocking(false);
+	lobbySocket.setBlocking(false);
+
+	std::u32string str;
+	char coding = 0, playerID;
 	while (window.isOpen())
 	{
 		// check all the window's events that were triggered since the last iteration of the loop
@@ -224,23 +277,34 @@ void game::test()
 
 
 		} while (window.pollEvent(event));
-		std::u32string str;
-		char coding = 0, playerID;
-		if (!receive(chatSocket, str, coding, playerID))
+		if (receive(chatSocket, str, coding, playerID))
 		{
-			;//todo
+			if (coding == 1)
+			{
+				sf::String out;
+				for (auto& x : str)
+					out += x;
+				sf::Color col = !playerID ? sf::Color::Yellow : sf::Color::Black;
+				Chat.send(out, col);
+			}
 		}
-		if (coding == 1)
+		int com = getCommand(lobbySocket, str, coding, playerID);
+		if (!com)
 		{
-			sf::String out;
-			for (auto& x : str)
-				out += x;
-			Chat << out;
+			if (coding == 3 && playerID == 2)
+			{
+				sf::String out;
+				for (auto& x : str)
+					out += x;
+				players[com].nick = out;
+			}
 		}
-		/*tutaj funkcja -> sprawdzenie atomica jesli set to 
+
+
+		/*tutaj funkcja -> sprawdzenie atomica jesli set to
 		mutex lock i odczytaj dane w kolejki mutex unlock
 
-		
+
 		kod wątku pobierania danyc spij na oczekiwaniu danych jesli nadejdą to compute getprefix itd
 		lock mutex wbij do kolejki i set flat bool atomic unlock mutex
 		*/

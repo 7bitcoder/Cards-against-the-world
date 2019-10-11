@@ -2,6 +2,7 @@
 #include "lobbyThread.h"
 #include "MainThreadListener.h"
 #include "chat.h"
+#include "game.h"
 std::mutex mut;
 
 std::map<std::u32string, player> mapaLobby;
@@ -19,9 +20,9 @@ void ChatThread(SOCKET socket_, std::u32string lobbyId_)
 	mut.unlock();
 	chat Chat(listener.ListenSocket, lobbyId_, portStr);
 	Chat.run();
-} 
+}
 
-void lobbyThread(SOCKET socket_, std::u32string lobbyId)//, std::mutex, std::map<std::string, int>)
+void lobbyThread(SOCKET socket_, std::u32string lobbyId, std::u32string leader)//, std::mutex, std::map<std::string, int>)
 {
 
 	MainThreadListener listener(socket_, lobbyId);
@@ -34,8 +35,19 @@ void lobbyThread(SOCKET socket_, std::u32string lobbyId)//, std::mutex, std::map
 	//przeniesienie kodu z tworzenia listen socketa w chatThread
 	if (!listener.acceptLeaderConnection()) { ; }//TODO
 	std::thread chat(ChatThread, listener.ClientSocket, lobbyId);//TODO implement games states and lock lobby
-
-	while (true) { ; }
+	//oczekiwanie na potwierdzenia leadera;
+	game Game(listener.ListenSocket, listener.ClientSocket, leader, lobbyId);
+	Game.waitForLeaderAccept();
+	states state = states::waiting;
+	while (true) {
+		switch (state) {
+		case states::waiting: //waiting for players, settings and for game start
+			state = Game.waiting();
+			break;
+		case states::choseInit:
+			break;
+		}
+	}
 	return;
 }
 

@@ -15,9 +15,8 @@ C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Slider.h(32): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(25): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(32): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(179): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(180): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(208): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(213): warning C4101: "received": lokalna zmienna, do której nie istnieje odwołanie
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(89): warning C4715: "game::connect”: niewszystkie ścieżki kodu zwracają wartość
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(213): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(214): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(245): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(250): warning C4101: "received": lokalna zmienna, do której nie istnieje odwołanie
   Cards against the world.vcxproj -> C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Debug\Cards against the world.exe

@@ -54,7 +54,7 @@ int main(void) {
 			}
 			if (mapaLobby.size() < maxLobby) {
 				mut.unlock();
-				std::thread lobby(lobbyThread, mainListener.getNewClientSocket(), lobbyStr);
+				std::thread lobby(lobbyThread, mainListener.getNewClientSocket(), lobbyStr, mainListener.getNickname());
 				lobby.detach();
 				continue;
 			}

@@ -20,5 +20,5 @@ struct player
 };
 extern std::mutex mut;
 extern std::map<std::u32string, player> mapaLobby;
-void lobbyThread(SOCKET socket, std::u32string lobbyId);
+void lobbyThread(SOCKET socket, std::u32string lobbyId, std::u32string nick);
 
