@@ -111,19 +111,20 @@ message::code game::connect()
 		{
 			return message::unableToGetData;
 		}
-		int data = getMessagePrefix(buff, coding, playerId);
-		if (coding != 3 && playerID != 3) {//get id
+		getMessagePrefix(buff, coding, playerID);
+		if (coding != 4 ) {//get id
 			lobbySocket.disconnect();
 			return message::unableToGetData;
 		}
-		playerId = data;
+		playerId = playerID;
 		//get all info about others players 
 		if (lobbySocket.receive(buff, 4, received) != sf::Socket::Done)
 		{
 			return message::unableToGetData;
 		}
-		data = getMessagePrefix(buff, coding, playerId);
-		if (coding != 3 && playerID != 1) {//get id
+		getMessagePrefix(buff, coding, playerID);
+		int data = playerID;
+		if (coding != 5) {//get id
 			lobbySocket.disconnect();
 			return message::unableToGetData;
 		}
@@ -288,15 +289,17 @@ void game::test()
 				Chat.send(out, col);
 			}
 		}
-		int com = getCommand(lobbySocket, str, coding, playerID);
-		if (!com)
+		if (!getCommand(lobbySocket, str, coding, playerID))
 		{
-			if (coding == 3 && playerID == 2)
+			if (coding == 3)
 			{
 				sf::String out;
 				for (auto& x : str)
 					out += x;
-				players[com].nick = out;
+				players[playerID].nick = out;
+			}
+			if (coding == 6) {//check playerID
+				Chat.send(players[playerID].nick + " disconnected", sf::Color::Yellow);
 			}
 		}
 

@@ -2,11 +2,11 @@
 #include <vector>
 
 namespace codes {
-	char newPlayer = 2;//for others get id newplayer
-	char getId = 3;//get new player id;
-	char getLobbyInfo = 1;//get lobby nicks itp
-	char disconnect = 4;//disconnect player of this id 
-}
+	char newPlayer = 3;//for others get id newplayer
+	char getId = 4;//get new player id;
+	char getLobbyInfo = 5;//get lobby nicks itp
+	char disconnect = 6;//disconnect player of this id 
+}//TODO naprawnie deadlocka broadcast disconnect 
 game::game(SOCKET listen, SOCKET leader_, std::u32string nick, std::u32string id)
 {
 	for (int i = 0; i < 9; i++) {
@@ -22,20 +22,17 @@ game::game(SOCKET listen, SOCKET leader_, std::u32string nick, std::u32string id
 }
 bool game::broadCast(SOCKET socket, char* buff, int len)
 {
-	std::vector<int> toDelete;
-	for (int i = 1; i < 9; i++)
+	std::vector<std::map<SOCKET, slot>::iterator> toDelete;
+	for (auto it = clients.begin(); it != clients.end(); it++)
 	{
-		if (i != socket)
+		if (it->first != socket)
 		{
-			if (!sendLen(socket, buff, len))
-				toDelete.push_back(i);
+			if (!sendLen(it->first, buff, len))
+				toDelete.push_back(it);
 		}
 	}
 	for (auto& x : toDelete)
-	{
-		FD_CLR(clients[x].socket, &fds);
-		clients[x].free = true;
-	}
+		disconnect(x->first);
 	return true;
 }
 bool game::computeNewClientData(SOCKET socket, std::u32string & nick)
@@ -61,7 +58,6 @@ bool game::acceptNewClient() {//TODO dorobienie zwracania kodu b³êdów
 	int i = 0;
 	for (i = 1; i < 9; i++) {
 		if (free[i]) {
-			free[i] = false;
 			break;
 		}
 	}
@@ -96,27 +92,24 @@ bool game::acceptNewClient() {//TODO dorobienie zwracania kodu b³êdów
 			return false;
 		}
 	}
+	free[ID] = false;
 	clients[client].nick = nick;
 	clients[client].id = ID;
 	FD_SET(client, &fds);
-	coding = 3;
-	playerId = 3;
 	//send new id to player
-	addMessagePrefix(buff, ID, coding, playerId);
+	addMessagePrefix(buff, 1, 4, ID);
 	if (!sendLen(client, buff, 4)) {
 		//todo
 	}
 	//sent all info (about all players in lobby) to new client
-	coding = 3;
-	playerId = 1;
-	addMessagePrefix(buff, fds.fd_count, coding, playerId);
+	addMessagePrefix(buff, 1, 4, fds.fd_count);
 	if (!sendLen(client, buff, 4)) {
 		//todo
 	}
 	for (auto it = clients.begin(); it != clients.end(); it++) {
 		if (it->first != client) {
 			int size = nick.size() * 4;
-			addMessagePrefix(buff, size , 1, i);
+			addMessagePrefix(buff, size, 1, i);
 			code(nick, buff + 4);
 			if (!sendLen(client, buff, size + 4)) {
 				//TODO co zrobic ???
@@ -124,7 +117,7 @@ bool game::acceptNewClient() {//TODO dorobienie zwracania kodu b³êdów
 		}
 	}
 	//sent to all players info about new player
-	addMessagePrefix(buff, ID , 3, 2);
+	addMessagePrefix(buff, nick.size() * 4, 3, ID);
 	code(nick, buff + 4);
 	if (broadCast(client, buff, nick.size() * 4 + 4))
 	{
@@ -132,13 +125,14 @@ bool game::acceptNewClient() {//TODO dorobienie zwracania kodu b³êdów
 	}
 }
 void game::disconnect(SOCKET socket) {
-
-	for (auto& x : clients) {
-		if (x.socket == socket)
-			x.free = true;
+	if (clients.find(socket) != clients.end()) {
+		addMessagePrefix(buff, 1, 6, clients[socket].id);
+		broadCast(socket, buff, 4);
+		free[clients[socket].id] = true;
+		clients.erase(socket);
+		closesocket(socket);
+		FD_CLR(socket, &fds);
 	}
-	closesocket(socket);
-	FD_CLR(socket, &fds);
 }
 states game::waiting()
 {

@@ -21,13 +21,11 @@ private:
 	std::u32string lobbyId;
 public:
 	game(SOCKET listen, SOCKET leader, std::u32string nick, std::u32string lobbyId);
-	bool broadCast(int socket, char* buff, int len);
-	bool computeNewClientData(SOCKET socket);
-	bool computeNewClientData(int i);
+	bool broadCast(SOCKET socket, char* buff, int len);
 	bool computeNewClientData(SOCKET socket, std::u32string& nick);
 	bool acceptNewClient();
 	void disconnect(SOCKET sock);
-	bool waitForLeaderAccept() { char coding, id; if (receiveLen(clients[1].socket, buff, coding, id, 10, 0) == -1) return false; return true; }
+	bool waitForLeaderAccept() { char coding, id; if (receiveLen(leader, buff, coding, id, 10, 0) == -1) return false; return true; }
 	states waiting();
 	~game();
 };
