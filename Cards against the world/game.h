@@ -29,7 +29,9 @@ public:
 	game(sf::RenderWindow& win, sf::String lobbyId, sf::String nick, bool newlobby);
 	message::code connect();
 	bool Send(std::u32string s, sf::TcpSocket& socket);
-	int getCommand(sf::TcpSocket& socket, std::u32string& data, char& coding, char& playerId);
+	int getCommand(sf::TcpSocket& socket, char& coding, char& playerId);
+	std::u32string getString(sf::TcpSocket& socket, int length);
+	std::u32string getString(sf::TcpSocket& socket, char* buff, int length);
 	bool receive(sf::TcpSocket& socket, std::u32string& data, char& coding, char& playerId);
 	~game();
 	void test();

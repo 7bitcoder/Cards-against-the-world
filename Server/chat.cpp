@@ -4,10 +4,6 @@
 bool chat::disconnect(SOCKET socket)
 {
 	printf("plyer disconnected\n");
-	std::u32string msg = clients[socket].nick + U" disconnected.";
-	if (!broadCast(socket, msg)) {
-		//todo
-	} //TODO add command code 
 	closesocket(socket);
 	FD_CLR(socket, &fds);
 	clients.erase(socket);
@@ -19,29 +15,6 @@ chat::~chat() {
 		SOCKET socket = fds.fd_array[i];
 		closesocket(socket);
 	}
-}
-bool chat::broadCast(SOCKET socket, std::u32string msg)
-{
-	addMessagePrefix(buff, msg.size() * 4, 1, 0);
-	code(msg, buff + 4);
-	std::vector<SOCKET> toDelete;
-	for (int i = 0; i < fds.fd_count; i++)
-	{
-		SOCKET outSock = fds.fd_array[i];
-		if (outSock != socket && outSock != listenSocket)
-		{
-			if (!sendLen(outSock, buff, msg.size() * 4 + 4)) {
-				//TODO co zrobic ???
-				toDelete.push_back(outSock);
-			}
-		}
-	}
-	for (auto& x : toDelete)
-	{
-		FD_CLR(x, &fds);
-		clients.erase(x);
-	}
-	return true;
 }
 bool chat::broadCast(SOCKET socket, char* buff, int len)
 {
@@ -123,18 +96,6 @@ bool chat::acceptNewClient()
 	if (!computeNewClientData(client))
 		return false;
 	FD_SET(client, &fds);
-	std::u32string welcome = U"Welcome to lobby: " + lobbyId;
-	printf("new user\n");
-	addMessagePrefix(buff, welcome.size() * 4, 1, 0);
-	code(welcome, buff + 4);
-	if (!sendLen(client, buff, welcome.size() * 4 + 4)) {
-		//TODO co zrobic ???
-	}
-	welcome = clients[client].nick + U" joined lobby.";
-	if (!broadCast(client, welcome))
-	{
-		//??????
-	}
 	return true;
 }
 void chat::run()

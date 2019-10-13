@@ -112,7 +112,7 @@ message::code game::connect()
 			return message::unableToGetData;
 		}
 		getMessagePrefix(buff, coding, playerID);
-		if (coding != 4 ) {//get id
+		if (coding != 4) {//get id
 			lobbySocket.disconnect();
 			return message::unableToGetData;
 		}
@@ -123,17 +123,19 @@ message::code game::connect()
 			return message::unableToGetData;
 		}
 		getMessagePrefix(buff, coding, playerID);
-		int data = playerID;
+		int data = playerID - 1;
 		if (coding != 5) {//get id
 			lobbySocket.disconnect();
 			return message::unableToGetData;
 		}
 		while (data--) {
-			if (!receive(lobbySocket, rec, coding, playerID)) {
+			if (receive(lobbySocket, rec, coding, playerID)) {
 				players[playerID].nick.clear();
 				for (auto x : rec)
 					players[playerID].nick += x;
 			}
+			else { ; }
+			//todo
 		}
 	}
 	return message::connected;
@@ -150,7 +152,7 @@ bool game::Send(std::u32string s, sf::TcpSocket & socket)
 	}
 	return true;
 }
-int game::getCommand(sf::TcpSocket& socket, std::u32string& data, char& coding, char& playerId)
+int game::getCommand(sf::TcpSocket & socket, char& coding, char& playerId)
 {
 	std::size_t received;
 	if (socket.receive(buff, 4, received) != sf::Socket::Done)
@@ -158,6 +160,20 @@ int game::getCommand(sf::TcpSocket& socket, std::u32string& data, char& coding, 
 		return 0;
 	}
 	return getMessagePrefix(buff, coding, playerId);
+}
+std::u32string game::getString(sf::TcpSocket & socket, int length) {
+	std::size_t received;
+	int len = length / 4;
+	int count = 0;
+	while (count < length) {
+		if (socket.receive(buff + 4 + count, length, received) != sf::Socket::Done)
+		{
+			return false;
+		}
+		count += received;
+		length -= received;
+	}
+	return decode(buff + 4, len);
 }
 bool game::receive(sf::TcpSocket & socket, std::u32string & data, char& coding, char& playerId)
 {
@@ -177,7 +193,7 @@ bool game::receive(sf::TcpSocket & socket, std::u32string & data, char& coding, 
 		count += received;
 		length -= received;
 	}
-	if (coding == 1)
+	if (coding != 2)
 		data = decode(buff + 4, len);
 	return true;
 }
@@ -244,6 +260,7 @@ void game::test()
 
 	chat Chat(window, clickBuff, 150, 12, font);
 	Chat.setValues(sf::Vector2f(20, 450), 20, 600);
+	Chat.send("Welcome to lobby \'" + lobbyId + "\'", sf::Color::Yellow);
 	bool allertFlag = false;
 	sf::Clock timer;
 	chatSocket.setBlocking(false);
@@ -285,18 +302,28 @@ void game::test()
 				sf::String out;
 				for (auto& x : str)
 					out += x;
-				sf::Color col = !playerID ? sf::Color::Yellow : sf::Color::Black;
-				Chat.send(out, col);
+				if (playerID) {
+					out.insert(0, players[playerID].nick + ":");
+					Chat.send(out, sf::Color::Black);
+				}
+				else {
+					out.insert(0, "Server:");
+					Chat.send(out, sf::Color::Yellow);
+				}
+
 			}
 		}
-		if (!getCommand(lobbySocket, str, coding, playerID))
+		int len = getCommand(lobbySocket, coding, playerID);
+		if (len)
 		{
 			if (coding == 3)
 			{
 				sf::String out;
+				str = getString(lobbySocket, len);
 				for (auto& x : str)
 					out += x;
 				players[playerID].nick = out;
+				Chat.send(players[playerID].nick + " joined lobby", sf::Color::Yellow);
 			}
 			if (coding == 6) {//check playerID
 				Chat.send(players[playerID].nick + " disconnected", sf::Color::Yellow);

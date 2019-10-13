@@ -16,6 +16,7 @@ game::game(SOCKET listen, SOCKET leader_, std::u32string nick, std::u32string id
 	leader = leader_;
 	clients[leader].nick = nick;
 	clients[leader].id = 1;
+	free[1] = false;
 	listenSocket = listen;
 	FD_SET(listenSocket, &fds);
 	FD_SET(leader, &fds);
@@ -97,27 +98,27 @@ bool game::acceptNewClient() {//TODO dorobienie zwracania kodu b³êdów
 	clients[client].id = ID;
 	FD_SET(client, &fds);
 	//send new id to player
-	addMessagePrefix(buff, 1, 4, ID);
+	addMessagePrefix(buff, 1, codes::getId, ID);
 	if (!sendLen(client, buff, 4)) {
 		//todo
 	}
 	//sent all info (about all players in lobby) to new client
-	addMessagePrefix(buff, 1, 4, fds.fd_count);
+	addMessagePrefix(buff, 1,codes::getLobbyInfo, clients.size());
 	if (!sendLen(client, buff, 4)) {
 		//todo
 	}
 	for (auto it = clients.begin(); it != clients.end(); it++) {
 		if (it->first != client) {
-			int size = nick.size() * 4;
-			addMessagePrefix(buff, size, 1, i);
-			code(nick, buff + 4);
+			int size = it->second.nick.size() * 4;
+			addMessagePrefix(buff, size, 1, it->second.id);
+			code(it->second.nick, buff + 4);
 			if (!sendLen(client, buff, size + 4)) {
 				//TODO co zrobic ???
 			}
 		}
 	}
 	//sent to all players info about new player
-	addMessagePrefix(buff, nick.size() * 4, 3, ID);
+	addMessagePrefix(buff, nick.size() * 4, codes::newPlayer, ID);
 	code(nick, buff + 4);
 	if (broadCast(client, buff, nick.size() * 4 + 4))
 	{
@@ -126,12 +127,13 @@ bool game::acceptNewClient() {//TODO dorobienie zwracania kodu b³êdów
 }
 void game::disconnect(SOCKET socket) {
 	if (clients.find(socket) != clients.end()) {
-		addMessagePrefix(buff, 1, 6, clients[socket].id);
-		broadCast(socket, buff, 4);
+		int id = clients[socket].id;
 		free[clients[socket].id] = true;
 		clients.erase(socket);
 		closesocket(socket);
 		FD_CLR(socket, &fds);
+		addMessagePrefix(buff, 1, 6, id);
+		broadCast(socket, buff, 4);
 	}
 }
 states game::waiting()
@@ -153,7 +155,7 @@ states game::waiting()
 			}///TODO if leared is disconnected what happens?????
 			else {//get message
 				int i = recv(sock, buff, 4, 0);
-				if (i != 4) //TODO
+				if (i == 0) //TODO
 					disconnect(sock);
 			}
 		}
