@@ -2,7 +2,7 @@
 #include <map>
 #include "serverUtils.h"
 #define LEN 8000
-enum states{ waiting = 1, starting, questionInit, question, choseInit, chose, summing};
+enum states{ waiting = 1, starting, questionInit, question, choseInit, chose, summing, kill};
 struct slot
 {
 	std::u32string nick;

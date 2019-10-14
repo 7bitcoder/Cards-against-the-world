@@ -8,55 +8,37 @@ C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\
           ]
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\inputText.h(84): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\inputText.h(88): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Button.h(37): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Button.h(42): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Slider.h(22): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Slider.h(23): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Slider.h(32): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(25): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(32): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(255): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(256): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(289): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(294): warning C4101: "received": lokalna zmienna, do której nie istnieje odwołanie
-  menu.cpp
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Button.h(37): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Button.h(42): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\inputText.h(69): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\inputText.h(69): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\inputText.h(84): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
-          with
-          [
-              T=float
-          ]
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\inputText.h(84): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\inputText.h(88): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\PopAlert.h(23): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(51): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(52): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(58): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(59): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(65): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(66): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(105): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(106): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(112): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(113): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(119): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(120): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(164): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(165): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(168): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(169): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(174): warning C4244: "argument": konwersja z "double" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(182): warning C4244: "argument": konwersja z "double" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(188): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(189): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(195): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(196): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\SliderW.h(28): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Rounds.h(17): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(46): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(53): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(258): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(259): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(265): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(266): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(272): warning C4244: "argument": konwersja z "double" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(306): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(312): warning C4101: "received": lokalna zmienna, do której nie istnieje odwołanie
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(384): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(385): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(391): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(392): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(398): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(399): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(406): warning C4244: "argument": konwersja z "double" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(407): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(412): warning C4244: "argument": konwersja z "double" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(448): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(456): warning C4101: "received": lokalna zmienna, do której nie istnieje odwołanie
   Trwa generowanie kodu
-  9 of 1034 functions ( 0.9%) were compiled, the rest were copied from previous compilation.
-    2 functions were new in current compilation
-    10 functions had inline decision re-evaluated but remain unchanged
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\menu.cpp(261): warning C4715: "Menu::ConnectToLobby”: niewszystkie ścieżki kodu zwracają wartość
+  2 of 1160 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    2 functions had inline decision re-evaluated but remain unchanged
   Zakończono generowanie kodu
   Cards against the world.vcxproj -> C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Release\Cards against the world.exe

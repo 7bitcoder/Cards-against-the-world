@@ -174,11 +174,14 @@
     <ClCompile Include="chat.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="inputText.cpp" />
+    <ClCompile Include="lobbyPlayers.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="messages.cpp" />
     <ClCompile Include="PopAlert.cpp" />
+    <ClCompile Include="Rounds.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="Slider.cpp" />
+    <ClCompile Include="SliderW.cpp" />
     <ClCompile Include="socketUtils.cpp" />
     <ClCompile Include="Sounds.cpp" />
   </ItemGroup>
@@ -187,11 +190,14 @@
     <ClInclude Include="chat.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="inputText.h" />
+    <ClInclude Include="lobbyPlayers.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="messages.h" />
     <ClInclude Include="PopAlert.h" />
+    <ClInclude Include="Rounds.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="Slider.h" />
+    <ClInclude Include="SliderW.h" />
     <ClInclude Include="socketUtils.h" />
     <ClInclude Include="Sounds.h" />
   </ItemGroup>

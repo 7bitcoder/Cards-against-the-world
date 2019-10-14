@@ -1,12 +1,11 @@
-﻿  game.cpp
+﻿  lobbyThread.cpp
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.h(4): warning C4005: "LEN": ponowna definicja makra
   C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\socketUtils.h(15): note: zobacz poprzednią definicję „LEN”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(44): warning C4101: "state": lokalna zmienna, do której nie istnieje odwołanie
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(121): warning C4267: "argument": konwersja z "size_t" do "uint16_t", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\lobbyThread.cpp(10): warning C4005: "DEFAULT_BUFLEN": ponowna definicja makra
+  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\MainThreadListener.h(4): note: zobacz poprzednią definicję „DEFAULT_BUFLEN”
   Trwa generowanie kodu
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(127): warning C4715: "game::acceptNewClient”: niewszystkie ścieżki kodu zwracają wartość
-  5 of 855 functions ( 0.6%) were compiled, the rest were copied from previous compilation.
+  1 of 846 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    6 functions had inline decision re-evaluated but remain unchanged
+    1 functions had inline decision re-evaluated but remain unchanged
   Zakończono generowanie kodu
   Server.vcxproj -> C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\Release\Server.exe

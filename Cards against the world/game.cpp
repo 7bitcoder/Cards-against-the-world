@@ -5,12 +5,33 @@
 #include <iostream>
 #include "inputText.h"
 #include "Button.h"
-#include "chat.h"
-game::game(sf::RenderWindow& win, sf::String lobbyId_, sf::String nick, bool newlobby_) : window(win)
+#include "Rounds.h"
+#include"lobbyPlayers.h"
+
+game::game(sf::RenderWindow& win, sf::SoundBuffer& sndbuff, sf::Font font_, sf::String lobbyId_, sf::String nick, bool newlobby_) : window(win), Chat(win, sndbuff, 150, 12, font)
+, font(font_), clickBuff(sndbuff)
 {
 	newLobby = newlobby_;
 	lobbyId = lobbyId_;
 	nickname = nick;
+	state_ = state::lobby;
+	Chat.setValues(sf::Vector2f((1920 - 650), 450), 20, 600);
+	Chat.send("Welcome to lobby \'" + lobbyId + "\'", sf::Color::Yellow);
+	if (!backgroundTexture.loadFromFile("PNG/background.jpg"))
+		throw std::exception("png background file missing");
+	background.setTexture(backgroundTexture);
+	if (!block.loadFromFile("PNG/green_button00.png"))
+		throw std::exception("png file missing");
+
+	if (!blockPressed.loadFromFile("PNG/green_button01.png"))
+		throw std::exception("png file missing");
+
+	if (!offButton.loadFromFile("PNG/green_button04.png"))
+		throw std::exception("png file missing");
+
+	if (!switchBuff.loadFromFile("Sounds/switch2.ogg"))
+		throw std::exception("Sound file missing");
+
 }
 
 message::code game::connect()
@@ -141,6 +162,19 @@ message::code game::connect()
 	return message::connected;
 }
 
+void game::run()
+{
+	switch (state_) {
+	case state::lobby:
+		state_ = newLobby ? LeaderWait() : joinWait();
+		break;
+	case state::exit:
+		return;
+	default:
+		break;
+	}
+}
+
 bool game::Send(std::u32string s, sf::TcpSocket & socket)
 {
 	int len = s.size() * 4;
@@ -199,57 +233,33 @@ bool game::receive(sf::TcpSocket & socket, std::u32string & data, char& coding, 
 }
 game::~game()
 {
+	lobbySocket.disconnect();
+	chatSocket.disconnect();
+	entranceSocket.disconnect();
 }
+game::state game::joinWait() {
+	sf::Texture roundsOn, VolumePointner, VolumeSliderLine;
 
-void game::test()
-{
-	sf::Texture backgroundTexture;
-	sf::Sprite background;
-	sf::Font font;
-	sf::Font font2;
-	sf::SoundBuffer clickBuff;
-	sf::SoundBuffer switchBuff;
-	//sf::Sprite background;
-	sf::Texture block;
-	sf::Texture blockPressed;
-	sf::Texture offButton;
-	sf::Texture whiteBox;
-	sf::Texture checkOff;
-	sf::Texture textBox;
-	sf::Shader backgroundShader;
-	if (!clickBuff.loadFromFile("Sounds/click1.ogg"))
-		throw std::exception("Sound file missing");
-
-	if (!switchBuff.loadFromFile("Sounds/switch2.ogg"))
-		throw std::exception("Sound file missing");
-
-	if (!font2.loadFromFile("Fonts/NunitoSans-Regular.ttf"))
-		throw std::exception("font file missing");
-
-	if (!font.loadFromFile("Fonts/NunitoSans-Bold.ttf"))
-		throw std::exception("font file missing");
-
-	if (!block.loadFromFile("PNG/green_button00.png"))
+	if (!roundsOn.loadFromFile("PNG/rounds_on_button11.png"))
 		throw std::exception("png file missing");
 
-	if (!blockPressed.loadFromFile("PNG/green_button01.png"))
+	if (!VolumePointner.loadFromFile("PNG/grey_sliderUp.png"))
 		throw std::exception("png file missing");
 
-	if (!offButton.loadFromFile("PNG/green_button04.png"))
+	if (!VolumeSliderLine.loadFromFile("PNG/grey_sliderHorizontal.png"))
 		throw std::exception("png file missing");
-
-	if (!textBox.loadFromFile("PNG/grey_button06.png"))
-		throw std::exception("png file missing");
-
-	if (!backgroundTexture.loadFromFile("PNG/background.jpg"))
-		throw std::exception("png background file missing");
 	//back.setSmooth(true);
-	if (!whiteBox.loadFromFile("PNG/grey_panel.png"))
-		throw std::exception("png file missing");
 
 	background.setTexture(backgroundTexture);
 	int linex = 1920 / 2;
 	int liney = 1080 / 2;
+
+	Button apply(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
+	apply.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney + 100) * setting.yScale);
+	apply.setScale(1.8 * setting.xScale, 1 * setting.yScale);
+	apply.setTitle("READY");
+	apply.setSoundVolume(setting.SoundVolume);
+	apply.setColor(sf::Color::White);
 
 	Button goBack(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
 	goBack.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney + 200) * setting.yScale);
@@ -258,9 +268,13 @@ void game::test()
 	goBack.setSoundVolume(setting.SoundVolume);
 	goBack.setColor(sf::Color::White);
 
-	chat Chat(window, clickBuff, 150, 12, font);
-	Chat.setValues(sf::Vector2f(20, 450), 20, 600);
-	Chat.send("Welcome to lobby \'" + lobbyId + "\'", sf::Color::Yellow);
+	lobbyPlayers lobbyClients(window, font, 30);
+	lobbyClients.setPosition(50 * setting.xScale, (50) * setting.yScale);
+	lobbyClients.addPlayer(playerId, nickname);
+	for (auto& x : players) {
+		lobbyClients.addPlayer(x.first, x.second.nick);
+	}
+
 	bool allertFlag = false;
 	sf::Clock timer;
 	chatSocket.setBlocking(false);
@@ -275,13 +289,16 @@ void game::test()
 		event.type = sf::Event::GainedFocus;
 		do {
 			goBack.checkState();
+			apply.checkState();
 			Chat.checkSideBarState();
 			if (Chat.function() && event.type == sf::Event::KeyPressed) {
 				if (Chat.addChar(event.key)) {
-					if (!Send(Chat.getText(), chatSocket))
-					{
-						;//TODO
-					}
+					auto text = Chat.getText();
+					if (!text.empty())
+						if (!Send(text, chatSocket))
+						{
+							;//TODO
+						}
 				}
 
 			}
@@ -289,7 +306,8 @@ void game::test()
 				Chat.scrolled(event.mouseWheelScroll.delta);
 			}
 			else if (goBack.buttonFunction())
-				return;
+				return game::state::exit;
+			else if (apply.buttonFunction());
 			else;
 			std::size_t received;
 
@@ -314,34 +332,202 @@ void game::test()
 			}
 		}
 		int len = getCommand(lobbySocket, coding, playerID);
-		if (len)
+		if (len)//check commands
 		{
-			if (coding == 3)
-			{
-				sf::String out;
+			sf::String out;
+			switch (coding) {
+			case 3:
 				str = getString(lobbySocket, len);
 				for (auto& x : str)
 					out += x;
 				players[playerID].nick = out;
 				Chat.send(players[playerID].nick + " joined lobby", sf::Color::Yellow);
-			}
-			if (coding == 6) {//check playerID
+				lobbyClients.addPlayer(playerID, out);
+				break;
+			case 6: //check playerID
 				Chat.send(players[playerID].nick + " disconnected", sf::Color::Yellow);
+				lobbyClients.del(playerID);
+				break;
+			default:
+				break;
 			}
 		}
 
-
-		/*tutaj funkcja -> sprawdzenie atomica jesli set to
-		mutex lock i odczytaj dane w kolejki mutex unlock
-
-
-		kod wątku pobierania danyc spij na oczekiwaniu danych jesli nadejdą to compute getprefix itd
-		lock mutex wbij do kolejki i set flat bool atomic unlock mutex
-		*/
 		window.clear(sf::Color::Black);
 		window.draw(background);
 		Chat.draw();
 		goBack.draw();
+		apply.draw();
+		lobbyClients.draw();
 		window.display();
+	}
+}
+game::state game::LeaderWait()
+{
+	sf::Texture roundsOn, VolumePointner, VolumeSliderLine;
+
+	if (!roundsOn.loadFromFile("PNG/rounds_on_button11.png"))
+		throw std::exception("png file missing");
+
+	if (!VolumePointner.loadFromFile("PNG/grey_sliderUp.png"))
+		throw std::exception("png file missing");
+
+	if (!VolumeSliderLine.loadFromFile("PNG/grey_sliderHorizontal.png"))
+		throw std::exception("png file missing");
+	//back.setSmooth(true);
+
+	background.setTexture(backgroundTexture);
+	int linex = 1920 / 2;
+	int liney = 1080 / 2;
+
+	Button start(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
+	start.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney + 100) * setting.yScale);
+	start.setScale(1.8 * setting.xScale, 1 * setting.yScale);
+	start.setTitle("START");
+	start.setSoundVolume(setting.SoundVolume);
+	start.setColor(sf::Color::White);
+
+	Button apply(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
+	apply.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney)* setting.yScale);
+	apply.setScale(1.8 * setting.xScale, 1 * setting.yScale);
+	apply.setTitle("APPLY");
+	apply.setSoundVolume(setting.SoundVolume);
+	apply.setColor(sf::Color::White);
+
+	Button goBack(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
+	goBack.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney + 200) * setting.yScale);
+	goBack.setScale(1.8 * setting.xScale, 1 * setting.yScale);
+	goBack.setTitle("BACK");
+	goBack.setSoundVolume(setting.SoundVolume);
+	goBack.setColor(sf::Color::White);
+
+	Rounds rounds(window, roundsOn, VolumePointner, VolumeSliderLine, clickBuff);
+	rounds.setFont(font);
+	rounds.setPosition((linex - 50) * setting.xScale, 300 * setting.yScale);
+	rounds.setScale(setting.xScale, setting.yScale);
+	rounds.setSliderPosition(linex - 150, (500 - 30));
+	rounds.setSoundVolume(setting.SoundVolume);
+
+	lobbyPlayers lobbyClients(window, font, 30);
+	lobbyClients.setPosition(50 * setting.xScale, (50) * setting.yScale);
+	lobbyClients.addPlayer(playerId, nickname);
+	for (auto& x : players) {
+		lobbyClients.addPlayer(x.first, x.second.nick);
+	}
+
+	bool allertFlag = false;
+	sf::Clock timer;
+	chatSocket.setBlocking(false);
+	lobbySocket.setBlocking(false);
+
+	std::u32string str;
+	char coding = 0, playerID;
+	while (window.isOpen())
+	{
+		// check all the window's events that were triggered since the last iteration of the loop
+		sf::Event event;
+		event.type = sf::Event::GainedFocus;
+		do {
+			rounds.checkState();
+			goBack.checkState();
+			apply.checkState();
+			start.checkState();
+			Chat.checkSideBarState();
+			if (Chat.function() && event.type == sf::Event::KeyPressed) {
+				if (Chat.addChar(event.key)) {
+					auto text = Chat.getText();
+					if (!text.empty())
+						if (!Send(text, chatSocket))
+						{
+							;//TODO
+						}
+				}
+
+			}
+			else if (event.type == sf::Event::MouseWheelScrolled) {
+				Chat.scrolled(event.mouseWheelScroll.delta);
+			}
+			else if (rounds.function());
+			else if (goBack.buttonFunction())
+				return game::state::exit;
+			else if (apply.buttonFunction());
+			else if (start.buttonFunction());
+			else;
+			std::size_t received;
+
+
+		} while (window.pollEvent(event));
+		if (receive(chatSocket, str, coding, playerID))
+		{
+			if (coding == 1)
+			{
+				sf::String out;
+				for (auto& x : str)
+					out += x;
+				if (playerID) {
+					out.insert(0, players[playerID].nick + ":");
+					Chat.send(out, sf::Color::Black);
+				}
+				else {
+					out.insert(0, "Server:");
+					Chat.send(out, sf::Color::Yellow);
+				}
+
+			}
+		}
+		int len = getCommand(lobbySocket, coding, playerID);
+		if (len)//check commands
+		{
+			sf::String out;
+			switch (coding) {
+			case 3:
+				str = getString(lobbySocket, len);
+				for (auto& x : str)
+					out += x;
+				players[playerID].nick = out;
+				Chat.send(players[playerID].nick + " joined lobby", sf::Color::Yellow);
+				lobbyClients.addPlayer(playerID, out);
+				break;
+			case 6: //check playerID
+				Chat.send(players[playerID].nick + " disconnected", sf::Color::Yellow);
+				lobbyClients.del(playerID);
+				break;
+			default:
+				break;
+			}
+		}
+
+		window.clear(sf::Color::Black);
+		window.draw(background);
+		Chat.draw();
+		goBack.draw();
+		apply.draw();
+		rounds.draw();
+		start.draw();
+		lobbyClients.draw();
+		window.display();
+	}
+}
+void game::checkCommands() {
+	static char coding, playerID;
+	int len = getCommand(lobbySocket, coding, playerID);
+	if (len)
+	{
+		sf::String out;
+		std::u32string str;
+		switch (coding) {
+		case 3:
+			str = getString(lobbySocket, len);
+			for (auto& x : str)
+				out += x;
+			players[playerID].nick = out;
+			Chat.send(players[playerID].nick + " joined lobby", sf::Color::Yellow);
+			break;
+		case 6: //check playerID
+			Chat.send(players[playerID].nick + " disconnected", sf::Color::Yellow);
+			break;
+		default:
+			break;
+		}
 	}
 }

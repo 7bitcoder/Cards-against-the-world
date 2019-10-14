@@ -44,6 +44,12 @@ void lobbyThread(SOCKET socket_, std::u32string lobbyId, std::u32string leader)/
 		case states::waiting: //waiting for players, settings and for game start
 			state = Game.waiting();
 			break;
+		case states::kill:
+			try {
+				chat.~thread();
+			}
+			catch (...) { ; }
+			return;
 		case states::choseInit:
 			break;
 		}

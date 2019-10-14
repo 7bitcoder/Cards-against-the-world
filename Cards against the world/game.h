@@ -3,6 +3,7 @@
 #include <SFML/Network.hpp>
 #include "socketUtils.h"
 #include"messages.h"
+#include "chat.h"
 #define LEN 4000
 
 
@@ -12,6 +13,9 @@ struct player {
 class game :public socketUtils
 {
 private:
+	enum state{lobby, GameBegin, exit};
+	state state_;
+	chat Chat;
 	std::map<int, player> players;//0 listen rest players up to 8
 	unsigned short portToConnect = 3000;
 	sf::IpAddress address = "127.0.0.1";//"3.229.14.134";
@@ -25,15 +29,30 @@ private:
 	char buff[LEN];
 	bool newLobby;
 	char playerId;
-public:
-	game(sf::RenderWindow& win, sf::String lobbyId, sf::String nick, bool newlobby);
-	message::code connect();
+	//
+	sf::Texture backgroundTexture;
+	sf::Sprite background;
+	sf::Font font;
+	sf::SoundBuffer clickBuff;
+	sf::SoundBuffer switchBuff;
+	//sf::Sprite background;
+	sf::Texture block;
+	sf::Texture blockPressed;
+	sf::Texture offButton;
+	sf::Texture checkOff;
+
+	//
 	bool Send(std::u32string s, sf::TcpSocket& socket);
 	int getCommand(sf::TcpSocket& socket, char& coding, char& playerId);
 	std::u32string getString(sf::TcpSocket& socket, int length);
-	std::u32string getString(sf::TcpSocket& socket, char* buff, int length);
 	bool receive(sf::TcpSocket& socket, std::u32string& data, char& coding, char& playerId);
+	game::state joinWait();
+	game::state LeaderWait();
+	void checkCommands();
+public:
+	game(sf::RenderWindow& win, sf::SoundBuffer& sndbuff, sf::Font font, sf::String lobbyId, sf::String nick, bool newlobby);
+	message::code connect();
+	void run();
 	~game();
-	void test();
 };
 

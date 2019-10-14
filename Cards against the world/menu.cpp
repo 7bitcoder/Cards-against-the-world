@@ -165,7 +165,7 @@ st Menu::ConnectToLobby()
 	textBox1.setScale(1.8 * setting.xScale, 1 * setting.yScale);
 
 	textBox2.setTexture(textBox);
-	textBox2.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney) * setting.yScale);
+	textBox2.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney)* setting.yScale);
 	textBox2.setScale(1.8 * setting.xScale, 1 * setting.yScale);
 
 	inputText lobbyId(window, clickBuff, 20);
@@ -179,13 +179,13 @@ st Menu::ConnectToLobby()
 	inputText nickname(window, clickBuff, 20);
 	nickname.setBounds(sf::Vector2f(textBox2.getGlobalBounds().left, textBox2.getGlobalBounds().top), sf::Vector2f(textBox2.getGlobalBounds().width, textBox2.getGlobalBounds().height));
 	nickname.setString("Nickname");
-	nickname.setPosition((linex - 190 * 1.8 / 2) * setting.xScale + 10, (liney) * setting.yScale + 10);
+	nickname.setPosition((linex - 190 * 1.8 / 2) * setting.xScale + 10, (liney)* setting.yScale + 10);
 	nickname.setColor();
 	nickname.setFont(font);
 	nickname.setSize(25);
 
 	Button connect(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
-	connect.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney + 100)* setting.yScale);
+	connect.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney + 100) * setting.yScale);
 	connect.setScale(1.8 * setting.xScale, 1 * setting.yScale);
 	connect.setTitle("CONNECT");
 	connect.setSoundVolume(setting.SoundVolume);
@@ -197,6 +197,7 @@ st Menu::ConnectToLobby()
 	goBack.setTitle("BACK");
 	goBack.setSoundVolume(setting.SoundVolume);
 	goBack.setColor(sf::Color::White);
+
 	bool allertFlag = false;
 	sf::Clock timer;
 	while (window.isOpen())
@@ -219,12 +220,12 @@ st Menu::ConnectToLobby()
 					}
 				}
 				else if (connect.buttonFunction()) {
-					game gameLobby(window, lobbyId.getText(), nickname.getText(), setting.newLobby);
+					game gameLobby(window, clickBuff, font, lobbyId.getText(), nickname.getText(), setting.newLobby);
 					auto msg = gameLobby.connect();
 					if (msg == message::connected) {
 						//ok play
 						std::cout << "fail\n";
-						gameLobby.test();
+						gameLobby.run();
 					}
 					else {
 						alert.setText(message::getConnectError(msg));//TO wyswietlanie texstu jak w czasie zrobienie klasy

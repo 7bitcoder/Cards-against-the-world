@@ -139,6 +139,8 @@ void game::disconnect(SOCKET socket) {
 states game::waiting()
 {
 	while (true) {
+		if (!clients.size())
+			return states::kill;
 		fd_set copy = fds;
 		int socketCount = select(0, &copy, nullptr, nullptr, nullptr);
 		if (socketCount == SOCKET_ERROR) {
@@ -165,5 +167,9 @@ states game::waiting()
 
 game::~game()
 {
-
+	for (int i = 0; i < fds.fd_count; i++)
+	{
+		SOCKET socket = fds.fd_array[i];
+		closesocket(socket);
+	}
 }

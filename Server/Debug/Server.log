@@ -1,8 +1,6 @@
-﻿  game.cpp
+﻿  lobbyThread.cpp
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.h(4): warning C4005: "LEN": ponowna definicja makra
   C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\socketUtils.h(15): note: zobacz poprzednią definicję „LEN”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(44): warning C4101: "state": lokalna zmienna, do której nie istnieje odwołanie
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(106): warning C4267: "argument": konwersja z "size_t" do "char", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(121): warning C4267: "argument": konwersja z "size_t" do "uint16_t", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(127): warning C4715: "game::acceptNewClient”: niewszystkie ścieżki kodu zwracają wartość
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\lobbyThread.cpp(10): warning C4005: "DEFAULT_BUFLEN": ponowna definicja makra
+  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\MainThreadListener.h(4): note: zobacz poprzednią definicję „DEFAULT_BUFLEN”
   Server.vcxproj -> C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\Debug\Server.exe
