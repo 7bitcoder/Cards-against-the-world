@@ -2,10 +2,32 @@
 #include <vector>
 
 namespace codes {
-	char newPlayer = 3;//for others get id newplayer
-	char getId = 4;//get new player id;
-	char getLobbyInfo = 5;//get lobby nicks itp
-	char disconnect = 6;//disconnect player of this id 
+	/*protokól komunikacji 
+	1 bajt  CODE 
+	0 - ZWYKŁE dane czyli raw data z sizem podanym w Size
+	1 - UNICODE message size w bajtach podany w Size
+	2 - ERROR kod erroru podany w playerId
+	KOmendy :	
+	z kodem podanym  w playerId oraz ew danymi w Size
+	2 bajtach SIZE 	
+	short długość wiadomości zawsze podana w bajtach lub dodatkowe dane
+	1 bajt PLAYERID
+	 id gracza wysyłającego jeśli server to 0 , 1 to broadcast reszta to id gracza lub dodatkowe dane
+	4+ bajty wiadomość
+	*/
+	char raw = 0;//raw  data
+	char unicode = 1;//unicode string 
+	char error = 2;//error
+	char newPlayer = 3;// for others get id newplayer
+	char getId = 4;// get new player id;
+	char getLobbyInfo = 5;// get lobby nicks itp
+	char disconnect = 6;// disconnect player of this id 
+	char Ready = 7;// - Ready wcisniecie ready i wyslanie do servera i wszyatkich  zmiana na zielony
+	char notReady = 8;// - notReady to samo pu tylko not ready zmiana na czerowny
+	char start = 9;// - start leader jeśli wszyscy ready to zmiana stanu na grę LEADER
+	char dequeUpdate = 10;// - update talii //aktualnie jeszcze nie LEADER
+	char timeUpdate = 11;// - update czas gry LEADER
+
 }//TODO naprawnie deadlocka broadcast disconnect 
 game::game(SOCKET listen, SOCKET leader_, std::u32string nick, std::u32string id)
 {
@@ -55,7 +77,7 @@ bool game::computeNewClientData(SOCKET socket, std::u32string & nick)
 	printf("code is ok\n");
 	return true;
 }
-bool game::acceptNewClient() {//TODO dorobienie zwracania kodu b��d�w
+bool game::acceptNewClient() {//TODO dorobienie zwracania kodu b³êdów
 	int i = 0;
 	for (i = 1; i < 9; i++) {
 		if (free[i]) {
