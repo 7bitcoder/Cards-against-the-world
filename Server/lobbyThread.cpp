@@ -45,10 +45,10 @@ void lobbyThread(SOCKET socket_, std::u32string lobbyId, std::u32string leader)/
 			state = Game.waiting();
 			break;
 		case states::kill:
-			try {
-				chat.~thread();
-			}
-			catch (...) { ; }
+			chat.join();
+			mut.lock();
+			mapaLobby.erase(lobbyId);
+			mut.unlock();
 			return;
 		case states::choseInit:
 			break;

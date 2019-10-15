@@ -119,8 +119,10 @@ void chat::run()
 				ZeroMemory(rcvbuff, strlen(rcvbuff));
 				if (!clients[sock].received) {
 					int i = recv(sock, clients[sock].buff, 4, 0);
-					if (i != 4) //TODO
+					if (i != 4) {
 						disconnect(sock);
+						continue;
+					}
 					char coding, playerId;
 					clients[sock].all = getMessagePrefix(clients[sock].buff, coding, playerId);
 					i = recv(sock, clients[sock].buff + 4, clients[sock].all, 0);
@@ -156,6 +158,8 @@ void chat::run()
 				}
 			}
 		}
+		if (!clients.size())
+			return;
 	}
 }
 

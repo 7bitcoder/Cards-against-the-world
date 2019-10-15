@@ -4,8 +4,8 @@ C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.h(4): warnin
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\lobbyThread.cpp(10): warning C4005: "DEFAULT_BUFLEN": ponowna definicja makra
   C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\MainThreadListener.h(4): note: zobacz poprzednią definicję „DEFAULT_BUFLEN”
   Trwa generowanie kodu
-  1 of 846 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+  40 of 869 functions ( 4.6%) were compiled, the rest were copied from previous compilation.
+    23 functions were new in current compilation
+    25 functions had inline decision re-evaluated but remain unchanged
   Zakończono generowanie kodu
   Server.vcxproj -> C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\Release\Server.exe
