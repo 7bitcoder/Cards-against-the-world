@@ -2,31 +2,32 @@
 #include <vector>
 
 namespace codes {
-	/*protokól komunikacji 
-	1 bajt  CODE 
+	/*protokól komunikacji
+	1 bajt  CODE
 	0 - ZWYKŁE dane czyli raw data z sizem podanym w Size
 	1 - UNICODE message size w bajtach podany w Size
 	2 - ERROR kod erroru podany w playerId
-	KOmendy :	
+	KOmendy :
 	z kodem podanym  w playerId oraz ew danymi w Size
-	2 bajtach SIZE 	
+	2 bajtach SIZE
 	short długość wiadomości zawsze podana w bajtach lub dodatkowe dane
 	1 bajt PLAYERID
 	 id gracza wysyłającego jeśli server to 0 , 1 to broadcast reszta to id gracza lub dodatkowe dane
 	4+ bajty wiadomość
 	*/
-	char raw = 0;//raw  data
-	char unicode = 1;//unicode string 
-	char error = 2;//error
-	char newPlayer = 3;// for others get id newplayer
-	char getId = 4;// get new player id;
-	char getLobbyInfo = 5;// get lobby nicks itp
-	char disconnect = 6;// disconnect player of this id 
-	char Ready = 7;// - Ready wcisniecie ready i wyslanie do servera i wszyatkich  zmiana na zielony
-	char notReady = 8;// - notReady to samo pu tylko not ready zmiana na czerowny
-	char start = 9;// - start leader jeśli wszyscy ready to zmiana stanu na grę LEADER
-	char dequeUpdate = 10;// - update talii //aktualnie jeszcze nie LEADER
-	char timeUpdate = 11;// - update czas gry LEADER
+	const char raw = 0;//raw  data
+	const char unicode = 1;//unicode string 
+	const char error = 2;//error
+	const char newPlayer = 3;// for others get id newplayer
+	const char getId = 4;// get new player id;
+	const char getLobbyInfo = 5;// get lobby nicks itp
+	const char disconnect = 6;// disconnect player of this id 
+	const char Ready = 7;// - Ready wcisniecie ready i wyslanie do servera i wszyatkich  zmiana na zielony
+	const char notReady = 8;// - notReady to samo pu tylko not ready zmiana na czerowny
+	const char start = 9;// - start leader jeśli wszyscy ready to zmiana stanu na grę LEADER
+	const char dequeUpdate = 10;// - update talii //aktualnie jeszcze nie LEADER
+	const char timeUpdate = 11;// - update czas gry LEADER
+	const char notAllPlayersAreReady = 12; // nie wszyscy gracze są gotowi
 
 }//TODO naprawnie deadlocka broadcast disconnect 
 game::game(SOCKET listen, SOCKET leader_, std::u32string nick, std::u32string id)
@@ -38,17 +39,18 @@ game::game(SOCKET listen, SOCKET leader_, std::u32string nick, std::u32string id
 	leader = leader_;
 	clients[leader].nick = nick;
 	clients[leader].id = 1;
+	clients[leader].ready = false;
 	free[1] = false;
 	listenSocket = listen;
 	FD_SET(listenSocket, &fds);
 	FD_SET(leader, &fds);
 }
-bool game::broadCast(SOCKET socket, char* buff, int len)
+bool game::broadCast(SOCKET socket, char* buff, int len, bool all)
 {
 	std::vector<std::map<SOCKET, slot>::iterator> toDelete;
 	for (auto it = clients.begin(); it != clients.end(); it++)
 	{
-		if (it->first != socket)
+		if (all || it->first != socket)
 		{
 			if (!sendLen(it->first, buff, len))
 				toDelete.push_back(it);
@@ -118,6 +120,7 @@ bool game::acceptNewClient() {//TODO dorobienie zwracania kodu b³êdów
 	free[ID] = false;
 	clients[client].nick = nick;
 	clients[client].id = ID;
+	clients[client].ready = false;
 	FD_SET(client, &fds);
 	//send new id to player
 	addMessagePrefix(buff, 1, codes::getId, ID);
@@ -125,7 +128,7 @@ bool game::acceptNewClient() {//TODO dorobienie zwracania kodu b³êdów
 		//todo
 	}
 	//sent all info (about all players in lobby) to new client
-	addMessagePrefix(buff, 1,codes::getLobbyInfo, clients.size());
+	addMessagePrefix(buff, 1, codes::getLobbyInfo, clients.size());
 	if (!sendLen(client, buff, 4)) {
 		//todo
 	}
@@ -179,8 +182,35 @@ states game::waiting()
 			}///TODO if leared is disconnected what happens?????
 			else {//get message
 				int i = recv(sock, buff, 4, 0);
-				if (i == 0) //TODO
+				if (i <= 0) //TODO
 					disconnect(sock);
+				else {//decode
+					char code, playerID;
+					getMessagePrefix(buff, code, playerID);
+					switch (code) {
+					case codes::Ready://ready
+						clients[sock].ready = true;
+						broadCast(sock, buff, 4, true);//true to send all
+						break;
+					case codes::notReady://notReady
+						clients[sock].ready = false;
+						broadCast(sock, buff, 4, true);
+						break;
+					case codes::start://start game
+						for (auto it = clients.begin(); it != clients.end(); it++) 
+							if (it->first != leader)
+								if (!it->second.ready) {
+									addMessagePrefix(buff, 1, codes::notAllPlayersAreReady, 0);
+									if (!sendLen(leader, buff, 4));
+									//TODO
+									break;
+								}
+						//start
+						break;
+					default:
+						break;
+					}
+				}
 			}
 		}
 	}

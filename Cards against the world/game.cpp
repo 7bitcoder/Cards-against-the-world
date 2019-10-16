@@ -7,7 +7,35 @@
 #include "Button.h"
 #include "Rounds.h"
 #include"lobbyPlayers.h"
+namespace codes {
+	/*protokól komunikacji
+	1 bajt  CODE
+	0 - ZWYKŁE dane czyli raw data z sizem podanym w Size
+	1 - UNICODE message size w bajtach podany w Size
+	2 - ERROR kod erroru podany w playerId
+	KOmendy :
+	z kodem podanym  w playerId oraz ew danymi w Size
+	2 bajtach SIZE
+	short długość wiadomości zawsze podana w bajtach lub dodatkowe dane
+	1 bajt PLAYERID
+	 id gracza wysyłającego jeśli server to 0 , 1 to broadcast reszta to id gracza lub dodatkowe dane
+	4+ bajty wiadomość
+	*/
+	const char raw = 0;//raw  data
+	const char unicode = 1;//unicode string 
+	const char error = 2;//error
+	const char newPlayer = 3;// for others get id newplayer
+	const char getId = 4;// get new player id;
+	const char getLobbyInfo = 5;// get lobby nicks itp
+	const char disconnect = 6;// disconnect player of this id 
+	const char Ready = 7;// - Ready wcisniecie ready i wyslanie do servera i wszyatkich  zmiana na zielony
+	const char notReady = 8;// - notReady to samo pu tylko not ready zmiana na czerowny
+	const char start = 9;// - start leader jeśli wszyscy ready to zmiana stanu na grę LEADER
+	const char dequeUpdate = 10;// - update talii //aktualnie jeszcze nie LEADER
+	const char timeUpdate = 11;// - update czas gry LEADER
+	const char notAllPlayersAreReady = 12; // nie wszyscy gracze są gotowi
 
+}//TODO naprawnie deadlocka broadcast disconnect
 game::game(sf::RenderWindow& win, sf::SoundBuffer& sndbuff, sf::Font font_, sf::String lobbyId_, sf::String nick, bool newlobby_) : window(win), Chat(win, sndbuff, 150, 12, font)
 , font(font_), clickBuff(sndbuff)
 {
@@ -254,12 +282,12 @@ game::state game::joinWait() {
 	int linex = 1920 / 2;
 	int liney = 1080 / 2;
 
-	Button apply(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
-	apply.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney + 100) * setting.yScale);
-	apply.setScale(1.8 * setting.xScale, 1 * setting.yScale);
-	apply.setTitle("READY");
-	apply.setSoundVolume(setting.SoundVolume);
-	apply.setColor(sf::Color::White);
+	Button ready(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
+	ready.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney + 100) * setting.yScale);
+	ready.setScale(1.8 * setting.xScale, 1 * setting.yScale);
+	ready.setTitle("READY");
+	ready.setSoundVolume(setting.SoundVolume);
+	ready.setColor(sf::Color::White);
 
 	Button goBack(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
 	goBack.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney + 200) * setting.yScale);
@@ -289,7 +317,7 @@ game::state game::joinWait() {
 		event.type = sf::Event::GainedFocus;
 		do {
 			goBack.checkState();
-			apply.checkState();
+			ready.checkState();
 			Chat.checkSideBarState();
 			if (Chat.function() && event.type == sf::Event::KeyPressed) {
 				if (Chat.addChar(event.key)) {
@@ -307,7 +335,22 @@ game::state game::joinWait() {
 			}
 			else if (goBack.buttonFunction())
 				return game::state::exit;
-			else if (apply.buttonFunction());
+			else if (ready.buttonFunction()) {
+				if (ready_) {
+					addMessagePrefix(buff, 1, 8, playerId);
+					ready_ = false;
+					ready.setTitle("READY");
+				}
+				else {
+					addMessagePrefix(buff, 1, 7, playerId);
+					ready_ = true;
+					ready.setTitle("NOT READY");
+				}
+				if (lobbySocket.send(buff, 4) != sf::Socket::Done)//TODO
+				{
+					//TODO
+				}
+			}
 			else;
 			std::size_t received;
 
@@ -348,6 +391,12 @@ game::state game::joinWait() {
 				Chat.send(players[playerID].nick + " disconnected", sf::Color::Yellow);
 				lobbyClients.del(playerID);
 				break;
+			case 7://ready
+				lobbyClients.setReady(playerID);
+				break;
+			case 8://not ready
+				lobbyClients.setNotReady(playerID);
+				break;
 			default:
 				break;
 			}
@@ -357,7 +406,7 @@ game::state game::joinWait() {
 		window.draw(background);
 		Chat.draw();
 		goBack.draw();
-		apply.draw();
+		ready.draw();
 		lobbyClients.draw();
 		window.display();
 	}
@@ -450,7 +499,13 @@ game::state game::LeaderWait()
 			else if (rounds.function());
 			else if (goBack.buttonFunction())
 				return game::state::exit;
-			else if (apply.buttonFunction());
+			else if (apply.buttonFunction()) {
+				addMessagePrefix(buff, 1, 9, playerId);
+				if (lobbySocket.send(buff, 4) != sf::Socket::Done)//TODO
+				{
+					//TODO
+				}
+			}
 			else if (start.buttonFunction());
 			else;
 			std::size_t received;
@@ -480,7 +535,7 @@ game::state game::LeaderWait()
 		{
 			sf::String out;
 			switch (coding) {
-			case 3:
+			case codes::newPlayer:
 				str = getString(lobbySocket, len);
 				for (auto& x : str)
 					out += x;
@@ -488,9 +543,18 @@ game::state game::LeaderWait()
 				Chat.send(players[playerID].nick + " joined lobby", sf::Color::Yellow);
 				lobbyClients.addPlayer(playerID, out);
 				break;
-			case 6: //check playerID
+			case codes::disconnect: //check playerID
 				Chat.send(players[playerID].nick + " disconnected", sf::Color::Yellow);
 				lobbyClients.del(playerID);
+				break;
+			case codes::Ready://ready
+				lobbyClients.setReady(playerID);
+				break;
+			case codes::notReady://not ready
+				lobbyClients.setNotReady(playerID);
+				break;
+			case codes::notAllPlayersAreReady:
+				Chat.send("not all players are ready", sf::Color::Yellow);
 				break;
 			default:
 				break;

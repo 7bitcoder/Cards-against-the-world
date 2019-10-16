@@ -71,9 +71,6 @@ bool Button::settingsListFunction()
 void Button::setTitle(std::string title_)
 {
 	text = title_;
-	title.setFont(font);
-	title.setCharacterSize(25);
-	title.setFillColor(sf::Color::Black);
 	title.setString(title_);
 	title.setScale(setting.xScale, setting.yScale);
 	title.setOrigin(title.getGlobalBounds().width / 2, 0);
@@ -88,6 +85,8 @@ Button::Button(sf::RenderWindow & win, sf::Texture & pres, sf::Texture & rel, sf
 	released(rel),
 	offButton(off)
 {
+	title.setFont(font);
+	title.setCharacterSize(25);
 	switchS.setVolume(30);
 	this->setTexture(off);
 	buttonSt = buttonState::isNotPressed;

@@ -14,9 +14,10 @@ std::vector<lobbyPlayers::player>::iterator lobbyPlayers::find(int id)
 }
 void lobbyPlayers::refractorization()
 {
+	float rad = float(charSize) / 4;
 	for (int i = 0; i < players.size(); i++) {
-		players[i].controll.setPosition(begin.x - 50, begin.y + i * 1.5);
-		players[i].nick.setPosition(begin.x, begin.y + i * 1.5);
+		players[i].nick.setPosition(begin.x, begin.y + i * (charSize + 20));
+		players[i].controll.setPosition(begin.x - (2 * rad + 5), players[i].nick.getPosition().y + 2 * rad);
 	}
 }
 void lobbyPlayers::del(int id) {

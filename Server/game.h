@@ -6,6 +6,7 @@ enum states{ waiting = 1, starting, questionInit, question, choseInit, chose, su
 struct slot
 {
 	std::u32string nick;
+	bool ready;
 	int id;
 };
 class game: public serverUtils
@@ -21,7 +22,7 @@ private:
 	std::u32string lobbyId;
 public:
 	game(SOCKET listen, SOCKET leader, std::u32string nick, std::u32string lobbyId);
-	bool broadCast(SOCKET socket, char* buff, int len);
+	bool broadCast(SOCKET socket, char* buff, int len, bool all = false);
 	bool computeNewClientData(SOCKET socket, std::u32string& nick);
 	bool acceptNewClient();
 	void disconnect(SOCKET sock);

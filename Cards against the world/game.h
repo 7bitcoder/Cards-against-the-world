@@ -29,6 +29,7 @@ private:
 	char buff[LEN];
 	bool newLobby;
 	char playerId;
+	bool ready_ = false;
 	//
 	sf::Texture backgroundTexture;
 	sf::Sprite background;

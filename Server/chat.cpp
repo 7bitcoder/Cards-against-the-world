@@ -128,6 +128,7 @@ void chat::run()
 					i = recv(sock, clients[sock].buff + 4, clients[sock].all, 0);
 					if (i <= 0) {
 						disconnect(sock);
+						continue;
 					}
 					if (i != clients[sock].all) {
 						clients[sock].received = i;
@@ -141,6 +142,7 @@ void chat::run()
 					int i = recv(sock, buff + clients[sock].received + 4, clients[sock].all - clients[sock].received, 0);
 					if (i <= 0) {
 						disconnect(sock);
+						continue;
 					}
 					if (i + clients[sock].received < clients[sock].all) {
 						clients[sock].received += i;
