@@ -160,7 +160,8 @@ st Menu::test()
 	int liney = 1080 / 2;
 	Deck deck;
 
-	deck.load("taliaRocka.txt");
+	if (!deck.load("taliaRocka.txt")) { ; }
+		//todo
 
 	Button quit(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
 	quit.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney + 100) * setting.yScale);
@@ -170,7 +171,7 @@ st Menu::test()
 	quit.setColor(sf::Color::White);
 	int x;
 	while (true) {
-		std::cout << "podaj index\n";
+		std::cout << "\npodaj index\n";
 		std::cin >> x;
 		std::cout << deck.getCard(x);
 	}

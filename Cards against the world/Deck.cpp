@@ -26,7 +26,7 @@ int Deck::getNumber(std::string & line)
 bool Deck::load(std::string name)
 {
 	pathToDeck = name;
-	std::ifstream file(pathToDeck);
+	std::ifstream file("Decks" / pathToDeck);
 	std::string buff, wholeCard;
 	whiteCards = 0;
 	BlackCards = 0;

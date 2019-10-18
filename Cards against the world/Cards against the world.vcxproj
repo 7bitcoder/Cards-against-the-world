@@ -170,6 +170,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="card.cpp" />
     <ClCompile Include="Cards against the world.cpp" />
     <ClCompile Include="chat.cpp" />
     <ClCompile Include="Deck.cpp" />
@@ -188,6 +189,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
+    <ClInclude Include="card.h" />
     <ClInclude Include="chat.h" />
     <ClInclude Include="Deck.h" />
     <ClInclude Include="game.h" />

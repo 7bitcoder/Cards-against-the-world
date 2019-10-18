@@ -4,7 +4,7 @@
 Podczas ostatniej
 podróży Martyna
 Wojciechowska
-odkryła__.
+odkryła __.
 //b1
 Podczas wycieczki
 szkolnej doszło do
@@ -59,7 +59,7 @@ Wizyta __ skończyła się na __.
 //b15
 Jestem profesorem
 chemii,adoktorat
-robiłem z__.
+robiłem z __.
 //b16
 Gdyby nie __ i __, to
 pewnie nigdy bym nie
@@ -80,7 +80,7 @@ __.
 //b20
 Najważniejszym
 cytatem z Mickiewicza
-jest "__ mój
+jest " __ mój
 szlachetny panie...".
 //b21
 Mój kuzyn z Ameryki
@@ -159,7 +159,7 @@ __.
 Kiedy popsuła mi się
 spłuczka w kiblu,
 jedynym ratunkiem
-okazało się być__.
+okazało się być __.
 //b40
 Mój ostatni cosplay
 zbudowałem na bazie
@@ -239,7 +239,7 @@ Gdyby nie ta gra, to
 nigdy bym się nie
 przyznał, że lubię __ 
 //b60
-Prędzej trafisz na__,
+Prędzej trafisz na __,
 niż Ci kosa wypadnie.
 //b61
 Blondynki lubią __ .W
@@ -256,7 +256,7 @@ chuligani podpalili __.
 //b64
 W następnym
 wyścigu,udział biorą
-__i__.
+__ i __.
 //b65
 Nareszcie __
 czekałem na to!
@@ -303,7 +303,7 @@ Too znacza, że albo
 Tobie odbiło na
 punkcie __, albo
 moim ulubionym
-zajęciem jest__.
+zajęciem jest __.
 //b76
 Kiedy życie da mi __,
 to sięgam po __ i od
@@ -319,13 +319,13 @@ Potrzebowałem tylko
 drobnej korekty
 uzębienia, ale zamiast
 aparatu dentysta
-zaproponował__.
+zaproponował __.
 //b80
 Najlepszym lekiem na
 zatwardzenie jest __.
 //b81
 Flip i Flap zawsze
-kłócili się o__.
+kłócili się o __.
 //b82
 Nagrodą kolejnej
 edycji Tańca z
@@ -345,7 +345,7 @@ Wojewódzkiego.
 //b86
 Ludzie szukają opini na temat pracy,
 podczas gdy powinni
-szukać__.
+szukać __.
 //b87
 O mój Boże
 znalazłem __ w __!
@@ -404,7 +404,7 @@ trzeba uważać na __.
 Uciekł z rąk
 dżihadystów,
 torturowali go przy
-użyciu__.
+użyciu __.
 //b101
 Ukrytą treścią w poezji Juliusza Słowackiego jest __.
 //b102
