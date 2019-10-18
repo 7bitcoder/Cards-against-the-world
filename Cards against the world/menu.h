@@ -35,6 +35,7 @@ public:
 	//st settingsUupdate();
 	st ConnectToLobby();
 	st choseGameMode();
+	st test();
 	~Menu();
 };
 

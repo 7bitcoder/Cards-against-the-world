@@ -48,6 +48,9 @@ int main()
 				window.setMouseCursorVisible(true);
 				state = Menu_.ConnectToLobby();
 				break;
+			case st::settings:
+				state = Menu_.test();
+				break;
 			case st::quit:
 				setting.save();
 				window.close();

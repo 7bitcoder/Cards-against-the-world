@@ -2,6 +2,7 @@
 #include "inputText.h"
 #include "PopAlert.h"
 #include"game.h"
+#include"Deck.h"
 Menu::Menu(sf::RenderWindow& win, std::string& ver_) : window(win), version(ver_)
 {
 
@@ -80,7 +81,7 @@ st Menu::mainMenuUpdate()
 			if (play.buttonFunction())
 				return st::choseGameMode;
 			else if (settings.buttonFunction())
-				;// return st::settings;
+				return st::settings;// return st::settings;
 			else if (quit.buttonFunction())
 				return st::quit;
 			else;
@@ -150,6 +151,44 @@ st Menu::choseGameMode()
 		createLobby.draw();
 		joinLobby.draw();
 		goBack.draw();
+		window.display();
+	}
+}
+st Menu::test()
+{
+	int linex = 1920 / 2;
+	int liney = 1080 / 2;
+	Deck deck;
+
+	deck.load("taliaRocka.txt");
+
+	Button quit(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
+	quit.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney + 100) * setting.yScale);
+	quit.setScale(1.8 * setting.xScale, 1 * setting.yScale);
+	quit.setTitle("BACK");
+	quit.setSoundVolume(setting.SoundVolume);
+	quit.setColor(sf::Color::White);
+	int x;
+	while (true) {
+		std::cout << "podaj index\n";
+		std::cin >> x;
+		std::cout << deck.getCard(x);
+	}
+	while (window.isOpen())
+	{
+		// check all the window's events that were triggered since the last iteration of the loop
+		sf::Event event;
+		do {
+
+			quit.checkState();
+			if (quit.buttonFunction())
+				return st::mainMenu;
+			else;
+		} while (window.pollEvent(event));
+
+		window.clear(sf::Color::Black);
+		window.draw(background);
+		quit.draw();
 		window.display();
 	}
 }

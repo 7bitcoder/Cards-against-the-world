@@ -132,7 +132,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\Sylwester\Desktop\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -172,6 +172,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Cards against the world.cpp" />
     <ClCompile Include="chat.cpp" />
+    <ClCompile Include="Deck.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="inputText.cpp" />
     <ClCompile Include="lobbyPlayers.cpp" />
@@ -188,6 +189,7 @@
   <ItemGroup>
     <ClInclude Include="Button.h" />
     <ClInclude Include="chat.h" />
+    <ClInclude Include="Deck.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="inputText.h" />
     <ClInclude Include="lobbyPlayers.h" />
