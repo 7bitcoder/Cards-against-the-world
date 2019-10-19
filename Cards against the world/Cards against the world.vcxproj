@@ -186,6 +186,7 @@
     <ClCompile Include="SliderW.cpp" />
     <ClCompile Include="socketUtils.cpp" />
     <ClCompile Include="Sounds.cpp" />
+    <ClCompile Include="table.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
@@ -204,6 +205,7 @@
     <ClInclude Include="SliderW.h" />
     <ClInclude Include="socketUtils.h" />
     <ClInclude Include="Sounds.h" />
+    <ClInclude Include="table.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

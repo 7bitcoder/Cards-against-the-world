@@ -4,7 +4,9 @@
 #include "menu.h"
 #include "Sounds.h"
 #include <iostream>
+#include "Deck.h"
 Settings setting;
+Deck deck;
 int main()
 {
 	try

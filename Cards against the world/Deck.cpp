@@ -7,7 +7,12 @@ Deck::Deck()
 }
 std::string Deck::getCard(std::size_t pos, bool black__)
 {
-	return black__ ? black_.at(pos) : white_.at(pos);
+	try {
+		return black__ ? black_.at(pos) : white_.at(pos);
+	}
+	catch (...) {
+		return std::string("error: validate your deck, cound not find ") + (!black__ ? "white " : "black ") + "card, id: " + std::to_string(pos);
+	}
 }
 Deck::card Deck::checkIfNewCard(std::string& line) {
 	if (line.size() < 3)
@@ -25,6 +30,8 @@ int Deck::getNumber(std::string & line)
 }
 bool Deck::load(std::string name)
 {
+	white_.clear();
+	black_.clear();
 	pathToDeck = name;
 	std::ifstream file("Decks" / pathToDeck);
 	std::string buff, wholeCard;

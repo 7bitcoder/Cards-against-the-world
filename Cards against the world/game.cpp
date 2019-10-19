@@ -298,11 +298,10 @@ game::state game::joinWait() {
 
 	lobbyPlayers lobbyClients(window, font, 30);
 	lobbyClients.setPosition(50 * setting.xScale, (50) * setting.yScale);
-	lobbyClients.addPlayer(playerId, nickname);
 	for (auto& x : players) {
 		lobbyClients.addPlayer(x.first, x.second.nick);
 	}
-
+	lobbyClients.addPlayer(playerId, nickname);
 	bool allertFlag = false;
 	sf::Clock timer;
 	chatSocket.setBlocking(false);

@@ -2,8 +2,7 @@
 #include "inputText.h"
 #include "PopAlert.h"
 #include"game.h"
-#include"Deck.h"
-#include "card.h"
+#include "table.h"
 
 Menu::Menu(sf::RenderWindow& win, std::string& ver_) : window(win), version(ver_)
 {
@@ -40,6 +39,10 @@ Menu::Menu(sf::RenderWindow& win, std::string& ver_) : window(win), version(ver_
 
 	if (!mar.loadFromFile("PNG/grey_sliderRight.png"))
 		throw std::exception("png file missing");
+
+	card::setFont("Fonts/Lato-Regular.ttf");
+	card::setBlackTexture("PNG/cardTemplate.png");
+	card::setWhiteTexture("PNG/cardTemplateWhite.png");
 
 	background.setTexture(backgroundTexture);
 }
@@ -160,7 +163,7 @@ st Menu::test()
 {
 	int linex = 1920 / 2;
 	int liney = 1080 / 2;
-	Deck deck;
+	
 
 	if (!deck.load("taliaRocka.txt")) { ; }
 	//todo
@@ -171,35 +174,29 @@ st Menu::test()
 	quit.setTitle("BACK");
 	quit.setSoundVolume(setting.SoundVolume);
 	quit.setColor(sf::Color::White);
-	card::setFont("Fonts/Lato-Regular.ttf");
-	card::setBlackTexture("PNG/cardTemplate.png");
-	card::setWhiteTexture("PNG/cardTemplateWhite.png");
-	card testcard(card::kind::white);
-	testcard.setPosition(50, 50, 30);
-	testcard.setCharSize(25);
-	testcard.setId(1);
+
+	table tabl(window, 8);
+	tabl.init({ 4,5,1,12,14,15,26,18 });
+	tabl.setDouble(true);
+	sf::Event event;
+	event.type = sf::Event::GainedFocus;
 	while (window.isOpen())
 	{
-		int x;
-		std::cout << "\npodaj index\n";
-		std::cin >> x;
-		testcard.setId(x);
-		testcard.setTextUtf8(deck.getCard(x, false));
-		
 		// check all the window's events that were triggered since the last iteration of the loop
-		sf::Event event;
 		do {
-
 			quit.checkState();
 			if (quit.buttonFunction())
 				return st::mainMenu;
+			else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+				tabl.function();
+			}
 			else;
 		} while (window.pollEvent(event));
 
 		window.clear(sf::Color::Black);
 		window.draw(background);
 		quit.draw();
-		window.draw(testcard);
+		tabl.draw();
 		window.display();
 	}
 }
