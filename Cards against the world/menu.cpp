@@ -3,6 +3,8 @@
 #include "PopAlert.h"
 #include"game.h"
 #include"Deck.h"
+#include "card.h"
+
 Menu::Menu(sf::RenderWindow& win, std::string& ver_) : window(win), version(ver_)
 {
 
@@ -161,7 +163,7 @@ st Menu::test()
 	Deck deck;
 
 	if (!deck.load("taliaRocka.txt")) { ; }
-		//todo
+	//todo
 
 	Button quit(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
 	quit.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney + 100) * setting.yScale);
@@ -169,14 +171,21 @@ st Menu::test()
 	quit.setTitle("BACK");
 	quit.setSoundVolume(setting.SoundVolume);
 	quit.setColor(sf::Color::White);
-	int x;
-	while (true) {
-		std::cout << "\npodaj index\n";
-		std::cin >> x;
-		std::cout << deck.getCard(x);
-	}
+	card::setFont("Fonts/Lato-Regular.ttf");
+	card::setBlackTexture("PNG/cardTemplate.png");
+	card::setWhiteTexture("PNG/cardTemplateWhite.png");
+	card testcard(card::kind::white);
+	testcard.setPosition(50, 50, 30);
+	testcard.setCharSize(25);
+	testcard.setId(1);
 	while (window.isOpen())
 	{
+		int x;
+		std::cout << "\npodaj index\n";
+		std::cin >> x;
+		testcard.setId(x);
+		testcard.setTextUtf8(deck.getCard(x, false));
+		
 		// check all the window's events that were triggered since the last iteration of the loop
 		sf::Event event;
 		do {
@@ -190,6 +199,7 @@ st Menu::test()
 		window.clear(sf::Color::Black);
 		window.draw(background);
 		quit.draw();
+		window.draw(testcard);
 		window.display();
 	}
 }
