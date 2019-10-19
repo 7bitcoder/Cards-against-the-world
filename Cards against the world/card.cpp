@@ -57,7 +57,7 @@ void card::setPosition(int x, int y, int offset_)
 	text.setPosition(x + offset, y + offset);
 	//219 302
 	number.setPosition(x + 174, y + 230);
-	chose.setPosition(x, y);
+	chose.setPosition(x + offset / 3, y + offset / 3);
 }
 
 void card::setTextUtf8(std::string str)
@@ -100,7 +100,7 @@ card::card(card::kind kind__)
 	number.setCharacterSize(18);
 	chose.setFont(font);
 	chose.setFillColor(kind_ == kind::black ? sf::Color::White : sf::Color::Black);
-	chose.setCharacterSize(15);
+	chose.setCharacterSize(18);
 	chosen = false;
 }
 card::~card()

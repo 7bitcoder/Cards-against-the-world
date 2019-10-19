@@ -50,7 +50,7 @@ table::table(sf::RenderWindow & win, int numberOfCards_) : window(win), slots(nu
 	float idff = float(numberOfCards_) / 2;
 	float width = slots.front().getXSize();
 	float heigh = slots.front().getYSize();
-	float spacing = 5;
+	float spacing = 20;
 	float all = numberOfCards * width + spacing * (numberOfCards_ - 1);
 	all /= 2;
 	all = centr - all;
@@ -72,13 +72,13 @@ bool table::init(std::vector<int> initCards) {
 void table::replaceChosenFirst(int newId)
 {
 	slots[chosen.x].setId(newId);
-	slots[chosen.x].setTextUtf8(deck.getCard(newId));
+	slots[chosen.x].setTextUtf8(deck.getCard(newId, false));
 }
 
 void table::replaceChosenSecound(int newId)
 {
 	slots[chosen.y].setId(newId);
-	slots[chosen.y].setTextUtf8(deck.getCard(newId));
+	slots[chosen.y].setTextUtf8(deck.getCard(newId, false));
 }
 
 table::~table()

@@ -79,6 +79,12 @@ bool Deck::load(std::string name)
 			}
 
 		}
+		for (auto& x : white_)
+			if (x.empty())
+				return false;
+		for (auto& x : black_)
+			if (x.empty())
+				return false;
 		return true;
 	}
 	catch (...) {

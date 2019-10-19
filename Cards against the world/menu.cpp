@@ -163,10 +163,17 @@ st Menu::test()
 {
 	int linex = 1920 / 2;
 	int liney = 1080 / 2;
-	
+
 
 	if (!deck.load("taliaRocka.txt")) { ; }
 	//todo
+
+	Button next(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
+	next.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney)* setting.yScale);
+	next.setScale(1.8 * setting.xScale, 1 * setting.yScale);
+	next.setTitle("NEXT");
+	next.setSoundVolume(setting.SoundVolume);
+	next.setColor(sf::Color::White);
 
 	Button quit(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
 	quit.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney + 100) * setting.yScale);
@@ -176,25 +183,34 @@ st Menu::test()
 	quit.setColor(sf::Color::White);
 
 	table tabl(window, 8);
-	tabl.init({ 4,5,1,12,14,15,26,18 });
+	std::vector<int> xd = { 0,1,2,3,4,5,6,7 };
+	tabl.init(xd);
 	tabl.setDouble(true);
 	sf::Event event;
 	event.type = sf::Event::GainedFocus;
 	while (window.isOpen())
 	{
 		// check all the window's events that were triggered since the last iteration of the loop
-		do {
+		while (window.pollEvent(event)) {
 			quit.checkState();
+			next.checkState();
 			if (quit.buttonFunction())
 				return st::mainMenu;
-			else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+			if (next.buttonFunction()) {
+				for (int i = xd.back(), n = 0; n < 8; n++, i++) {
+					xd[n] = i;
+				}
+				tabl.init(xd);
+			}
+			else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
 				tabl.function();
 			}
 			else;
-		} while (window.pollEvent(event));
-
+		}
+		
 		window.clear(sf::Color::Black);
 		window.draw(background);
+		next.draw();
 		quit.draw();
 		tabl.draw();
 		window.display();
