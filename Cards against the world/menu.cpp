@@ -186,7 +186,8 @@ st Menu::test()
 
 	table tabl(window, 10);
 	std::vector<int> xd = { 0,1,2,3,4,5,6,7, 8, 9 };
-	tabl.init(xd);
+	if (!tabl.init(xd))
+		;//todo
 	tabl.setDouble(true);
 
 	chat Chat(window, clickBuff, 150, 12, font);
