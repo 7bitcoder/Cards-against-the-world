@@ -181,6 +181,7 @@
     <ClCompile Include="messages.cpp" />
     <ClCompile Include="PopAlert.cpp" />
     <ClCompile Include="Rounds.cpp" />
+    <ClCompile Include="ScoreBoard.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="Slider.cpp" />
     <ClCompile Include="SliderW.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="messages.h" />
     <ClInclude Include="PopAlert.h" />
     <ClInclude Include="Rounds.h" />
+    <ClInclude Include="ScoreBoard.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="Slider.h" />
     <ClInclude Include="SliderW.h" />

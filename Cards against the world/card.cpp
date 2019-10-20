@@ -50,9 +50,8 @@ bool card::isOn(sf::Vector2f pos)
 	return false;
 }
 
-void card::setPosition(int x, int y, int offset_)
+void card::setPosition(int x, int y)
 {
-	offset = offset_;
 	back.setPosition(x, y);
 	text.setPosition(x + offset, y + offset);
 	//219 302

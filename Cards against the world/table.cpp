@@ -44,19 +44,23 @@ table::table(sf::RenderWindow & win, int numberOfCards_) : window(win), slots(nu
 	for (auto& x : slots) {
 		x.setCharSize(20);
 	}
-	int centr = window.getSize().x / 2;
-	int centry = 700;
+	int beg = 250;
+	int centry = 800;
+	int centr = (window.getSize().x / 2) - 190 * 1.8;
 	numberOfCards = numberOfCards_;
 	float idff = float(numberOfCards_) / 2;
 	float width = slots.front().getXSize();
 	float heigh = slots.front().getYSize();
-	float spacing = 20;
-	float all = numberOfCards * width + spacing * (numberOfCards_ - 1);
-	all /= 2;
-	all = centr - all;
-	for (int i = 0; i < numberOfCards_; i++) {
-		positions.push_back({ i * (width + spacing) + all, float(centry) });
-		slots[i].setPosition(positions.back().x, positions.back().y, 20);
+	float spacing = 15;
+	int inRow = 5;
+	for (int rows = 0; rows < 2; rows++) {
+		for (int i = 0; i < inRow; i++) {
+			if (positions.size() == numberOfCards_)
+				continue;
+			positions.push_back({ beg + i * (width + spacing), centry - rows * (heigh + spacing) });
+			slots[i + rows * inRow].setOffest(20);
+			slots[i + rows * inRow].setPosition(positions.back().x, positions.back().y);
+		}
 	}
 	resetChosen();
 }

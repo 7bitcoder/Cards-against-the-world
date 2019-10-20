@@ -6,17 +6,13 @@
 #include "chat.h"
 #define LEN 4000
 
-
-struct player {
-	sf::String nick;
-};
 class game :public socketUtils
 {
 private:
 	enum state{lobby, GameBegin, exit};
 	state state_;
 	chat Chat;
-	std::map<int, player> players;//0 listen rest players up to 8
+	std::map<int, sf::String > players;//0 listen rest players up to 8
 	unsigned short portToConnect = 3000;
 	sf::IpAddress address = "3.229.14.134";
 	std::u32string code = U"a7dzRwQjnw5kW6uEnhx7";

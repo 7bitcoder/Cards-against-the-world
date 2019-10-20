@@ -166,6 +166,7 @@ message::code game::connect()
 			return message::unableToGetData;
 		}
 		playerId = playerID;
+		players[playerId] = nickname;
 		//get all info about others players 
 		if (lobbySocket.receive(buff, 4, received) != sf::Socket::Done)
 		{
@@ -179,9 +180,9 @@ message::code game::connect()
 		}
 		while (data--) {
 			if (receive(lobbySocket, rec, coding, playerID)) {
-				players[playerID].nick.clear();
+				players[playerID].clear();
 				for (auto x : rec)
-					players[playerID].nick += x;
+					players[playerID] += x;
 			}
 			else { ; }
 			//todo
@@ -299,9 +300,8 @@ game::state game::joinWait() {
 	lobbyPlayers lobbyClients(window, font, 30);
 	lobbyClients.setPosition(50 * setting.xScale, (50) * setting.yScale);
 	for (auto& x : players) {
-		lobbyClients.addPlayer(x.first, x.second.nick);
+		lobbyClients.addPlayer(x.first, x.second);
 	}
-	lobbyClients.addPlayer(playerId, nickname);
 	bool allertFlag = false;
 	sf::Clock timer;
 	chatSocket.setBlocking(false);
@@ -363,7 +363,7 @@ game::state game::joinWait() {
 				for (auto& x : str)
 					out += x;
 				if (playerID) {
-					out.insert(0, players[playerID].nick + ":");
+					out.insert(0, players[playerID] + ":");
 					Chat.send(out, sf::Color::Black);
 				}
 				else {
@@ -382,12 +382,12 @@ game::state game::joinWait() {
 				str = getString(lobbySocket, len);
 				for (auto& x : str)
 					out += x;
-				players[playerID].nick = out;
-				Chat.send(players[playerID].nick + " joined lobby", sf::Color::Yellow);
+				players[playerID] = out;
+				Chat.send(players[playerID] + " joined lobby", sf::Color::Yellow);
 				lobbyClients.addPlayer(playerID, out);
 				break;
 			case 6: //check playerID
-				Chat.send(players[playerID].nick + " disconnected", sf::Color::Yellow);
+				Chat.send(players[playerID] + " disconnected", sf::Color::Yellow);
 				lobbyClients.del(playerID);
 				break;
 			case 7://ready
@@ -460,7 +460,7 @@ game::state game::LeaderWait()
 	lobbyClients.setPosition(50 * setting.xScale, (50) * setting.yScale);
 	lobbyClients.addPlayer(playerId, nickname);
 	for (auto& x : players) {
-		lobbyClients.addPlayer(x.first, x.second.nick);
+		lobbyClients.addPlayer(x.first, x.second);
 	}
 
 	bool allertFlag = false;
@@ -519,7 +519,7 @@ game::state game::LeaderWait()
 				for (auto& x : str)
 					out += x;
 				if (playerID) {
-					out.insert(0, players[playerID].nick + ":");
+					out.insert(0, players[playerID] + ":");
 					Chat.send(out, sf::Color::Black);
 				}
 				else {
@@ -538,12 +538,12 @@ game::state game::LeaderWait()
 				str = getString(lobbySocket, len);
 				for (auto& x : str)
 					out += x;
-				players[playerID].nick = out;
-				Chat.send(players[playerID].nick + " joined lobby", sf::Color::Yellow);
+				players[playerID] = out;
+				Chat.send(players[playerID] + " joined lobby", sf::Color::Yellow);
 				lobbyClients.addPlayer(playerID, out);
 				break;
 			case codes::disconnect: //check playerID
-				Chat.send(players[playerID].nick + " disconnected", sf::Color::Yellow);
+				Chat.send(players[playerID] + " disconnected", sf::Color::Yellow);
 				lobbyClients.del(playerID);
 				break;
 			case codes::Ready://ready
@@ -583,11 +583,11 @@ void game::checkCommands() {
 			str = getString(lobbySocket, len);
 			for (auto& x : str)
 				out += x;
-			players[playerID].nick = out;
-			Chat.send(players[playerID].nick + " joined lobby", sf::Color::Yellow);
+			players[playerID] = out;
+			Chat.send(players[playerID] + " joined lobby", sf::Color::Yellow);
 			break;
 		case 6: //check playerID
-			Chat.send(players[playerID].nick + " disconnected", sf::Color::Yellow);
+			Chat.send(players[playerID] + " disconnected", sf::Color::Yellow);
 			break;
 		default:
 			break;

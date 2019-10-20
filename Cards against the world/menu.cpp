@@ -3,6 +3,8 @@
 #include "PopAlert.h"
 #include"game.h"
 #include "table.h"
+#include "chat.h"
+#include "ScoreBoard.h"
 
 Menu::Menu(sf::RenderWindow& win, std::string& ver_) : window(win), version(ver_)
 {
@@ -161,31 +163,56 @@ st Menu::choseGameMode()
 }
 st Menu::test()
 {
-	int linex = 1920 / 2;
-	int liney = 1080 / 2;
+	int linex = 1920;
+	int liney = 1080;
 
 
 	if (!deck.load("taliaRocka.txt")) { ; }
 	//todo
 
 	Button next(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
-	next.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney)* setting.yScale);
+	next.setPosition((linex - 190 * 1.8) * setting.xScale, (liney - 200) * setting.yScale);
 	next.setScale(1.8 * setting.xScale, 1 * setting.yScale);
 	next.setTitle("NEXT");
 	next.setSoundVolume(setting.SoundVolume);
 	next.setColor(sf::Color::White);
 
 	Button quit(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
-	quit.setPosition((linex - 190 * 1.8 / 2) * setting.xScale, (liney + 100) * setting.yScale);
+	quit.setPosition((linex - 190 * 1.8) * setting.xScale, (liney - 100) * setting.yScale);
 	quit.setScale(1.8 * setting.xScale, 1 * setting.yScale);
 	quit.setTitle("BACK");
 	quit.setSoundVolume(setting.SoundVolume);
 	quit.setColor(sf::Color::White);
 
-	table tabl(window, 8);
-	std::vector<int> xd = { 0,1,2,3,4,5,6,7 };
+	table tabl(window, 10);
+	std::vector<int> xd = { 0,1,2,3,4,5,6,7, 8, 9 };
 	tabl.init(xd);
 	tabl.setDouble(true);
+
+	chat Chat(window, clickBuff, 150, 12, font);
+	Chat.setValues(sf::Vector2f((1920 - 650), 50), 20, 600);
+
+	ScoreBoard score(window, 25, 200, 8);
+	score.setColor(sf::Color::White);
+	std::map<int, sf::String> pla;
+	pla[0] = "tom";
+	pla[1] = "john";
+	pla[2] = "marry";
+	pla[3] = "ham";
+
+	pla[4] = "xDDDDDDDDDD";
+	pla[5] = "sylwek";
+	pla[6] = "jack";
+	pla[7] = "fuck";
+	score.setPosition(50, 50, pla, font);
+
+	card black(card::kind::black);
+	black.setOffest(20);
+	black.setPosition(1920 - 350, 500);
+	black.setCharSize(20);
+	black.setId(0);
+	black.setTextUtf8("W mieszkaniu znanego dziennikarza znaleziono __.");
+
 	sf::Event event;
 	event.type = sf::Event::GainedFocus;
 	while (window.isOpen())
@@ -194,10 +221,33 @@ st Menu::test()
 		while (window.pollEvent(event)) {
 			quit.checkState();
 			next.checkState();
+			Chat.checkSideBarState();
+			if (Chat.function() && event.type == sf::Event::KeyPressed) {
+				if (Chat.addChar(event.key)) {
+					auto text = Chat.getText();
+					if (!text.empty()) {
+						char x = char(text[0]);
+						std::string dd;
+						dd += x;
+						int index = -1;
+						try {
+							index = std::stoi(dd);
+						}
+						catch (...) {}
+						if (index < 0 || index > pla.size() - 1)
+							continue;
+						score.updateScore(index);
+					}
+
+				}
+			}
+			else if (event.type == sf::Event::MouseWheelScrolled) {
+				Chat.scrolled(event.mouseWheelScroll.delta);
+			}
 			if (quit.buttonFunction())
 				return st::mainMenu;
 			if (next.buttonFunction()) {
-				for (int i = xd.back(), n = 0; n < 8; n++, i++) {
+				for (int i = xd.back(), n = 0; n < 10; n++, i++) {
 					xd[n] = i;
 				}
 				tabl.init(xd);
@@ -207,12 +257,15 @@ st Menu::test()
 			}
 			else;
 		}
-		
+		score.update();
 		window.clear(sf::Color::Black);
 		window.draw(background);
+		Chat.draw();
+		score.draw();
 		next.draw();
 		quit.draw();
 		tabl.draw();
+		window.draw(black);
 		window.display();
 	}
 }

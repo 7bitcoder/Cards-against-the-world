@@ -24,7 +24,8 @@ public:
 	void setId(int id);
 	int getId() { return id; }
 	bool isOn(sf::Vector2f pos);
-	void setPosition(int x, int y, int offset);
+	void setOffest(int off) { offset = off; }
+	void setPosition(int x, int y);
 	void setTextUtf8(std::string str);//get
 	float getXSize() { return back.getGlobalBounds().width; }
 	float getYSize() { return back.getGlobalBounds().height; }
