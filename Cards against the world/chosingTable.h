@@ -5,16 +5,17 @@
 
 class chosingTable
 {
-private:
+public:
 	struct data
 	{
 		card card_;
 		int playerId;
 		int related;
 	};
+private:
 	sf::RenderWindow& window;
 	std::vector<sf::Vector2f> normalPositions;
-	std::vector<sf::Vector2i> doublePositions;
+	std::vector<sf::Vector2f> doublePositions;
 	std::vector<data> slots;
 	int chosen;
 	int numberOfCards;
@@ -30,6 +31,6 @@ public:
 	void draw();
 	void setDrawable(bool t) { hide = !t; }
 	void setDouble(bool doubl_) { doubl = doubl_; }
-	bool init(std::vector<int> initCards, bool doubleMode);
+	bool init(std::vector<sf::Vector2i> initCards, bool doubleMode);//vector template <card id, player id> id double then cards for one player should be togeder
 };
 
