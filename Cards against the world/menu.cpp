@@ -5,6 +5,7 @@
 #include "table.h"
 #include "chat.h"
 #include "ScoreBoard.h"
+#include "timer.h"
 
 Menu::Menu(sf::RenderWindow& win, std::string& ver_) : window(win), version(ver_)
 {
@@ -213,6 +214,15 @@ st Menu::test()
 	black.setCharSize(20);
 	black.setId(0);
 	black.setTextUtf8("W mieszkaniu znanego dziennikarza znaleziono __.");
+	sf::Texture tmp;
+	tmp.loadFromFile("PNG/tmp.png");
+	timer clock(tmp, font);
+	clock.setTitle("Time:");
+	clock.setPosition(linex / 2 - 150, 10);
+	clock.setSize(60);
+	clock.setTimer(10, 5);
+	clock.setDeadline(1, 0);
+	clock.start();
 
 	sf::Event event;
 	event.type = sf::Event::GainedFocus;
@@ -259,6 +269,8 @@ st Menu::test()
 			else;
 		}
 		score.update();
+		if (clock.run())
+			;
 		window.clear(sf::Color::Black);
 		window.draw(background);
 		Chat.draw();
@@ -266,6 +278,7 @@ st Menu::test()
 		next.draw();
 		quit.draw();
 		tabl.draw();
+		window.draw(clock);
 		window.draw(black);
 		window.display();
 	}

@@ -188,6 +188,7 @@
     <ClCompile Include="socketUtils.cpp" />
     <ClCompile Include="Sounds.cpp" />
     <ClCompile Include="table.cpp" />
+    <ClCompile Include="timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
@@ -208,6 +209,7 @@
     <ClInclude Include="socketUtils.h" />
     <ClInclude Include="Sounds.h" />
     <ClInclude Include="table.h" />
+    <ClInclude Include="timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
