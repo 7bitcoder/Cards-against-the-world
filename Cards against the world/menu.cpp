@@ -220,8 +220,8 @@ st Menu::test()
 	clock.setTitle("Time:");
 	clock.setPosition(linex / 2 - 150, 10);
 	clock.setSize(60);
-	clock.setTimer(10, 5);
-	clock.setDeadline(1, 0);
+	clock.setTimer(0, 10);
+	clock.setDeadline(0, 5);
 	clock.start();
 
 	sf::Event event;
@@ -269,8 +269,10 @@ st Menu::test()
 			else;
 		}
 		score.update();
-		if (clock.run())
-			;
+		if (clock.run()) {
+			clock.setTimer(0, 10);
+			clock.start();
+		}
 		window.clear(sf::Color::Black);
 		window.draw(background);
 		Chat.draw();

@@ -80,6 +80,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <CodeAnalysisRuleSet>CppCoreCheckExperimentalRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -173,6 +174,7 @@
     <ClCompile Include="card.cpp" />
     <ClCompile Include="Cards against the world.cpp" />
     <ClCompile Include="chat.cpp" />
+    <ClCompile Include="chosingTable.cpp" />
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="inputText.cpp" />
@@ -194,6 +196,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="card.h" />
     <ClInclude Include="chat.h" />
+    <ClInclude Include="chosingTable.h" />
     <ClInclude Include="Deck.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="inputText.h" />
