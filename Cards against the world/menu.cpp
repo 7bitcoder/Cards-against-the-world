@@ -6,6 +6,7 @@
 #include "chat.h"
 #include "ScoreBoard.h"
 #include "timer.h"
+#include "chosingTable.h"
 
 Menu::Menu(sf::RenderWindow& win, std::string& ver_) : window(win), version(ver_)
 {
@@ -184,12 +185,20 @@ st Menu::test()
 	quit.setTitle("BACK");
 	quit.setSoundVolume(setting.SoundVolume);
 	quit.setColor(sf::Color::White);
+	
+/*
+table tabl(window, 10);
 
-	table tabl(window, 10);
-	std::vector<int> xd = { 0,1,2,3,4,5,6,7, 8, 9 };
-	if (!tabl.init(xd))
-		;//todo
-	tabl.setDouble(true);
+if (!tabl.init(xd))
+	;//todo
+tabl.setDouble(true);
+*/
+	std::vector<sf::Vector2i> xd = { {0,0},{1,0},{2,1},{3,1},{4,2},{5,2},{6,3},{7,3},{8,4},{9,4},{10,5},{11,5},{12,6},{13,6} };
+	bool doubl = false;
+	int siz = 5;
+	chosingTable tabl(window, siz);
+	if (!tabl.init(std::vector<sf::Vector2i>(xd.begin(),xd.begin() + (doubl ? siz*2 : siz)), doubl))
+		;
 
 	chat Chat(window, clickBuff, 150, 12, font);
 	Chat.setValues(sf::Vector2f((1920 - 650), 50), 20, 600);
@@ -258,10 +267,7 @@ st Menu::test()
 			if (quit.buttonFunction())
 				return st::mainMenu;
 			if (next.buttonFunction()) {
-				for (int i = xd.back(), n = 0; n < 10; n++, i++) {
-					xd[n] = i;
-				}
-				tabl.init(xd);
+				std::cout << "chosen id " << tabl.getChosenPlayerId() << std::endl;
 			}
 			else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
 				tabl.function();

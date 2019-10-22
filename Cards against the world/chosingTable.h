@@ -3,7 +3,7 @@
 #include "card.h"
 #include "Deck.h"
 
-class chosingTable
+class chosingTable//number of cards minus one player chosing one !!!!
 {
 public:
 	struct data
@@ -17,11 +17,11 @@ private:
 	std::vector<sf::Vector2f> normalPositions;
 	std::vector<sf::Vector2f> doublePositions;
 	std::vector<data> slots;
-	int chosen;
+	int chosen = -1;
 	int numberOfCards;
 	bool doubl;
 	bool hide = false;
-	void resetChosen() { resetOne(chosen); resetOne(slots[chosen].related); chosen = -1; }
+	void resetChosen(int chosen) { if (chosen != -1) { resetOne(chosen); resetOne(slots[chosen].related); this->chosen = -1; } }
 	void resetOne(int x) { if (x != -1) slots[x].card_.resetChosen(); }
 public:
 	chosingTable(sf::RenderWindow& win, int numberOfCards);
