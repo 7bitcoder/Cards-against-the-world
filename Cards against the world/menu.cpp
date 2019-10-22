@@ -195,7 +195,7 @@ tabl.setDouble(true);
 */
 	std::vector<sf::Vector2i> xd = { {0,0},{1,0},{2,1},{3,1},{4,2},{5,2},{6,3},{7,3},{8,4},{9,4},{10,5},{11,5},{12,6},{13,6} };
 	bool doubl = false;
-	int siz = 5;
+	int siz = 7;
 	chosingTable tabl(window, siz);
 	if (!tabl.init(std::vector<sf::Vector2i>(xd.begin(),xd.begin() + (doubl ? siz*2 : siz)), doubl))
 		;
