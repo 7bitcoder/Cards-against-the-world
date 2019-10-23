@@ -174,30 +174,31 @@ st Menu::test()
 
 	Button next(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
 	next.setPosition((linex - 190 * 1.8) * setting.xScale, (liney - 200) * setting.yScale);
-	next.setScale(1.8 * setting.xScale, 1 * setting.yScale);
+	next.setScale(setting.xScale, 1 * setting.yScale);
 	next.setTitle("NEXT");
 	next.setSoundVolume(setting.SoundVolume);
 	next.setColor(sf::Color::White);
 
 	Button quit(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
 	quit.setPosition((linex - 190 * 1.8) * setting.xScale, (liney - 100) * setting.yScale);
-	quit.setScale(1.8 * setting.xScale, 1 * setting.yScale);
+	quit.setScale(setting.xScale, 1 * setting.yScale);
 	quit.setTitle("BACK");
 	quit.setSoundVolume(setting.SoundVolume);
 	quit.setColor(sf::Color::White);
-	
-/*
-table tabl(window, 10);
 
-if (!tabl.init(xd))
-	;//todo
-tabl.setDouble(true);
-*/
+
+	/*std::vector <int> xd = { 0,1,2,3,4,5,6,7, 8, 9 };
+	table tabl(window, 10);
+
+	if (!tabl.init(xd))
+		;//todo
+	tabl.setDouble(true);
+	*/
 	std::vector<sf::Vector2i> xd = { {0,0},{1,0},{2,1},{3,1},{4,2},{5,2},{6,3},{7,3},{8,4},{9,4},{10,5},{11,5},{12,6},{13,6} };
 	bool doubl = false;
-	int siz = 7;
+	int siz = 6;
 	chosingTable tabl(window, siz);
-	if (!tabl.init(std::vector<sf::Vector2i>(xd.begin(),xd.begin() + (doubl ? siz*2 : siz)), doubl))
+	if (!tabl.init(std::vector<sf::Vector2i>(xd.begin(), xd.begin() + (doubl ? siz * 2 : siz)), doubl))
 		;
 
 	chat Chat(window, clickBuff, 150, 12, font);
@@ -219,8 +220,8 @@ tabl.setDouble(true);
 
 	card black(card::kind::black);
 	black.setOffest(20);
-	black.setPosition(1920 - 350, 500);
-	black.setCharSize(20);
+	black.setPosition(1920 - 400, 500);
+	black.setCharSize(30);
 	black.setId(0);
 	black.setTextUtf8("W mieszkaniu znanego dziennikarza znaleziono __.");
 	sf::Texture tmp;
@@ -267,7 +268,10 @@ tabl.setDouble(true);
 			if (quit.buttonFunction())
 				return st::mainMenu;
 			if (next.buttonFunction()) {
-				std::cout << "chosen id " << tabl.getChosenPlayerId() << std::endl;
+				//for (int i = xd.back(), f = 0; f < 10; f++, i++) {
+					//xd[f] = i;
+			//	}
+				//tabl.init(xd);
 			}
 			else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
 				tabl.function();

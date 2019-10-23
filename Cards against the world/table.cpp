@@ -45,7 +45,6 @@ table::table(sf::RenderWindow & win, int numberOfCards_) : window(win), slots(nu
 		x.setCharSize(20);
 	}
 	int beg = 250;
-	int centry = 800;
 	int centr = (window.getSize().x / 2) - 190 * 1.8;
 	numberOfCards = numberOfCards_;
 	float idff = float(numberOfCards_) / 2;
@@ -53,13 +52,11 @@ table::table(sf::RenderWindow & win, int numberOfCards_) : window(win), slots(nu
 	float heigh = slots.front().getYSize();
 	float spacing = 15;
 	int inRow = 5;
+	int centry = 800 - heigh - spacing;
 	for (int rows = 0; rows < 2; rows++) {
 		for (int i = 0; i < inRow; i++) {
-			if (positions.size() == numberOfCards_)
-				continue;
-			positions.push_back({ beg + i * (width + spacing), centry - rows * (heigh + spacing) });
 			slots[i + rows * inRow].setOffest(20);
-			slots[i + rows * inRow].setPosition(positions.back().x, positions.back().y);
+			slots[i + rows * inRow].setPosition(beg + i * (width + spacing), centry + rows * (heigh + spacing));
 		}
 	}
 	resetChosen();
@@ -76,7 +73,7 @@ bool table::init(std::vector<int> initCards) {
 void table::replaceChosenFirst(int newId)
 {
 	slots[chosen.x].setId(newId);
-	slots[chosen.x].setTextUtf8(deck.getCard(newId, false));
+	slots[chosen.x].setTextUtf8(deck.getCard(newId, true));
 }
 
 void table::replaceChosenSecound(int newId)

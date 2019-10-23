@@ -8,10 +8,19 @@ Deck::Deck()
 std::string Deck::getCard(std::size_t pos, bool black__)
 {
 	try {
-		return black__ ? black_.at(pos) : white_.at(pos);
+		return black__ ? black_.at(pos).text : white_.at(pos);
 	}
 	catch (...) {
 		return std::string("error: validate your deck, cound not find ") + (!black__ ? "white " : "black ") + "card, id: " + std::to_string(pos);
+	}
+}
+bool Deck::getDouble(std::size_t pos)
+{
+	try {
+		return black_.at(pos).doubl;
+	}
+	catch (...) {
+		return false;
 	}
 }
 Deck::card Deck::checkIfNewCard(std::string& line) {
@@ -62,10 +71,16 @@ bool Deck::load(std::string name)
 			}
 			int index = getNumber(buff);
 			if (check == card::black) {
-				if (!black_.at(index).empty()) {
+				if (!black_.at(index).text.empty()) {
 					return false;
 				}
-				black_.at(index) = wholeCard;
+				int found = 0;
+				for (auto& x : wholeCard) {
+					if (x == '_')
+						found++;
+				}
+				black_.at(index).text = wholeCard;
+				black_.at(index).doubl = found > 2;
 				BlackCards++;
 				wholeCard.clear();
 			}
@@ -83,7 +98,7 @@ bool Deck::load(std::string name)
 			if (x.empty())
 				return false;
 		for (auto& x : black_)
-			if (x.empty())
+			if (x.text.empty())
 				return false;
 		return true;
 	}

@@ -7,7 +7,6 @@ class table
 {
 private:
 	sf::RenderWindow& window;
-	std::vector<sf::Vector2f> positions;
 	std::vector<card> slots;
 	sf::Vector2i chosen;
 	int numberOfCards;
