@@ -10,7 +10,9 @@ namespace message {
 	const code unableToRechServer = 7;
 	const code unableToSendData = 8;
 	const code unableToGetData = 9;
-	const code connected = 10;
+	const code lobbyIsLocked = 10;
+	const code nicknameIsAlreadyCHosen = 11;
+	const code connected = 12;
 	namespace {//private
 		const std::vector<std::string> connectionError{
 			"Unknown error",
@@ -22,7 +24,10 @@ namespace message {
 			"Lobby name is locked",
 			"Unable to reach server",
 			"Unable to send data",
-			"Unable to get Data" };//7
+			"Unable to get Data",
+			"Cannot join lobby, game has already started",
+			"Nickname is already chosen"
+		};//7
 	}
 	std::string getConnectError(code error) {
 		if (error < 1 || error >= connectionError.size())

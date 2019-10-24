@@ -1,0 +1,64 @@
+﻿  chat.cpp
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\chat.cpp(13): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\chat.cpp(22): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\chat.cpp(44): warning C4101: "state": lokalna zmienna, do której nie istnieje odwołanie
+  game.cpp
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.h(9): warning C4005: "LEN": ponowna definicja makra
+  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\socketUtils.h(15): note: zobacz poprzednią definicję „LEN”
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.h(29): warning C4267: "return": konwersja z "size_t" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(54): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(88): warning C4101: "state": lokalna zmienna, do której nie istnieje odwołanie
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(172): warning C4267: "argument": konwersja z "size_t" do "char", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(178): warning C4267: "inicjowanie": konwersja z "size_t" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(187): warning C4267: "argument": konwersja z "size_t" do "uint16_t", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(189): warning C4267: "argument": konwersja z "size_t" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(245): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(282): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(332): warning C4244: "-=": konwersja z "_Rep" do "long", możliwa utrata danych
+          with
+          [
+              _Rep=__int64
+          ]
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(373): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(365): warning C4101: "ch": lokalna zmienna, do której nie istnieje odwołanie
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(408): warning C4244: "-=": konwersja z "_Rep" do "long", możliwa utrata danych
+          with
+          [
+              _Rep=__int64
+          ]
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(395): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(449): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(467): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(441): warning C4101: "ch": lokalna zmienna, do której nie istnieje odwołanie
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(512): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(516): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(523): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(528): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(532): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(541): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(548): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+  lobbyThread.cpp
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.h(9): warning C4005: "LEN": ponowna definicja makra
+  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\socketUtils.h(15): note: zobacz poprzednią definicję „LEN”
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.h(29): warning C4267: "return": konwersja z "size_t" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\lobbyThread.cpp(10): warning C4005: "DEFAULT_BUFLEN": ponowna definicja makra
+  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\MainThreadListener.h(4): note: zobacz poprzednią definicję „DEFAULT_BUFLEN”
+  MainThreadListener.cpp
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\MainThreadListener.cpp(35): warning C4267: "argument": konwersja z "size_t" do "uint16_t", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\MainThreadListener.cpp(37): warning C4267: "argument": konwersja z "size_t" do "int", możliwa utrata danych
+  Server.cpp
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\Server.cpp(90): warning C4267: "argument": konwersja z "size_t" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\Server.cpp(94): warning C4267: "argument": konwersja z "size_t" do "int", możliwa utrata danych
+  serverUtils.cpp
+  severRawUtils.cpp
+  socketUtils.cpp
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\socketUtils.cpp(21): warning C4101: "ch": lokalna zmienna, do której nie istnieje odwołanie
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\socketUtils.cpp(33): warning C4267: "=": konwersja z "size_t" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\socketUtils.cpp(43): warning C4267: "inicjowanie": konwersja z "size_t" do "int", możliwa utrata danych
+  tcpListener.cpp
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\tcpListener.cpp(9): warning C4101: "state": lokalna zmienna, do której nie istnieje odwołanie
+  Generowanie kodu...
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(122): warning C4715: "game::rejectNewClient”: niewszystkie ścieżki kodu zwracają wartość
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(193): warning C4715: "game::acceptNewClient”: niewszystkie ścieżki kodu zwracają wartość
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(471): warning C4715: "game::questionOvertimeF”: niewszystkie ścieżki kodu zwracają wartość
+  Server.vcxproj -> C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\x64\Debug\Server.exe

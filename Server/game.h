@@ -1,13 +1,17 @@
 #pragma once
 #include <map>
 #include "serverUtils.h"
+#include <algorithm>
+#include <vector>
+#include <deque>
+#include <set>
+
 #define LEN 8000
-enum states{ waiting = 1, starting, questionInit, question, choseInit, chose, summing, kill};
 class Cards{//front is top back is bottom of cards deque
 	private:
-	std::deque<data> cards;
+	std::deque<int> cards;
 	public:
-	deques();{}
+		Cards() { ; }
 	void init(int wh )
 	{
 	cards.clear();
@@ -18,10 +22,11 @@ class Cards{//front is top back is bottom of cards deque
 	std::random_shuffle(cards.begin(), cards.end());
 	}
 	int getCard() { 
-	int id = cards.front().id; 
+	int id = cards.front(); 
 	cards.pop_front();
 	return id;
 	}
+	int size() { return cards.size(); }
 	bool empty() { return cards.empty();}// do sprawdzenia czy talia jest pusta czarna przy rozpoczecie rundy
 	void putCardsBack(std::vector<int> & car){
 	for(int x : car)
@@ -33,14 +38,14 @@ class whiteCards:public Cards{
 	std::set<int> cardsTaken;//check if putCards back are OK
 	public:
 	int getCard(){
-	int  id = Cads::getCard();
+	int  id = Cards::getCard();
 	cardsTaken.insert(id);
 	return id;
 	}
 	bool putCardsBack(std::vector<int> & car){
 	for(int x : car){
 		auto it = cardsTaken.find(x);
-		if(it == cardsTaken.end()
+		if(it == cardsTaken.end())
 		   return false;
 		cardsTaken.erase(it);
 	}
@@ -54,6 +59,7 @@ struct slot
 	bool ready;
 	int id;
 };
+enum states { waiting = 1, starting, questionInit, question, questionOvertime, choseInit, chose, choseOvertime, summing, kill };
 class game: public serverUtils
 {
 private:
@@ -61,9 +67,11 @@ private:
 	whiteCards white;
 	bool lock;//lock lobby for new players
 	char buff[LEN];
-	choserId;
+	std::map<SOCKET, slot>::iterator choser;
 	char free[9];//free table to check if slot of id is free;
 	std::map<SOCKET, slot> clients;//0 listen rest players up to 8
+	std::vector<int> cardsToSendToChoser;
+	std::vector<int> alreadySended;
 	SOCKET leader;
 	SOCKET listenSocket;
 	fd_set fds;
@@ -72,11 +80,19 @@ public:
 	game(SOCKET listen, SOCKET leader, std::u32string nick, std::u32string lobbyId);
 	bool broadCast(SOCKET socket, char* buff, int len, bool all = false);
 	bool computeNewClientData(SOCKET socket, std::u32string& nick);
+	bool rejectNewClient();
 	bool acceptNewClient();
 	void disconnect(SOCKET sock);
 	bool waitForLeaderAccept() { char coding, id; if (receiveLen(leader, buff, coding, id, 10, 0) == -1) return false; return true; }
-	getNewChoser()
-	states waiting();
+	states waitingF();
+	states startingF();
+	states questionInitF();
+	states questionF();
+	states questionOvertimeF();
+	states choseinitF();
+	states choseF();
+	states choseOvertimeF();
+	states summingF();
 	~game();
 };
 

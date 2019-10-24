@@ -42,7 +42,31 @@ void lobbyThread(SOCKET socket_, std::u32string lobbyId, std::u32string leader)/
 	while (true) {
 		switch (state) {
 		case states::waiting: //waiting for players, settings and for game start
-			state = Game.waiting();
+			state = Game.waitingF();
+			break;
+		case states::starting: //waiting for players, settings and for game start
+			state = Game.startingF();
+			break;
+		case states::questionInit: //waiting for players, settings and for game start
+			state = Game.questionInitF();
+			break;
+		case states::question: //waiting for players, settings and for game start
+			state = Game.questionF();
+			break;
+		case states::questionOvertime: //waiting for players, settings and for game start
+			state = Game.questionOvertimeF();
+			break;
+		case states::choseInit: //waiting for players, settings and for game start
+			state = Game.choseinitF();
+			break;
+		case states::chose: //waiting for players, settings and for game start
+			state = Game.choseF();
+			break;
+		case states::choseOvertime: //waiting for players, settings and for game start
+			state = Game.choseOvertimeF();
+			break;
+		case states::summing: //waiting for players, settings and for game start
+			state = Game.summingF();
 			break;
 		case states::kill:
 			chat.join();
@@ -50,7 +74,7 @@ void lobbyThread(SOCKET socket_, std::u32string lobbyId, std::u32string leader)/
 			mapaLobby.erase(lobbyId);
 			mut.unlock();
 			return;
-		case states::choseInit:
+		default:
 			break;
 		}
 	}

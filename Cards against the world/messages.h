@@ -30,6 +30,8 @@ namespace message {
 	extern const code unableToRechServer;
 	extern const code unableToSendData;
 	extern const code unableToGetData;
+	extern const code lobbyIsLocked;
+	extern const code nicknameIsAlreadyCHosen;
 	extern const code connected;
 	namespace {//private
 		extern const std::vector<std::string> connectionError;//7
