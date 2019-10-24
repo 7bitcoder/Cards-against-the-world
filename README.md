@@ -6,5 +6,5 @@ Server is simply secured you need to send specific code to get access. </br>
 To run server code i used Amazon AWS it provides free cloud computing, within you can set up small windows server. </br>
 Currently there is only one deck available "Talia Rocka PL" in future i plan to create separate server that can send to clients many decks
 Amazon AWS </br>
-https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc
+https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc </br>
 Sfml https://www.sfml-dev.org/index.php
