@@ -61,6 +61,7 @@ private:
 	whiteCards white;
 	bool lock;//lock lobby for new players
 	char buff[LEN];
+	choserId;
 	char free[9];//free table to check if slot of id is free;
 	std::map<SOCKET, slot> clients;//0 listen rest players up to 8
 	SOCKET leader;
@@ -74,6 +75,7 @@ public:
 	bool acceptNewClient();
 	void disconnect(SOCKET sock);
 	bool waitForLeaderAccept() { char coding, id; if (receiveLen(leader, buff, coding, id, 10, 0) == -1) return false; return true; }
+	getNewChoser()
 	states waiting();
 	~game();
 };
