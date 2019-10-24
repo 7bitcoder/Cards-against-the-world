@@ -22,12 +22,27 @@ namespace codes {
 	const char getId = 4;// get new player id;
 	const char getLobbyInfo = 5;// get lobby nicks itp
 	const char disconnect = 6;// disconnect player of this id 
-	const char Ready = 7;// - Ready wcisniecie ready i wyslanie do servera i wszyatkich  zmiana na zielony
-	const char notReady = 8;// - notReady to samo pu tylko not ready zmiana na czerowny
-	const char start = 9;// - start leader jeśli wszyscy ready to zmiana stanu na grę LEADER
-	const char dequeUpdate = 10;// - update talii //aktualnie jeszcze nie LEADER
-	const char timeUpdate = 11;// - update czas gry LEADER
-	const char notAllPlayersAreReady = 12; // nie wszyscy gracze są gotowi
+	const char Ready = 7;// - Ready send info that player is ready
+	const char notReady = 8;// - notReady player is not ready
+	const char start = 9;// - start if all players are ready then start game - change state LEADER
+	const char dequeUpdate = 10;// - update deque
+	const char timeUpdate = 11;// - update game time / rounds
+	const char notAllPlayersAreReady = 12; // not all pleyrs arre ready
+	const char sendWhiteDequeLen = 13;//send white deque len;
+	const char sendBlackDequeLen = 14;
+	const char sendRandomTenCards = 15; //send init cards to players
+	const char youAreTheChoser = 16;//send info that you are the choser now
+	const char sendBlackCard = 17;//send black card to players
+	const char sendChosenWhiteCards = 18;//send one or 2 chosen cards from normal players to choser
+	const char getRandomWhiteCardsRequest = 19;//when player time is up sent it to him
+	const char getRandomWhiteCards = 20;//get random cards from request ^
+	const char choserWinnerId = 21;//server get from choser winner
+	const char getRandomWinnerRequest = 22;//if time is up request for random one
+	const char getRandomWinner = 23;//response ^
+	const char sendWinner = 24;//send to all player winner to update points;
+	const char gameIsOver = 25;//time is up or rounds
+	const char shuffleWhiteDeque = 26;//shuffle deque LEADER concept if cards are reapiting then shuffle it
+	const char playerIsNotResponsing = 27;//if pleyer is not responsing send it to rest and stop game
 
 }//TODO naprawnie deadlocka broadcast disconnect 
 game::game(SOCKET listen, SOCKET leader_, std::u32string nick, std::u32string id)
@@ -78,6 +93,26 @@ bool game::computeNewClientData(SOCKET socket, std::u32string & nick)
 	}
 	printf("code is ok\n");
 	return true;
+}
+bool game::rejectNewClient() {
+	SOCKET client = accept(listenSocket, nullptr, nullptr);
+	if (client == INVALID_SOCKET) {
+		printf("accept failed with error: %d\n", WSAGetLastError());
+		closesocket(client);
+		return false;
+	}
+	int iResult = receiveLen(client, buff, coding, playerId, 2, 0);//wait 2 sec
+	if (iResult <= 0)
+	{
+		printf("receive failed with error: %d\n", WSAGetLastError());
+		closesocket(client);
+		return false;
+	}//idk if necesary 
+	addMessagePrefix(buff, 1, codes::getId, ID);//add error lobby is already in game
+		if (!sendLen(client, buff, 4)) {
+		//todo
+	}
+	closesocket(client);
 }
 bool game::acceptNewClient() {//TODO dorobienie zwracania kodu b³êdów
 	int i = 0;
@@ -186,7 +221,7 @@ states game::waiting()
 					disconnect(sock);
 				else {//decode
 					char code, playerID;
-					getMessagePrefix(buff, code, playerID);
+					int additionlInfo = getMessagePrefix(buff, code, playerID);
 					switch (code) {
 					case codes::Ready://ready
 						clients[sock].ready = true;
@@ -205,7 +240,82 @@ states game::waiting()
 									//TODO
 									break;
 								}
-						//start
+						lockLobby = true;
+						return states::starting;
+						break;
+						case codes::sendWhiteDequeLen:
+							white.init(aditionalInfo);
+							break;
+							
+						case codes::sendBlackDequeLen:
+							black.init(aditionalInfo);
+							break;
+					default:
+						break;
+					}
+				}
+			}
+		}
+	}
+	return states();
+}
+states game::starting()
+{
+	//deques shuffle;
+	white.shuffle();
+	black.shuffle();
+	//send to all players 10 init cards
+	addMessagePrefix(buff, 1, codes::sendRandomTenCards, 0);
+	for(auto & player : clients){
+		for(int i = 0; i < 10 ; i++){
+			unit16_t id = white.getCard();
+			id = htons(id);
+			memcpy(buff + 4 + i*2, (char*)& id, 2);//add to raw data units 16
+		}
+		if (!sendLen(player->first, buff, 4 + 10*2))
+		//todo
+	}
+	//init choser
+	choserId = rand() % clients.size();
+	return state::questionInit;
+}
+states game::questionInit(){
+	//get new choser
+	int min = 10;
+		smollest in range choser : 10
+	if(min == 10)
+		choser = 1; //leader = first new round
+	//youAreTheChoser
+	while (true) {
+		if (!clients.size())
+			return states::kill;
+		fd_set copy = fds;
+		int socketCount = select(0, &copy, nullptr, nullptr, nullptr);
+		if (socketCount == SOCKET_ERROR) {
+			printf("select failed with error: %d\n", WSAGetLastError());
+			continue;
+		}
+		printf("after xd\n");
+		for (int i = 0; i < socketCount; i++) {
+			printf("in for %d\n", i);
+			SOCKET sock = copy.fd_array[i];
+			if (sock == listenSocket) {//listen
+				rejectNewClient()
+					continue;
+			}///TODO if leared is disconnected what happens?????
+			else {//get message
+				int i = recv(sock, buff, 4, 0);
+				if (i <= 0) //TODO
+					disconnect(sock);
+				else {//decode
+					char code, playerID;
+					int additionalInfo = getMessagePrefix(buff, code, playerID);
+					switch (code) {
+					case codes::Ready://ready
+						break;
+					case codes::notReady://notReady
+						break;
+					case codes::start://start game
 						break;
 					default:
 						break;
@@ -216,7 +326,6 @@ states game::waiting()
 	}
 	return states();
 }
-
 game::~game()
 {
 	for (int i = 0; i < fds.fd_count; i++)
