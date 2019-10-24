@@ -31,7 +31,7 @@ namespace codes {
 	const char sendWhiteDequeLen = 13;//send white deque len;
 	const char sendBlackDequeLen = 14;
 	const char sendRandomTenCards = 15; //send init cards to players
-	const char youAreTheChoser = 16;//send info that you are the choser now
+	const char sendChoserId = 16;//send info to all plaers that id of player is id of choser
 	const char sendBlackCard = 17;//send black card to players
 	const char sendChosenWhiteCards = 18;//send one or 2 chosen cards from normal players to choser
 	const char getRandomWhiteCardsRequest = 19;//when player time is up sent it to him
@@ -275,25 +275,44 @@ states game::starting()
 		if (!sendLen(player->first, buff, 4 + 10*2))
 		//todo
 	}
-	//init choser
-	choserId = rand() % clients.size();
 	return state::questionInit;
 }
 states game::questionInit(){
 	//get new choser
 	int min = 10;
-		smollest in range choser : 10
+		auto it =  in clients smollest in range choser : 10
 	if(min == 10)
 		choser = 1; //leader = first new round
-	//youAreTheChoser
-	while (true) {
+	
+	//send info choser
+	addMessagePrefix(buff, 1, codes::sendChoserId, choser);
+	broadCast(0,buff,4,true)
+	
+	//send black card
+	int id = black.getCard();
+	addMessagePrefix(buff, 1, codes::sendBlackCard, choser);
+	broadCast(0,buff,4,true)
+		return state::question;
+}
+state game::question(){
+	chrono time start now
+	TIMEVAL tv = { 60*3 , 0 };//3 min
+while (true) {
 		if (!clients.size())
 			return states::kill;
 		fd_set copy = fds;
-		int socketCount = select(0, &copy, nullptr, nullptr, nullptr);
+	chrono get time;
+	durr  = time  - start in microsec
+		tv.tv_sec -= durr / 1000000;
+		tv.tv_usec -= durr % 1000000;
+		int socketCount = select(0, &copy, nullptr, nullptr, time);
 		if (socketCount == SOCKET_ERROR) {
 			printf("select failed with error: %d\n", WSAGetLastError());
 			continue;
+		}
+		else if (socketCount == 0) {
+			printf("response time for data is is up\n");
+			//todo
 		}
 		printf("after xd\n");
 		for (int i = 0; i < socketCount; i++) {
@@ -324,7 +343,10 @@ states game::questionInit(){
 			}
 		}
 	}
-	return states();
+	return states::choseInit;	
+}
+states game::choseinit(){
+	
 }
 game::~game()
 {
