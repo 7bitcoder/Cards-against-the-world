@@ -1,33 +1,33 @@
 #include "table.h"
-
-sf::Vector2i table::getChosenId()
-{
-	return { slots[chosen.x].getId(),slots[chosen.y].getId() };
-}
-
+#include <cstdlib>
+#include <iostream>
+#include <ctime>
 void table::function()
 {
-	static bool full = false;
-	sf::Vector2i pos = sf::Mouse::getPosition(window);
-	for (int i = 0; i < slots.size(); i++) {
-		if (slots[i].isOn(sf::Vector2f(pos.x, pos.y))) {
-			if (doubl) {
-				if (chosen.x != -1 && chosen.y != -1)
-					resetChosen();
-				if (chosen.x == -1) {
+	if (!hide) {
+		static bool full = false;
+		sf::Vector2i pos = sf::Mouse::getPosition(window);
+		for (int i = 0; i < slots.size(); i++) {
+			if (slots[i].isOn(sf::Vector2f(pos.x, pos.y))) {
+				if (doubl) {
+					if (chosen.x != -1 && chosen.y != -1)
+						resetChosen();
+					if (chosen.x == -1) {
+						chosen.x = i;
+						slots[i].setChosen();//first
+						selected = true;
+					}
+					else if (chosen.y == -1 && chosen.x != i) {
+						chosen.y = i;
+						slots[i].setChosen(true); //secound
+					}
+				}
+				else if (!slots[i].isChosen()) {
+					resetOne(chosen.x);
 					chosen.x = i;
-					slots[i].setChosen();//first
+					slots[i].setChosen();
+					selected = true;
 				}
-				else if (chosen.y == -1 && chosen.x != i) {
-					chosen.y = i;
-					slots[i].setChosen(true); //secound
-				}
-			}
-			else if (!slots[i].isChosen()) {
-				resetOne(chosen.x);
-				chosen.x = i;
-				slots[i].setChosen();
-
 			}
 		}
 	}
@@ -35,12 +35,14 @@ void table::function()
 
 void table::draw()
 {
-	for (auto& x : slots)
-		window.draw(x);
+	if (!hide)
+		for (auto& x : slots)
+			window.draw(x);
 }
 
 table::table(sf::RenderWindow & win, int numberOfCards_) : window(win), slots(numberOfCards_, card(card::kind::white))
 {
+	std::srand(std::time(nullptr));
 	for (auto& x : slots) {
 		x.setCharSize(20);
 	}
@@ -80,6 +82,22 @@ void table::replaceChosenSecound(int newId)
 {
 	slots[chosen.y].setId(newId);
 	slots[chosen.y].setTextUtf8(deck.getCard(newId, false));
+}
+
+void table::choseRandom()
+{
+	resetChosen();
+	std::vector<int> cardsVectorPos{ 0,1,2,3,4,5,6,7,8,9 };
+	int pos = std::rand() % 10;
+	chosen.x = pos;
+	slots[pos].setChosen();//first
+	selected = true;
+	cardsVectorPos.erase(cardsVectorPos.begin() + pos);
+	if (doubl) {
+		pos = std::rand() % 9;
+		chosen.y = pos;
+		slots[pos].setChosen();//secound
+	}
 }
 
 table::~table()

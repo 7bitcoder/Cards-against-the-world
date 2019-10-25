@@ -19,7 +19,9 @@ private:
 public:
 	//TODO get files from server;
 	Deck();
-	bool load(std::string name);
+	bool load(std::experimental::filesystem::path name);
+	int getBlackDeckSize() { return black_.size(); }
+	int getWhiteDeckSize() { return white_.size(); }
 	std::string getCard(std::size_t pos, bool black = true);
 	bool getDouble(std::size_t pos);//only black cards !!!!
 	~Deck();

@@ -247,6 +247,10 @@ states game::waitingF()
 									break;
 								}
 						lock = true;
+						addMessagePrefix(buff, 1, codes::start, 0);
+						if (!broadCast(0, buff, 4, true)) {
+							;//todo
+						}
 						return states::starting;
 						break;
 					case codes::sendWhiteDequeLen:
@@ -291,6 +295,15 @@ states game::startingF()
 	return states::questionInit;
 }
 states game::questionInitF() {
+
+	//send black card
+	uint16_t id = black.getCard();
+	id = htons(id);
+	memcpy(buff + 4, (char*)& id, 2);
+	int id = black.getCard();
+	addMessagePrefix(buff, 1, codes::sendBlackCard, 0);
+	broadCast(0, buff, 6, true);
+
 	//get new choser
 	int min = 10;
 	auto it = clients.end();
@@ -311,10 +324,6 @@ states game::questionInitF() {
 	addMessagePrefix(buff, 1, codes::sendChoserId, choser->second.id);
 	broadCast(0, buff, 4, true);
 
-	//send black card
-	int id = black.getCard();
-	addMessagePrefix(buff, 1, codes::sendBlackCard, choser->second.id);
-	broadCast(0, buff, 4, true);
 	return states::question;
 }
 states game::questionF() {
@@ -362,7 +371,6 @@ states game::questionF() {
 					case codes::sendChosenWhiteCards://get cards to send to choser
 					{
 						int len = 6;
-						char16_t ch; mbstate_t state{};
 						uint16_t* ptr = (uint16_t*)(buff + 4);
 						cardsToSendToChoser.push_back(ntohs(*ptr));
 						if (additionalInfo > 2) {
@@ -371,7 +379,7 @@ states game::questionF() {
 							cardsToSendToChoser.push_back(ntohs(*ptr));
 						}
 						if (!sendLen(choser->first, buff, len));
-						;//todo
+							;//todo
 						if (alreadySended.size() == clients.size() - 1)//all players sended cards
 							return states::choseInit;
 					}
@@ -508,12 +516,15 @@ states game::choseF() {
 	}
 	char coding, playerID;
 	int l = getMessagePrefix(buff,coding, playerID);
-	if (coding != codes::choserWinnerId)
+	if (coding == codes::choserWinnerId) {
+		int winner = playerID;
+		addMessagePrefix(buff, 1, codes::sendWinner, winner);
+		if (!broadCast(0, buff, 4, true))
+			;//todo
+	}
+	else {
 		;//todo
-	int winner = playerID;
-	addMessagePrefix(buff, 1, codes::sendWinner, winner);
-	if (!broadCast(0, buff, 4, true))
-		;//todo
+	}
 	return states::summing;
 }
 states game::choseOvertimeF()

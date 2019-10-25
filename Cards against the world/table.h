@@ -3,6 +3,8 @@
 #include "card.h"
 #include <vector>
 #include <SFML/Graphics.hpp>
+
+
 class table
 {
 private:
@@ -11,17 +13,23 @@ private:
 	sf::Vector2i chosen;
 	int numberOfCards;
 	bool doubl;
-	void resetChosen() { resetOne(chosen.x); resetOne(chosen.y); chosen = { -1, -1 }; }
+	bool selected = false;//did you select card
+	bool hide;
 	void resetOne(int x) { if (x != -1) slots[x].resetChosen(); }
 public:
-	sf::Vector2i getChosenId();
+	void hideF(bool hid = true) { hide = hid; }
 	void function();
 	void draw();
 	void setDouble(bool doubl_) { doubl = doubl_; }
 	table(sf::RenderWindow& win, int numberOfCards);
 	bool init(std::vector<int> initCards);
+	int getFirst() { return slots[chosen.x].getId(); }
+	int getSecound() { return slots[chosen.y].getId(); }
 	void replaceChosenFirst(int newId);
 	void replaceChosenSecound(int newId);
+	void resetChosen() { resetOne(chosen.x); resetOne(chosen.y); chosen = { -1, -1 }; selected = false; }
+	bool selectedCards() { return selected; }
+	void choseRandom();
 
 	~table();
 };

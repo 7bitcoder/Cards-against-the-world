@@ -37,7 +37,7 @@ int Deck::getNumber(std::string & line)
 	line.erase(0, 3);
 	return std::stoi(line);
 }
-bool Deck::load(std::string name)
+bool Deck::load(std::experimental::filesystem::path name)
 {
 	white_.clear();
 	black_.clear();

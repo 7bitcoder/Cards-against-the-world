@@ -19,11 +19,14 @@ private:
 	std::vector<data> slots;
 	int chosen = -1;
 	int numberOfCards;
+	bool selected = false;
 	bool doubl;
 	bool hide = false;
-	void resetChosen(int chosen) { if (chosen != -1) { resetOne(chosen); resetOne(slots[chosen].related); this->chosen = -1; } }
 	void resetOne(int x) { if (x != -1) slots[x].card_.resetChosen(); }
 public:
+	void resetChosen() { if (chosen != -1) { resetOne(chosen); resetOne(slots[chosen].related); this->chosen = -1; selected = false; } }
+	bool selectedCards() { return selected; }
+	void hideF(bool hid = true) { hide = hid; }
 	chosingTable(sf::RenderWindow& win, int numberOfCards);
 	~chosingTable();
 	int getChosenPlayerId(); // get player id of chosen cards
@@ -32,5 +35,6 @@ public:
 	void setDrawable(bool t) { hide = !t; }
 	void setDouble(bool doubl_) { doubl = doubl_; }
 	bool init(std::vector<sf::Vector2i> initCards, bool doubleMode);//vector template <card id, player id> id double then cards for one player should be togeder
+	void choseRandom();
 };
 

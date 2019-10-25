@@ -9,7 +9,6 @@ socketUtils::~socketUtils()
 {
 }
 void socketUtils::addMessagePrefix(char* pos, uint16_t nmb, char coding, char playerId) {
-	mbstate_t state{};
 	pos[0] = coding;
 	nmb = htons(nmb);
 	memcpy(pos + 1, (char*)& nmb, 2);
@@ -18,7 +17,6 @@ void socketUtils::addMessagePrefix(char* pos, uint16_t nmb, char coding, char pl
 uint16_t socketUtils::getMessagePrefix(char* pos, char& coding, char& playerId) {
 	coding = pos[0];
 	playerId = pos[3];
-	char16_t ch; mbstate_t state{};
 	uint16_t* ptr = (uint16_t*)(pos + 1);
 	return ntohs(*ptr);
 }

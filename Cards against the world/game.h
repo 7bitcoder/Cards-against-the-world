@@ -10,7 +10,7 @@
 class game :public socketUtils
 {
 private:
-	enum state{lobby, GameBegin, exit};
+	enum state{lobby, inGame, exit};
 	state state_;
 	chat Chat;
 	std::map<int, sf::String > players;//0 listen rest players up to 8
@@ -47,6 +47,7 @@ private:
 	bool receive(sf::TcpSocket& socket, std::u32string& data, char& coding, char& playerId);
 	game::state joinWait();
 	game::state LeaderWait();
+	game::state inGame();
 	void checkCommands();
 public:
 	game(sf::RenderWindow& win, sf::SoundBuffer& sndbuff, sf::Font font, sf::String lobbyId, sf::String nick, bool newlobby);
