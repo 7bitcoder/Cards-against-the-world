@@ -47,6 +47,7 @@ namespace codes {
 	const char gameIsOver = 25;//time is up or rounds
 	const char shuffleWhiteDeque = 26;//shuffle deque LEADER concept if cards are reapiting then shuffle it
 	const char playerIsNotResponsing = 27;//if pleyer is not responsing send it to rest and stop game
+	const char notEnoughPlayers = 28;//min 4 players required
 
 }//TODO naprawnie deadlocka broadcast disconnect 
 game::game(SOCKET listen, SOCKET leader_, std::u32string nick, std::u32string id)
@@ -238,6 +239,12 @@ states game::waitingF()
 						broadCast(sock, buff, 4, true);
 						break;
 					case codes::start://start game
+						if(clients.size() < 3){
+							addMessagePrefix(buff, 1, codes::notEnoughPlayers, 0);
+							if (!sendLen(leader, buff, 4));
+							//TODO
+							break;
+						}
 						for (auto it = clients.begin(); it != clients.end(); it++)
 							if (it->first != leader)
 								if (!it->second.ready) {
