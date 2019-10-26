@@ -1,119 +1,4 @@
-﻿  Cards against the world.cpp
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Button.h(37): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Button.h(42): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-  Deck.cpp
-  chosingTable.cpp
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\card.h(35): warning C4244: "argument": konwersja z "float" do "unsigned int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(29): error C2365: "chosingTable::hide": zmiana definicji; definicja poprzednia była "składowa danych"
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(24): note: zobacz deklarację „chosingTable::hide”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(29): error C2059: błąd składniowy: „=”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(29): error C2238: nieoczekiwany(e) token(y) poprzedzający(e) ";"
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(31): error C2588: "::~chosingTable": niedozwolony globalny destruktor
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(31): error C4430: brak specyfikatora typu - założono, że int. Uwaga: C++ nie obsługuje domyślnie typu int
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(35): error C2065: "hide": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(36): error C2065: "doubl": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(39): error C2059: błąd składniowy: „}”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(39): error C2143: błąd składniowy: brakuje „;” przed „}”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(20): error C2365: "table::hide": zmiana definicji; definicja poprzednia była "składowa danych"
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(17): note: zobacz deklarację „table::hide”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(20): error C2059: błąd składniowy: „=”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(20): error C2238: nieoczekiwany(e) token(y) poprzedzający(e) ";"
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(21): error C2628: "table" poprzedzający "void" jest niedozwolony (zapomnialeś ";"?)
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(21): error C2556: "table function(void)": przeciążona funkcja różni się tylko typem zwracanym od "void function(void)"
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(33): note: zobacz deklarację „function”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(21): error C2371: "function": zmiana definicji; różne typy podstawowe
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(33): note: zobacz deklarację „function”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(23): error C2084: funkcja "void setDouble(bool)" ma już treść
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(36): note: zobacz poprzednią definicję „setDouble”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(23): error C2065: "doubl": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(24): error C2143: błąd składniowy: brakuje „)” przed „&”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(24): error C2143: błąd składniowy: brakuje „;” przed „&”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(24): error C4430: brak specyfikatora typu - założono, że int. Uwaga: C++ nie obsługuje domyślnie typu int
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(24): error C2530: "win": odwołania muszą być zainicjowane
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(24): error C2062: nieoczekiwany typ "int"
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(24): error C2059: błąd składniowy: „)”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(26): error C2065: "slots": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(26): error C2065: "chosen": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(27): error C2065: "slots": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(27): error C2065: "chosen": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(30): error C2065: "chosen": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(30): error C3861: "resetOne": identyfikatora nie odnaleziono
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(30): error C2065: "selected": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(31): error C2065: "selected": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(34): error C2588: "::~table": niedozwolony globalny destruktor
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(34): error C4430: brak specyfikatora typu - założono, że int. Uwaga: C++ nie obsługuje domyślnie typu int
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(35): error C2059: błąd składniowy: „}”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(35): error C2143: błąd składniowy: brakuje „;” przed „}”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(7): error C2039: „getChosenPlayerId”: Nie jest składową „chosingTable”
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(6): note: zobacz deklarację „chosingTable”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(9): error C2065: "slots": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(9): error C2065: "chosen": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(12): error C2039: „function”: Nie jest składową „chosingTable”
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(6): note: zobacz deklarację „chosingTable”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(14): error C2065: "hide": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(16): error C2065: "window": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(17): error C2065: "slots": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(18): error C2065: "slots": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(18): warning C4244: "argument": konwersja z "T" do "T", możliwa utrata danych
-          with
-          [
-              T=int
-          ]
-          and
-          [
-              T=float
-          ]
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(19): error C2065: "chosen": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(20): error C2065: "doubl": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(22): error C2065: "chosen": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(23): error C2065: "slots": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(24): error C2065: "slots": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(25): error C2065: "slots": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(26): error C2065: "slots": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(27): error C2065: "selected": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(30): error C2065: "chosen": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(30): error C3861: "resetOne": identyfikatora nie odnaleziono
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(31): error C2065: "chosen": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(32): error C2065: "slots": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(33): error C2065: "selected": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(41): error C2039: „draw”: Nie jest składową „chosingTable”
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(6): note: zobacz deklarację „chosingTable”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(43): error C2065: "hide": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(44): error C2065: "doubl": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(44): error C2065: "numberOfCards": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(46): error C2065: "window": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(46): error C2065: "slots": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(50): error C2676: dwuargumentowy "&": "table" nie definiuje tego operatora lub konwersji do typu akceptowalnego dla wstępnie zdefiniowanego operatora
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(50): error C2062: nieoczekiwany typ "int"
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(50): error C4430: brak specyfikatora typu - założono, że int. Uwaga: C++ nie obsługuje domyślnie typu int
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(50): error C2065: "numberOfCards_": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(50): error C2440: "inicjowanie": nie można konwertować z "initializer list" na "int"
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(50): note: Inicjalizator zawiera zbyt wiele elementów
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(51): error C4430: brak specyfikatora typu - założono, że int. Uwaga: C++ nie obsługuje domyślnie typu int
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(52): error C2448: "doubl": inicjator w stylu funkcyjnym wydaje się być definicją funkcji
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(120): error C2039: „init”: Nie jest składową „chosingTable”
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(6): note: zobacz deklarację „chosingTable”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(124): error C2065: "numberOfCards": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(125): error C2109: indeks dolny wymaga tablicy lub wskaźnika typu
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(126): error C2109: indeks dolny wymaga tablicy lub wskaźnika typu
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(127): error C2109: indeks dolny wymaga tablicy lub wskaźnika typu
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(128): error C2109: indeks dolny wymaga tablicy lub wskaźnika typu
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(129): error C2109: indeks dolny wymaga tablicy lub wskaźnika typu
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(129): error C2065: "doublePositions": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(133): error C2065: "numberOfCards": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(134): error C2109: indeks dolny wymaga tablicy lub wskaźnika typu
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(135): error C2109: indeks dolny wymaga tablicy lub wskaźnika typu
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(136): error C2109: indeks dolny wymaga tablicy lub wskaźnika typu
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(137): error C2109: indeks dolny wymaga tablicy lub wskaźnika typu
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(137): error C2065: "normalPositions": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(144): error C2039: „choseRandom”: Nie jest składową „chosingTable”
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(6): note: zobacz deklarację „chosingTable”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(147): error C2065: "numberOfCards": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(150): error C2109: indeks dolny wymaga tablicy lub wskaźnika typu
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(151): error C2065: "selected": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(152): error C2109: indeks dolny wymaga tablicy lub wskaźnika typu
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(156): error C2600: „chosingTable::~chosingTable”: Nie można zdefiniować generowanej przez kompilator specjalnej funkcji składowej (musi być najpierw zadeklarowana w klasie)
-  game.cpp
+﻿  game.cpp
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\inputText.h(69): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\inputText.h(69): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\inputText.h(84): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
@@ -126,38 +11,48 @@ C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Slider.h(22): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Slider.h(23): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Slider.h(32): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.h(50): error C2365: "game::inGame": zmiana definicji; definicja poprzednia była "moduł wyliczający"
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.h(13): note: zobacz deklarację „game::inGame”
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\card.h(35): warning C4244: "argument": konwersja z "float" do "unsigned int", możliwa utrata danych
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Button.h(37): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Button.h(42): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\SliderW.h(28): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Rounds.h(17): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\card.h(35): warning C4244: "argument": konwersja z "float" do "unsigned int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(20): error C2365: "table::hide": zmiana definicji; definicja poprzednia była "składowa danych"
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(17): note: zobacz deklarację „table::hide”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(20): error C2059: błąd składniowy: „=”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(20): error C2238: nieoczekiwany(e) token(y) poprzedzający(e) ";"
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(21): error C2628: "table" poprzedzający "void" jest niedozwolony (zapomnialeś ";"?)
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(23): error C2065: "doubl": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(24): error C2143: błąd składniowy: brakuje „)” przed „&”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(24): error C2143: błąd składniowy: brakuje „;” przed „&”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(24): error C4430: brak specyfikatora typu - założono, że int. Uwaga: C++ nie obsługuje domyślnie typu int
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(24): error C2530: "win": odwołania muszą być zainicjowane
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(24): error C2062: nieoczekiwany typ "int"
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(24): error C2059: błąd składniowy: „)”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(26): error C2065: "slots": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(26): error C2065: "chosen": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(27): error C2065: "slots": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(27): error C2065: "chosen": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(30): error C2065: "chosen": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(30): error C3861: "resetOne": identyfikatora nie odnaleziono
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(30): error C2065: "selected": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(31): error C2065: "selected": niezadeklarowany identyfikator
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(34): error C2588: "::~table": niedozwolony globalny destruktor
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(34): error C4430: brak specyfikatora typu - założono, że int. Uwaga: C++ nie obsługuje domyślnie typu int
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(35): error C2059: błąd składniowy: „}”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(35): error C2143: błąd składniowy: brakuje „;” przed „}”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(11): fatal error C1903: nie można odzyskać od poprzedniego błędu(ów); zatrzymywanie kompilacji
-  Wewnętrzny błąd kompilatora w "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.20.27508\bin\HostX86\x86\CL.exe"
-      Wybierz polecenie Pomoc techniczna w Visual C++
-      menu Pomoc lub otwórz plik pomocy technicznej aby uzyskać więcej informacji
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(93): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(100): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(318): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(319): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(325): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(326): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(338): warning C4244: "argument": konwersja z "double" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(370): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(391): warning C4101: "received": lokalna zmienna, do której nie istnieje odwołanie
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(473): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(474): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(480): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(481): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(487): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(488): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(495): warning C4244: "argument": konwersja z "double" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(496): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(501): warning C4244: "argument": konwersja z "double" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(543): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(680): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(681): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(687): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(688): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(717): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(793): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(794): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(800): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(801): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(830): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(909): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(910): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(916): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(917): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(946): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(453): warning C4715: "game::joinWait”: niewszystkie ścieżki kodu zwracają wartość
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(634): warning C4715: "game::LeaderWait”: niewszystkie ścieżki kodu zwracają wartość
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(785): warning C4715: "game::newRoundF”: niewszystkie ścieżki kodu zwracają wartość
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(1043): warning C4715: "game::normalF”: niewszystkie ścieżki kodu zwracają wartość
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\game.cpp(901): warning C4715: "game::choserF”: niewszystkie ścieżki kodu zwracają wartość
+  Cards against the world.vcxproj -> C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Debug\Cards against the world.exe

@@ -28,9 +28,8 @@ class Cards{//front is top back is bottom of cards deque
 	}
 	int size() { return cards.size(); }
 	bool empty() { return cards.empty();}// do sprawdzenia czy talia jest pusta czarna przy rozpoczecie rundy
-	void putCardsBack(std::vector<int> & car){
-	for(int x : car)
-		cards.push_back(x);
+	void putCardBack(int car){
+		cards.push_back(car);
 	}
 };
 class whiteCards:public Cards{
@@ -42,14 +41,12 @@ class whiteCards:public Cards{
 	cardsTaken.insert(id);
 	return id;
 	}
-	bool putCardsBack(std::vector<int> & car){
-	for(int x : car){
-		auto it = cardsTaken.find(x);
+	bool putCardBack(int car){
+		auto it = cardsTaken.find(car);
 		if(it == cardsTaken.end())
 		   return false;
 		cardsTaken.erase(it);
-	}
-	Cards::putCardsBack(car);
+	Cards::putCardBack(car);
 	return true;		
 	}
 };
@@ -70,8 +67,7 @@ private:
 	std::map<SOCKET, slot>::iterator choser;
 	char free[9];//free table to check if slot of id is free;
 	std::map<SOCKET, slot> clients;//0 listen rest players up to 8
-	std::vector<int> cardsToSendToChoser;
-	std::vector<int> alreadySended;
+	std::vector<int> playersSended;//players that sended cards
 	SOCKET leader;
 	SOCKET listenSocket;
 	fd_set fds;

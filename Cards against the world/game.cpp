@@ -7,10 +7,7 @@
 #include "Button.h"
 #include "Rounds.h"
 #include"lobbyPlayers.h"
-#include "ScoreBoard.h"
-#include "timer.h"
-#include "table.h"
-#include "chosingTable.h"
+
 
 namespace codes {
 	/*protokól komunikacji
@@ -55,10 +52,11 @@ namespace codes {
 	const char shuffleWhiteDeque = 26;//shuffle deque LEADER concept if cards are reapiting then shuffle it
 	const char playerIsNotResponsing = 27;//if pleyer is not responsing send it to rest and stop game
 	const char notEnoughPlayers = 28;//min 4 players required
+	const char getNewWhiteCards = 29;//get new white cards from server;
 
 }//TODO naprawnie deadlocka broadcast disconnect
 game::game(sf::RenderWindow& win, sf::SoundBuffer& sndbuff, sf::Font font_, sf::String lobbyId_, sf::String nick, bool newlobby_) : window(win), Chat(win, sndbuff, 150, 12, font)
-, font(font_), clickBuff(sndbuff)
+, font(font_), clickBuff(sndbuff), clock(font), normalTable(win), chosingTabl(win), score(win), black(card::kind::black)
 {
 	newLobby = newlobby_;
 	lobbyId = lobbyId_;
@@ -218,8 +216,17 @@ void game::run()
 	case state::lobby:
 		state_ = newLobby ? LeaderWait() : joinWait();
 		break;
-	case state::inGame:
-		state_ = inGame();
+	case state::init:
+		state_ = initF();
+		break;
+	case state::newRound:
+		state_ = newRoundF();
+		break;
+	case state::choser:
+		state_ = choserF();
+		break;
+	case state::normal:
+		state_ = normalF();
 		break;
 	case state::exit:
 		return;
@@ -428,7 +435,7 @@ game::state game::joinWait() {
 				break;
 			case codes::start:
 				Chat.send("Game started", sf::Color::Yellow);
-				return state::inGame;
+				return state::init;
 				break;
 			default:
 				break;
@@ -605,7 +612,7 @@ game::state game::LeaderWait()
 				break;
 			case codes::start:
 				Chat.send("Game started", sf::Color::Yellow);
-				return state::inGame;
+				return state::init;
 				break;
 			case codes::notEnoughPlayers:
 				Chat.send("Minimum four players required to start the game", sf::Color::Yellow);
@@ -625,7 +632,46 @@ game::state game::LeaderWait()
 		window.display();
 	}
 }
-game::state game::inGame()
+game::state game::initF()
+{
+	normalTable.init(10);
+	normalTable.hideF();
+	normalTable.resetChosen();
+
+	chosingTabl.init(players.size() - 1);
+	chosingTabl.hideF();
+	chosingTabl.resetChosen();
+
+	Chat.setValues(sf::Vector2f((1920 - 650), 50), 20, 600);
+
+	score.init(25, 200, players.size());
+	score.setColor(sf::Color::White);
+	score.setPosition(50, 50, players, font);//set Pos and add players
+
+	black.setOffest(20);
+	black.setPosition(1920 - 400, 500);
+	black.setCharSize(30);
+	black.setId(0);
+	black.setTextUtf8("");
+
+	int linex = 1920;
+
+	sf::Texture tmp;//temporary 
+	tmp.loadFromFile("PNG/tmp.png");
+
+	clock.setTexture(tmp);
+	clock.setTitle("Time:");
+	clock.setPosition(linex / 2 - 150, 10);
+	clock.setTimer(3, 0);
+	clock.stop();
+	clock.setSize(60);
+	clock.setDeadline(0, 20);
+
+	Chat.send("Waiting for server", sf::Color::Yellow);
+	return state::newRound;
+}
+
+game::state game::newRoundF()
 {
 	int linex = 1920;
 	int liney = 1080;
@@ -645,46 +691,10 @@ game::state game::inGame()
 	quit.setColor(sf::Color::White);
 
 
-
-	std::vector <int> cardsGotFromServer;
-	table normalTable(window, 10);
-	normalTable.hideF();
-	normalTable.resetChosen();
-
-	chosingTable chosingTabl(window, players.size() - 1);
-	chosingTabl.hideF();
-	chosingTabl.resetChosen();
-	
-	bool doubleMode = false;
-
-	Chat.setValues(sf::Vector2f((1920 - 650), 50), 20, 600);
-
-	ScoreBoard score(window, 25, 200, players.size());
-	score.setColor(sf::Color::White);
-
-	score.setPosition(50, 50, players, font);//set Pos and add players
-
-	card black(card::kind::black); // main black card
-	black.setOffest(20);
-	black.setPosition(1920 - 400, 500);
-	black.setCharSize(30);
-	black.setId(0);
-	black.setTextUtf8("");
-
-	sf::Texture tmp;//temporary 
-	tmp.loadFromFile("PNG/tmp.png");
-
-	timer clock(tmp, font);
-	clock.setTitle("Time:");
-	clock.setPosition(linex / 2 - 150, 10);
-	clock.setSize(60);
-	clock.setDeadline(0, 20);
-
 	sf::Event event;
 	event.type = sf::Event::GainedFocus;
 
-	enum inGameState { normal, chosing, none };
-	inGameState state_ = inGameState::none;
+
 	char coding, playerID;
 	while (window.isOpen())
 	{
@@ -707,52 +717,9 @@ game::state game::inGame()
 				Chat.scrolled(event.mouseWheelScroll.delta);
 			}
 			if (quit.buttonFunction())
-				return state::exit;//put ensure pop allert
+				return state::exit;//todo put ensure pop allert
 			if (confirm.buttonFunction()) {
-				if (state_ == inGameState::normal) {
-					if (!normalTable.selectedCards()) {//if you did not select cards
-						Chat.send("You did not select card" + doubleMode ? "s" : "", sf::Color::Yellow);
-					}
-					else {
-						int len = 2;
-						uint16_t first, secound, coded;
-						first = normalTable.getFirst();
-						coded = htons(first);
-						memcpy(buff + 4, (char*)& coded, 2);
-						if (doubleMode) {
-							len += 2;
-							secound = normalTable.getSecound();
-							coded = htons(secound);
-							memcpy(buff + 6, (char*)& coded, 2);
-						}
-						addMessagePrefix(buff, len, codes::sendChosenWhiteCards, playerId);
-						if (lobbySocket.send(buff, 4 + len) != sf::Socket::Done)//TODO
-						{
-							//TODO
-						}
-						Chat.send("You have confirmed cards id: " + std::to_string(first) + (doubleMode ? (", " + std::to_string(secound)) : ""), sf::Color::Yellow);
-						state_ = inGameState::none;
-					}
-				}
-				else if (state_ == inGameState::chosing) {
-					if (!chosingTabl.selectedCards()) {//if you did not select cards
-						Chat.send("You did not select card" + doubleMode ? "s" : "", sf::Color::Yellow);
-					}
-					else {
-						char winnerId = chosingTabl.getChosenPlayerId();
-						addMessagePrefix(buff, 1, codes::choserWinnerId, winnerId);
-						if (lobbySocket.send(buff, 4) != sf::Socket::Done)//TODO
-						{
-							//TODO
-						}
-						state_ = inGameState::none;
-					}
-				}
 
-			}
-			else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
-				normalTable.function();
-				chosingTabl.function();
 			}
 			else;
 		}
@@ -769,46 +736,257 @@ game::state game::inGame()
 					uint16_t id = ntohs(*ptr);
 					cards_.push_back(id);
 				}
-				normalTable.init(cards_);
+				normalTable.setCards(cards_);
 			}
 			break;
-			case codes::sendChoserId:
-				if (playerId == playerID) {// if choserid is equal to your id
-					state_ = inGameState::chosing;
-					normalTable.hideF();
-					chosingTabl.hideF(false);//unhide
-					clock.setTimer(3, 0);
-					clock.start();
-				}
-				else {
-					state_ = inGameState::normal;
-					normalTable.hideF(false);
-					chosingTabl.hideF();//unhide
-					clock.setTimer(3, 0);
-					clock.start();
-				}
-				score.setChosing(playerID);
-				break;
 			case codes::sendBlackCard:
 			{
 				uint16_t* ptr = (uint16_t*)(buff + 4);
 				uint16_t id = ntohs(*ptr);
 				black.setTextUtf8(deck.getCard(id, true));
 				doubleMode = deck.getDouble(id);
-				normalTable.resetChosen();
-				normalTable.setDouble(doubleMode);
+			}
+			break;
+			case codes::sendChoserId:
+				if (playerId == playerID) {// if choserid is equal to your id
+					normalTable.hideF();
+					chosingTabl.hideF(false);//unhide
+					score.setChosing(playerID);
+					chosingTabl.resetChosen();
+					chosingTabl.setDouble(doubleMode);
+					return state::choser;
+				}
+				else {
+					normalTable.hideF(false);
+					chosingTabl.hideF();
+					score.setChosing(playerID);
+					normalTable.resetChosen();
+					normalTable.setDouble(doubleMode);
+					return state::normal;
+				}
+				break;
+			case codes::gameIsOver:
+				Chat.send("Game is over", sf::Color::Yellow);
+				//return state::exit;
+				break;
+			default:
+				break;
+			}
+			score.update();
+			window.clear(sf::Color::Black);
+			window.draw(background);
+			Chat.draw();
+			score.draw();
+			confirm.draw();
+			quit.draw();
+			window.display();
+		}
+	}
+}
+
+game::state game::choserF()
+{
+	int linex = 1920;
+	int liney = 1080;
+
+	Button confirm(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
+	confirm.setPosition((linex - 190 * 1.8) * setting.xScale, (liney - 200) * setting.yScale);
+	confirm.setScale(setting.xScale, 1 * setting.yScale);
+	confirm.setTitle("CONFIRM WINNER");
+	confirm.setSoundVolume(setting.SoundVolume);
+	confirm.setColor(sf::Color::White);
+
+	Button quit(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
+	quit.setPosition((linex - 190 * 1.8) * setting.xScale, (liney - 100) * setting.yScale);
+	quit.setScale(setting.xScale, 1 * setting.yScale);
+	quit.setTitle("EXIT");
+	quit.setSoundVolume(setting.SoundVolume);
+	quit.setColor(sf::Color::White);
+
+	sf::Event event;
+
+	clock.setTimer(3, 0);
+	clock.start();
+
+	char coding, playerID;
+	while (window.isOpen())
+	{
+		// check all the window's events that were triggered since the last iteration of the loop
+		while (window.pollEvent(event)) {
+			quit.checkState();
+			confirm.checkState();
+			Chat.checkSideBarState();
+			if (Chat.function() && event.type == sf::Event::KeyPressed) {
+				if (Chat.addChar(event.key)) {
+					auto text = Chat.getText();
+					if (!text.empty())
+						if (!Send(text, chatSocket))
+						{
+							;//TODO
+						}
+				}
+			}
+			else if (event.type == sf::Event::MouseWheelScrolled) {
+				Chat.scrolled(event.mouseWheelScroll.delta);
+			}
+			if (quit.buttonFunction())
+				return state::exit;//todo put ensure pop allert
+			if (confirm.buttonFunction()) {
+
+				if (!chosingTabl.selectedCards()) {//if you did not select cards
+					Chat.send("You did not select card" + doubleMode ? "s" : "", sf::Color::Yellow);
+				}
+				else {
+					char winnerId = chosingTabl.getChosenPlayerId();
+					addMessagePrefix(buff, 1, codes::choserWinnerId, winnerId);
+					if (lobbySocket.send(buff, 4) != sf::Socket::Done)//TODO
+					{
+						//TODO
+					}
+				}
+			}
+			else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
+				chosingTabl.function();
+			}
+			else;
+		}
+		int len = getCommand(lobbySocket, coding, playerID);
+		if (len)//check commands
+		{
+			sf::String out;
+			switch (coding) {
+			case codes::randomWinnerRequest:
+			{
+				if (!chosingTabl.selectedCards()) {
+					Chat.send("Time is up and you did/'t chose card//s random will be chosen", sf::Color::Yellow);
+					normalTable.choseRandom();
+				}
+				else
+					Chat.send("Time is up", sf::Color::Yellow);
+				char winnerId = chosingTabl.getChosenPlayerId();
+				addMessagePrefix(buff, 1, codes::choserWinnerId, winnerId);
+				if (lobbySocket.send(buff, 4) != sf::Socket::Done)//TODO
+				{
+					//TODO
+				}
 			}
 			break;
 			case codes::sendWinner:
 				Chat.send("Round winner is " + players.at(playerID), sf::Color::Yellow);
 				score.updateScore(playerID);
+				return state::newRound;
 				break;
+			case codes::gameIsOver:
+				Chat.send("Game is over", sf::Color::Yellow);
+				//return state::exit;
+				break;
+			default:
+				break;
+			}
+			score.update();
+			if (clock.run()) {
+			}
+			window.clear(sf::Color::Black);
+			window.draw(background);
+			Chat.draw();
+			score.draw();
+			confirm.draw();
+			quit.draw();
+			chosingTabl.draw();
+			window.draw(clock);
+			window.draw(black);
+			window.display();
+		}
+	}
+}
+
+game::state game::normalF()
+{
+	int linex = 1920;
+	int liney = 1080;
+
+	Button confirm(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
+	confirm.setPosition((linex - 190 * 1.8) * setting.xScale, (liney - 200) * setting.yScale);
+	confirm.setScale(setting.xScale, 1 * setting.yScale);
+	confirm.setTitle("CONFIRM CARDS");
+	confirm.setSoundVolume(setting.SoundVolume);
+	confirm.setColor(sf::Color::White);
+
+	Button quit(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
+	quit.setPosition((linex - 190 * 1.8) * setting.xScale, (liney - 100) * setting.yScale);
+	quit.setScale(setting.xScale, 1 * setting.yScale);
+	quit.setTitle("EXIT");
+	quit.setSoundVolume(setting.SoundVolume);
+	quit.setColor(sf::Color::White);
+
+	sf::Event event;
+
+	clock.setTimer(3, 0);
+	clock.start();
+
+	char coding, playerID;
+	while (window.isOpen())
+	{
+		// check all the window's events that were triggered since the last iteration of the loop
+		while (window.pollEvent(event)) {
+			quit.checkState();
+			confirm.checkState();
+			Chat.checkSideBarState();
+			if (Chat.function() && event.type == sf::Event::KeyPressed) {
+				if (Chat.addChar(event.key)) {
+					auto text = Chat.getText();
+					if (!text.empty())
+						if (!Send(text, chatSocket))
+						{
+							;//TODO
+						}
+				}
+			}
+			else if (event.type == sf::Event::MouseWheelScrolled) {
+				Chat.scrolled(event.mouseWheelScroll.delta);
+			}
+			if (quit.buttonFunction())
+				return state::exit;//todo put ensure pop allert
+			if (confirm.buttonFunction()) {
+				if (!normalTable.selectedCards()) {//if you did not select cards
+					Chat.send("You did not select card" + doubleMode ? "s" : "", sf::Color::Yellow);
+				}
+				else {
+					int len = 2;
+					uint16_t first, secound, coded;
+					first = normalTable.getFirst();
+					coded = htons(first);
+					memcpy(buff + 4, (char*)& coded, 2);
+					if (doubleMode) {
+						len += 2;
+						secound = normalTable.getSecound();
+						coded = htons(secound);
+						memcpy(buff + 6, (char*)& coded, 2);
+					}
+					addMessagePrefix(buff, len, codes::sendChosenWhiteCards, playerId);
+					if (lobbySocket.send(buff, 4 + len) != sf::Socket::Done)//TODO
+					{
+						//TODO
+					}
+					Chat.send("You have confirmed cards id: " + std::to_string(first) + (doubleMode ? (", " + std::to_string(secound)) : ""), sf::Color::Yellow);
+				}
+			}
+			else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
+				normalTable.function();
+			}
+		}
+		int len = getCommand(lobbySocket, coding, playerID);
+		if (len)//check commands
+		{
+			sf::String out;
+			switch (coding) {
 			case codes::randomWhiteCardsRequest:
+			{
 				if (!normalTable.selectedCards()) {
 					Chat.send("Time is up and you did/'t chose card//s random will be chosen", sf::Color::Yellow);
 					normalTable.choseRandom();
 				}
-				else 
+				else
 					Chat.send("Time is up", sf::Color::Yellow);
 				int len = 2;
 				uint16_t first, secound, coded;
@@ -827,22 +1005,17 @@ game::state game::inGame()
 					//TODO
 				}
 				Chat.send("You have confirmed cards id: " + std::to_string(first) + (doubleMode ? (", " + std::to_string(secound)) : ""), sf::Color::Yellow);
-				state_ = inGameState::none;
+			}
 				break;
-			case codes::randomWinnerRequest:
-				if (!chosingTabl.selectedCards()) {
-					Chat.send("Time is up and you did/'t chose card//s random will be chosen", sf::Color::Yellow);
-					normalTable.choseRandom();
-				}
-				else
-					Chat.send("Time is up", sf::Color::Yellow);
-				char winnerId = chosingTabl.getChosenPlayerId();
-				addMessagePrefix(buff, 1, codes::choserWinnerId, winnerId);
-				if (lobbySocket.send(buff, 4) != sf::Socket::Done)//TODO
-				{
-					//TODO
-				}
-				state_ = inGameState::none;
+			case codes::getNewWhiteCards:
+			{
+
+			}
+				break;
+			case codes::sendWinner:
+				Chat.send("Round winner is " + players.at(playerID), sf::Color::Yellow);
+				score.updateScore(playerID);
+				return state::newRound;
 				break;
 			case codes::gameIsOver:
 				Chat.send("Game is over", sf::Color::Yellow);
@@ -869,26 +1042,3 @@ game::state game::inGame()
 	}
 }
 
-void game::checkCommands() {
-	static char coding, playerID;
-	int len = getCommand(lobbySocket, coding, playerID);
-	if (len)
-	{
-		sf::String out;
-		std::u32string str;
-		switch (coding) {
-		case 3:
-			str = getString(lobbySocket, len);
-			for (auto& x : str)
-				out += x;
-			players[playerID] = out;
-			Chat.send(players[playerID] + " joined lobby", sf::Color::Yellow);
-			break;
-		case 6: //check playerID
-			Chat.send(players[playerID] + " disconnected", sf::Color::Yellow);
-			break;
-		default:
-			break;
-		}
-	}
-}

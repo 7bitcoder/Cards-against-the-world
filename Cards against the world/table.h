@@ -21,8 +21,9 @@ public:
 	void function();
 	void draw();
 	void setDouble(bool doubl_) { doubl = doubl_; }
-	table(sf::RenderWindow& win, int numberOfCards);
-	bool init(std::vector<int> initCards);
+	table(sf::RenderWindow& win);
+	void init(int numberOfCards);
+	bool setCards(std::vector<int> initCards);
 	int getFirst() { return slots[chosen.x].getId(); }
 	int getSecound() { return slots[chosen.y].getId(); }
 	void replaceChosenFirst(int newId);

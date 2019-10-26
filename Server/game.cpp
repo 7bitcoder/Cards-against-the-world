@@ -48,6 +48,7 @@ namespace codes {
 	const char shuffleWhiteDeque = 26;//shuffle deque LEADER concept if cards are reapiting then shuffle it
 	const char playerIsNotResponsing = 27;//if pleyer is not responsing send it to rest and stop game
 	const char notEnoughPlayers = 28;//min 4 players required
+	const char getNewWhiteCards = 29;//get new white cards from server;
 
 }//TODO naprawnie deadlocka broadcast disconnect 
 game::game(SOCKET listen, SOCKET leader_, std::u32string nick, std::u32string id)
@@ -239,7 +240,7 @@ states game::waitingF()
 						broadCast(sock, buff, 4, true);
 						break;
 					case codes::start://start game
-						if(clients.size() < 3){
+						if (clients.size() < 3) {
 							addMessagePrefix(buff, 1, codes::notEnoughPlayers, 0);
 							if (!sendLen(leader, buff, 4));
 							//TODO
@@ -334,8 +335,7 @@ states game::questionInitF() {
 	return states::question;
 }
 states game::questionF() {
-	cardsToSendToChoser.clear();
-	alreadySended.clear();
+	playersSended.clear();
 	auto start = std::chrono::high_resolution_clock::now();
 	TIMEVAL tv = { 60 * 3 , 0 };//3 min 0  sec
 
@@ -377,17 +377,35 @@ states game::questionF() {
 					switch (code) {
 					case codes::sendChosenWhiteCards://get cards to send to choser
 					{
+						playersSended.push_back(sock);
+						bool doubleMode = false;
 						int len = 6;
+						uint16_t newFirst, newSec;
 						uint16_t* ptr = (uint16_t*)(buff + 4);
-						cardsToSendToChoser.push_back(ntohs(*ptr));
+						white.putCardBack(ntohs(*ptr));
+						newFirst = white.getCard();
 						if (additionalInfo > 2) {
+							doubleMode = true;
+							newSec = white.getCard();
 							len += 2;
 							ptr = (uint16_t*)(buff + 6);
-							cardsToSendToChoser.push_back(ntohs(*ptr));
+							white.putCardBack(ntohs(*ptr));
+
 						}
 						if (!sendLen(choser->first, buff, len));
+						;//todo
+						//send new card/s
+						newFirst = htons(newFirst);
+						memcpy(buff + 4, (char*)& newFirst, 2);
+						if (doubleMode) {
+							newSec = htons(newSec);
+							memcpy(buff + 6, (char*)& newSec, 2);
+						}
+						addMessagePrefix(buff, len, codes::getNewWhiteCards, 0);
+						if (!sendLen(sock, buff, len))
 							;//todo
-						if (alreadySended.size() == clients.size() - 1)//all players sended cards
+						int size = clients.size() - 1;
+						if (playersSended.size() == size)//all players sended cards
 							return states::choseInit;
 					}
 					default:
@@ -403,8 +421,8 @@ states game::questionOvertimeF()
 {
 	for (auto& x : clients) {
 		if (x.first != choser->first) {
-			auto it = std::find(alreadySended.begin(), alreadySended.end(), x.second.id);
-			if (it == alreadySended.end()) {//if player is did not send cards 
+			auto it = std::find(playersSended.begin(), playersSended.end(), x.first);
+			if (it == playersSended.end()) {//if player did not send cards 
 				addMessagePrefix(buff, 1, codes::randomWhiteCardsRequest, 0);
 				if (!sendLen(x.first, buff, 4))
 					;//todo
@@ -452,20 +470,38 @@ states game::questionOvertimeF()
 					switch (code) {
 					case codes::sendChosenWhiteCards://get cards to send to choser
 					{
+						playersSended.push_back(sock);
+						bool doubleMode = false;
 						int len = 6;
-						char16_t ch; mbstate_t state{};
+						uint16_t newFirst, newSec;
 						uint16_t* ptr = (uint16_t*)(buff + 4);
-						cardsToSendToChoser.push_back(ntohs(*ptr));
+						white.putCardBack(ntohs(*ptr));
+						newFirst = white.getCard();
 						if (additionalInfo > 2) {
+							doubleMode = true;
+							newSec = white.getCard();
 							len += 2;
 							ptr = (uint16_t*)(buff + 6);
-							cardsToSendToChoser.push_back(ntohs(*ptr));
+							white.putCardBack(ntohs(*ptr));
+
 						}
 						if (!sendLen(choser->first, buff, len));
 						;//todo
-						if (alreadySended.size() == clients.size() - 1)//all players sended cards
+						//send new card/s
+						newFirst = htons(newFirst);
+						memcpy(buff + 4, (char*)& newFirst, 2);
+						if (doubleMode) {
+							newSec = htons(newSec);
+							memcpy(buff + 6, (char*)& newSec, 2);
+						}
+						addMessagePrefix(buff, len, codes::getNewWhiteCards, 0);
+						if (!sendLen(sock, buff, len))
+							;//todo
+						int size = clients.size() - 1;
+						if (playersSended.size() == size)//all players sended cards
 							return states::choseInit;
 					}
+					break;
 					default:
 						break;
 					}
@@ -475,8 +511,8 @@ states game::questionOvertimeF()
 	}
 	for (auto& x : clients) {
 		if (x.first != choser->first) {
-			auto it = std::find(alreadySended.begin(), alreadySended.end(), x.second.id);
-			if (it == alreadySended.end()) {//if player is did not send cards 
+			auto it = std::find(playersSended.begin(), playersSended.end(), x.first);
+			if (it == playersSended.end()) {//if player is did not send cards 
 				addMessagePrefix(buff, 1, codes::playerIsNotResponsing, x.second.id);
 				if (!broadCast(x.first, buff, 4))
 					;//todo
@@ -485,8 +521,7 @@ states game::questionOvertimeF()
 	}
 }
 states game::choseinitF() {
-	white.putCardsBack(cardsToSendToChoser);//put back cards;
-	cardsToSendToChoser.clear();
+	playersSended.clear();
 	return states::chose;
 }
 states game::choseF() {
@@ -522,7 +557,7 @@ states game::choseF() {
 		length -= n;
 	}
 	char coding, playerID;
-	int l = getMessagePrefix(buff,coding, playerID);
+	int l = getMessagePrefix(buff, coding, playerID);
 	if (coding == codes::choserWinnerId) {
 		int winner = playerID;
 		addMessagePrefix(buff, 1, codes::sendWinner, winner);

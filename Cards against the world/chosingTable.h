@@ -11,6 +11,7 @@ public:
 		card card_;
 		int playerId;
 		int related;
+		data(card::kind car, int pl, int re) : card_(car), playerId(pl), related(re) {}
 	};
 private:
 	sf::RenderWindow& window;
@@ -27,11 +28,12 @@ public:
 	void resetChosen() { if (chosen != -1) { resetOne(chosen); resetOne(slots[chosen].related); this->chosen = -1; selected = false; } }
 	bool selectedCards() { return selected; }
 	void hideF(bool hid = true) { hide = hid; }
-	chosingTable(sf::RenderWindow& win, int numberOfCards);
+	chosingTable(sf::RenderWindow& win);
 	~chosingTable();
 	int getChosenPlayerId(); // get player id of chosen cards
 	void function();
 	void draw();
+	void init(int numberOfCards_);
 	void setDrawable(bool t) { hide = !t; }
 	void setDouble(bool doubl_) { doubl = doubl_; }
 	bool init(std::vector<sf::Vector2i> initCards, bool doubleMode);//vector template <card id, player id> id double then cards for one player should be togeder

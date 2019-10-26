@@ -40,16 +40,18 @@ void table::draw()
 			window.draw(x);
 }
 
-table::table(sf::RenderWindow & win, int numberOfCards_) : window(win), slots(numberOfCards_, card(card::kind::white))
+void table::init(int numberOfCards)
 {
-	std::srand(std::time(nullptr));
+	for (int i = 0; i < numberOfCards; i++) {
+		slots.emplace_back(card::kind::white);
+	}
 	for (auto& x : slots) {
 		x.setCharSize(20);
 	}
 	int beg = 250;
 	int centr = (window.getSize().x / 2) - 190 * 1.8;
-	numberOfCards = numberOfCards_;
-	float idff = float(numberOfCards_) / 2;
+	numberOfCards = 10;
+	float idff = float(numberOfCards) / 2;
 	float width = slots.front().getXSize();
 	float heigh = slots.front().getYSize();
 	float spacing = 15;
@@ -63,7 +65,12 @@ table::table(sf::RenderWindow & win, int numberOfCards_) : window(win), slots(nu
 	}
 	resetChosen();
 }
-bool table::init(std::vector<int> initCards) {
+
+table::table(sf::RenderWindow & win) : window(win)
+{
+	std::srand(std::time(nullptr));
+}
+bool table::setCards(std::vector<int> initCards) {
 	if (initCards.size() != slots.size())
 		return false;
 	for (int i = 0; i < initCards.size(); i++) {

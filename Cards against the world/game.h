@@ -4,13 +4,23 @@
 #include "socketUtils.h"
 #include"messages.h"
 #include "chat.h"
+#include "ScoreBoard.h"
+#include "timer.h"
+#include "table.h"
+#include "chosingTable.h"
 #define LEN 4000
 
 
 class game :public socketUtils
 {
 private:
-	enum state{lobby, inGame, exit};
+	table normalTable;
+	chosingTable chosingTabl;
+	timer clock;
+	ScoreBoard score;
+	card black;
+	bool doubleMode;//black card rewuire 2 white ones
+	enum state { lobby, init, newRound, choser, normal, exit };
 	state state_;
 	chat Chat;
 	std::map<int, sf::String > players;//0 listen rest players up to 8
@@ -27,7 +37,8 @@ private:
 	bool newLobby;
 	char playerId;
 	bool ready_ = false;
-	bool lockLobby  = false;
+	bool lockLobby = false;
+
 	//
 	sf::Texture backgroundTexture;
 	sf::Sprite background;
@@ -47,8 +58,10 @@ private:
 	bool receive(sf::TcpSocket& socket, std::u32string& data, char& coding, char& playerId);
 	game::state joinWait();
 	game::state LeaderWait();
-	game::state inGame();
-	void checkCommands();
+	game::state initF();
+	game::state newRoundF();
+	game::state choserF();
+	game::state normalF();
 public:
 	game(sf::RenderWindow& win, sf::SoundBuffer& sndbuff, sf::Font font, sf::String lobbyId, sf::String nick, bool newlobby);
 	message::code connect();

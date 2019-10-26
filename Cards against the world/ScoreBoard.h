@@ -9,6 +9,8 @@ struct data
 	bool activte;
 	sf::Text text;
 	sf::Clock timer;
+	data() {};
+	data(int sco, std::string str, bool ac) :score(sco), nickname(str), activte(ac) {};
 };
 class ScoreBoard
 {
@@ -35,7 +37,8 @@ public:
 	void setColor(sf::Color col) { base = col; }
 	void setChosing(int id) { dates[chosing].text.setFillColor(base); chosing = id; dates[id].text.setFillColor(sf::Color::Yellow); }
 	void setPosition(int x, int y, std::map<int, sf::String>& players, sf::Font& font);
-	ScoreBoard(sf::RenderWindow& win, int size, float vel_, int numberOfPlayers);
+	ScoreBoard(sf::RenderWindow& win);
+	void init(int size, float vel_, int numberOfPleyers);
 	~ScoreBoard();
 };
 

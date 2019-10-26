@@ -197,14 +197,14 @@ st Menu::test()
 	std::vector<sf::Vector2i> xd = { {0,0},{1,0},{2,1},{3,1},{4,2},{5,2},{6,3},{7,3},{8,4},{9,4},{10,5},{11,5},{12,6},{13,6} };
 	bool doubl = false;
 	int siz = 6;
-	chosingTable tabl(window, siz);
+	chosingTable tabl(window);
 	if (!tabl.init(std::vector<sf::Vector2i>(xd.begin(), xd.begin() + (doubl ? siz * 2 : siz)), doubl))
 		;
 
 	chat Chat(window, clickBuff, 150, 12, font);
 	Chat.setValues(sf::Vector2f((1920 - 650), 50), 20, 600);
 
-	ScoreBoard score(window, 25, 200, 8);
+	ScoreBoard score(window);
 	score.setColor(sf::Color::White);
 	std::map<int, sf::String> pla;
 	pla[0] = "tom";
@@ -226,7 +226,7 @@ st Menu::test()
 	black.setTextUtf8("W mieszkaniu znanego dziennikarza znaleziono __.");
 	sf::Texture tmp;
 	tmp.loadFromFile("PNG/tmp.png");
-	timer clock(tmp, font);
+	timer clock(font);
 	clock.setTitle("Time:");
 	clock.setPosition(linex / 2 - 150, 10);
 	clock.setSize(60);

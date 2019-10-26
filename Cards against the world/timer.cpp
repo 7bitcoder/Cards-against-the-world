@@ -4,9 +4,8 @@ timer::~timer()
 {
 }
 
-timer::timer(sf::Texture& back_, sf::Font& font_) : font(font_)
+timer::timer(sf::Font& font_) : font(font_)
 {
-	back.setTexture(back_);
 	title.setFont(font);
 	tim.setFont(font);
 	title.setFillColor(sf::Color::Black);

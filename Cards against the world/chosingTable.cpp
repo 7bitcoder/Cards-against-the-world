@@ -46,11 +46,10 @@ void chosingTable::draw()
 			window.draw(slots[i].card_);
 	}
 }
-
-chosingTable::chosingTable(sf::RenderWindow & win, int numberOfCards_) : window(win), slots(2 * numberOfCards_, { card(card::kind::white), 0, 0 }),
-chosen(-1), doubl(false)
-{
-	std::srand(std::time(nullptr));
+void chosingTable::init(int numberOfCards_) {
+	for (int i = 0; i < 2 * numberOfCards_; i++) {
+		slots.emplace_back(card::kind::white, 0, 0);
+	}
 	for (auto& x : slots) {
 		x.card_.setCharSize(20);
 		x.card_.setOffest(20);
@@ -117,6 +116,10 @@ chosen(-1), doubl(false)
 	}
 	chosen = -1;
 }
+chosingTable::chosingTable(sf::RenderWindow & win) : window(win), chosen(-1), doubl(false)
+{
+	std::srand(std::time(nullptr));
+}
 bool chosingTable::init(std::vector<sf::Vector2i> initCards, bool doubleMode) {
 	resetChosen();
 	doubl = doubleMode;
@@ -144,7 +147,7 @@ bool chosingTable::init(std::vector<sf::Vector2i> initCards, bool doubleMode) {
 void chosingTable::choseRandom()
 {
 	resetChosen();
-	std::vector<int> cardsVectorPos( doubl ? numberOfCards * 2 : numberOfCards );
+	std::vector<int> cardsVectorPos(doubl ? numberOfCards * 2 : numberOfCards);
 	int pos = std::rand() % cardsVectorPos.size();
 	chosen = pos;
 	slots[pos].card_.setChosen();//first

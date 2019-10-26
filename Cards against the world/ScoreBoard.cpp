@@ -120,9 +120,12 @@ void ScoreBoard::setPosition(int x, int y, std::map<int, sf::String> & players, 
 	states.push(std::move(std::vector<std::vector<data>::iterator>(rank.begin(), rank.end())));
 }
 
-ScoreBoard::ScoreBoard(sf::RenderWindow & win, int size, float vel_, int numberOfPleyers) :
-	window(win), dates(numberOfPleyers, {0, "", false})
-{
+ScoreBoard::ScoreBoard(sf::RenderWindow& win): window(win) {}
+
+void ScoreBoard::init(int size, float vel_, int numberOfPleyers) {
+	for (int i = 0; i < numberOfPleyers; i++) {
+		dates.emplace_back( 0, "", false );
+	}
 	vel = vel_;
 	updating = false;
 	charSize = size * setting.yScale;
