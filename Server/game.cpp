@@ -308,7 +308,6 @@ states game::questionInitF() {
 	uint16_t id = black.getCard();
 	id = htons(id);
 	memcpy(buff + 4, (char*)& id, 2);
-	int id = black.getCard();
 	addMessagePrefix(buff, 1, codes::sendBlackCard, 0);
 	broadCast(0, buff, 6, true);
 

@@ -7,7 +7,7 @@ private:
 	sf::Text title;
 	sf::Text tim;
 	sf::Clock clock;
-	sf::Font font;
+	sf::Font & font;
 	sf::Vector2i time_;//x min y sec
 	sf::Int32 allSecounds;
 	sf::Int32 deadline_;//x min y sec

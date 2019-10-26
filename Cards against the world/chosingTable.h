@@ -36,7 +36,7 @@ public:
 	void init(int numberOfCards_);
 	void setDrawable(bool t) { hide = !t; }
 	void setDouble(bool doubl_) { doubl = doubl_; }
-	bool init(std::vector<sf::Vector2i> initCards, bool doubleMode);//vector template <card id, player id> id double then cards for one player should be togeder
+	bool setCards(std::vector<sf::Vector2i> initCards, bool doubleMode);//vector template <card id, player id> id double then cards for one player should be togeder
 	void choseRandom();
 };
 

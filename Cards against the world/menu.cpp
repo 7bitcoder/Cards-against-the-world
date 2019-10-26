@@ -77,12 +77,12 @@ st Menu::mainMenuUpdate()
 	quit.setTitle("QUIT");
 	quit.setSoundVolume(setting.SoundVolume);
 	quit.setColor(sf::Color::White);
-
-
+	sf::Event event;
+	event.type = sf::Event::GainedFocus;
 	while (window.isOpen())
 	{
 		// check all the window's events that were triggered since the last iteration of the loop
-		sf::Event event;
+
 		do {
 			play.checkState();
 			settings.checkState();
@@ -94,6 +94,7 @@ st Menu::mainMenuUpdate()
 			else if (quit.buttonFunction())
 				return st::quit;
 			else;
+
 		} while (window.pollEvent(event));
 
 		window.clear(sf::Color::Black);
@@ -198,8 +199,7 @@ st Menu::test()
 	bool doubl = false;
 	int siz = 6;
 	chosingTable tabl(window);
-	if (!tabl.init(std::vector<sf::Vector2i>(xd.begin(), xd.begin() + (doubl ? siz * 2 : siz)), doubl))
-		;
+	tabl.init(5);
 
 	chat Chat(window, clickBuff, 150, 12, font);
 	Chat.setValues(sf::Vector2f((1920 - 650), 50), 20, 600);

@@ -749,16 +749,12 @@ game::state game::newRoundF()
 			break;
 			case codes::sendChoserId:
 				if (playerId == playerID) {// if choserid is equal to your id
-					normalTable.hideF();
-					chosingTabl.hideF(false);//unhide
 					score.setChosing(playerID);
 					chosingTabl.resetChosen();
 					chosingTabl.setDouble(doubleMode);
 					return state::choser;
 				}
 				else {
-					normalTable.hideF(false);
-					chosingTabl.hideF();
 					score.setChosing(playerID);
 					normalTable.resetChosen();
 					normalTable.setDouble(doubleMode);
@@ -806,7 +802,18 @@ game::state game::choserF()
 	sf::Event event;
 
 	clock.setTimer(3, 0);
-	clock.start();
+	clock.stop();
+
+	enum intState { wait, run };
+	intState state_ = wait;
+
+	normalTable.hideF(false);
+	chosingTabl.hideF(true);
+
+	std::vector<sf::Vector2i> cards_;
+
+	int gotCards = 0;
+	Chat.send("You are chosing cards, wait for other players", sf::Color::Yellow);
 
 	char coding, playerID;
 	while (window.isOpen())
@@ -832,21 +839,23 @@ game::state game::choserF()
 			if (quit.buttonFunction())
 				return state::exit;//todo put ensure pop allert
 			if (confirm.buttonFunction()) {
-
-				if (!chosingTabl.selectedCards()) {//if you did not select cards
-					Chat.send("You did not select card" + doubleMode ? "s" : "", sf::Color::Yellow);
-				}
-				else {
-					char winnerId = chosingTabl.getChosenPlayerId();
-					addMessagePrefix(buff, 1, codes::choserWinnerId, winnerId);
-					if (lobbySocket.send(buff, 4) != sf::Socket::Done)//TODO
-					{
-						//TODO
+				if (state_ == intState::run) {
+					if (!chosingTabl.selectedCards()) {//if you did not select cards
+						Chat.send("You did not select card" + doubleMode ? "s" : "", sf::Color::Yellow);
+					}
+					else {
+						char winnerId = chosingTabl.getChosenPlayerId();
+						addMessagePrefix(buff, 1, codes::choserWinnerId, winnerId);
+						if (lobbySocket.send(buff, 4) != sf::Socket::Done)//TODO
+						{
+							//TODO
+						}
 					}
 				}
 			}
 			else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
 				chosingTabl.function();
+				normalTable.function();
 			}
 			else;
 		}
@@ -855,6 +864,27 @@ game::state game::choserF()
 		{
 			sf::String out;
 			switch (coding) {
+			case codes::sendChosenWhiteCards:
+			{
+				uint16_t* ptr = (uint16_t*)(buff + 4);
+				uint16_t id = ntohs(*ptr);
+				cards_.emplace_back(id, playerID);
+				if (doubleMode) {
+					ptr = (uint16_t*)(buff + 6);
+					id = ntohs(id);
+					cards_.emplace_back(id, playerID);
+				}
+				gotCards++;
+				if (gotCards == players.size() - 1) {// got all cards from players
+					Chat.send("All players sent cards, chose winner", sf::Color::Yellow);
+					normalTable.hideF(true);
+					chosingTabl.hideF(false);
+					chosingTabl.setCards(cards_, true);
+					clock.start();
+					state_ = intState::run;
+				}
+			}
+			break;
 			case codes::randomWinnerRequest:
 			{
 				if (!chosingTabl.selectedCards()) {
@@ -893,6 +923,7 @@ game::state game::choserF()
 			confirm.draw();
 			quit.draw();
 			chosingTabl.draw();
+			normalTable.draw();
 			window.draw(clock);
 			window.draw(black);
 			window.display();
@@ -919,8 +950,11 @@ game::state game::normalF()
 	quit.setSoundVolume(setting.SoundVolume);
 	quit.setColor(sf::Color::White);
 
-	sf::Event event;
+	enum intState { wait, run };
+	intState state_ = intState::run;
 
+	sf::Event event;
+	Chat.send("Chose card//s", sf::Color::Yellow);
 	clock.setTimer(3, 0);
 	clock.start();
 
@@ -948,27 +982,30 @@ game::state game::normalF()
 			if (quit.buttonFunction())
 				return state::exit;//todo put ensure pop allert
 			if (confirm.buttonFunction()) {
-				if (!normalTable.selectedCards()) {//if you did not select cards
-					Chat.send("You did not select card" + doubleMode ? "s" : "", sf::Color::Yellow);
-				}
-				else {
-					int len = 2;
-					uint16_t first, secound, coded;
-					first = normalTable.getFirst();
-					coded = htons(first);
-					memcpy(buff + 4, (char*)& coded, 2);
-					if (doubleMode) {
-						len += 2;
-						secound = normalTable.getSecound();
-						coded = htons(secound);
-						memcpy(buff + 6, (char*)& coded, 2);
+				if (state_ == intState::run) {
+					if (!normalTable.selectedCards()) {//if you did not select cards
+						Chat.send("You did not select card" + doubleMode ? "s" : "", sf::Color::Yellow);
 					}
-					addMessagePrefix(buff, len, codes::sendChosenWhiteCards, playerId);
-					if (lobbySocket.send(buff, 4 + len) != sf::Socket::Done)//TODO
-					{
-						//TODO
+					else {
+						int len = 2;
+						uint16_t first, secound, coded;
+						first = normalTable.getFirst();
+						coded = htons(first);
+						memcpy(buff + 4, (char*)& coded, 2);
+						if (doubleMode) {
+							len += 2;
+							secound = normalTable.getSecound();
+							coded = htons(secound);
+							memcpy(buff + 6, (char*)& coded, 2);
+						}
+						addMessagePrefix(buff, len, codes::sendChosenWhiteCards, playerId);
+						if (lobbySocket.send(buff, 4 + len) != sf::Socket::Done)//TODO
+						{
+							//TODO
+						}
+						Chat.send("You have confirmed cards id: " + std::to_string(first) + (doubleMode ? (", " + std::to_string(secound)) : ""), sf::Color::Yellow);
+						state_ = intState::wait;
 					}
-					Chat.send("You have confirmed cards id: " + std::to_string(first) + (doubleMode ? (", " + std::to_string(secound)) : ""), sf::Color::Yellow);
 				}
 			}
 			else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
@@ -1005,13 +1042,14 @@ game::state game::normalF()
 					//TODO
 				}
 				Chat.send("You have confirmed cards id: " + std::to_string(first) + (doubleMode ? (", " + std::to_string(secound)) : ""), sf::Color::Yellow);
+				state_ = intState::wait;
 			}
-				break;
+			break;
 			case codes::getNewWhiteCards:
 			{
 
 			}
-				break;
+			break;
 			case codes::sendWinner:
 				Chat.send("Round winner is " + players.at(playerID), sf::Color::Yellow);
 				score.updateScore(playerID);

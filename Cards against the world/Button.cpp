@@ -12,7 +12,7 @@ void Button::switchSound()
 
 bool Button::buttonFunction()
 {
-	if (positionSt == positionState::isNotOn && lastPositionSt == positionState::isNotOn && clicked == false)
+	if (!window.hasFocus() || positionSt == positionState::isNotOn && lastPositionSt == positionState::isNotOn && clicked == false)
 		return false;
 	else if (positionSt == positionState::isOn && lastPositionSt == positionState::isNotOn)
 	{

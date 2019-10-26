@@ -120,7 +120,7 @@ chosingTable::chosingTable(sf::RenderWindow & win) : window(win), chosen(-1), do
 {
 	std::srand(std::time(nullptr));
 }
-bool chosingTable::init(std::vector<sf::Vector2i> initCards, bool doubleMode) {
+bool chosingTable::setCards(std::vector<sf::Vector2i> initCards, bool doubleMode) {
 	resetChosen();
 	doubl = doubleMode;
 	if (doubl) {
