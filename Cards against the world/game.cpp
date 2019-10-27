@@ -646,9 +646,9 @@ game::state game::initF()
 	chosingTabl.hideF();
 	chosingTabl.resetChosen();
 
-	score.init(25, 200, players.size());
+	score.init(25, players, font);
 	score.setColor(sf::Color::White);
-	score.setPosition(50, 50, players, font);//set Pos and add players
+	score.setPosition(50, 50);//set Pos and add players
 
 	black.setOffest(20);
 	black.setPosition(1920 - 400, 500);
@@ -770,7 +770,6 @@ game::state game::newRoundF()
 			default:
 				break;
 			}
-			score.update();
 			window.clear(sf::Color::Black);
 			window.draw(background);
 			Chat.draw();
@@ -915,7 +914,6 @@ game::state game::choserF()
 			default:
 				break;
 			}
-			score.update();
 			if (clock.run()) {
 			}
 			window.clear(sf::Color::Black);
@@ -1049,7 +1047,15 @@ game::state game::normalF()
 			break;
 			case codes::getNewWhiteCards:
 			{
-
+				uint16_t newFirst, newSec;
+				uint16_t* ptr = (uint16_t*)(buff + 4);
+				newFirst = ntohs(*ptr);
+				normalTable.replaceChosenFirst(newFirst);
+				if (doubleMode) {
+					ptr = (uint16_t*)(buff + 6);
+					newSec = ntohs(*ptr);
+					normalTable.replaceChosenSecound(newSec);
+				}
 			}
 			break;
 			case codes::sendWinner:
@@ -1064,7 +1070,6 @@ game::state game::normalF()
 			default:
 				break;
 			}
-			score.update();
 			if (clock.run()) {
 			}
 			window.clear(sf::Color::Black);

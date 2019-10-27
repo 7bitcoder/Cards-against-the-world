@@ -4,7 +4,6 @@
 #include"game.h"
 #include "table.h"
 #include "chat.h"
-#include "ScoreBoard.h"
 #include "timer.h"
 #include "chosingTable.h"
 
@@ -205,7 +204,7 @@ st Menu::test()
 	Chat.setValues(20, 600);
 	Chat.setPosition(sf::Vector2f((1920 - 650), 50));
 
-	ScoreBoard score(window);
+	staticScoreBoard score(window);
 	score.setColor(sf::Color::White);
 	std::map<int, sf::String> pla;
 	pla[0] = "tom";
@@ -217,9 +216,9 @@ st Menu::test()
 	pla[5] = "sylwek";
 	pla[6] = "jack";
 	pla[7] = "fuck";
-	score.init(20, 300, pla.size());
+	score.init(20, pla, font);
 	score.setColor(sf::Color::White);
-	score.setPosition(50, 50, pla, font);
+	score.setPosition(50, 50);
 
 	card black(card::kind::black);
 	black.setOffest(20);
@@ -281,7 +280,6 @@ st Menu::test()
 			}
 			else;
 		}
-		score.update();
 		if (clock.run()) {
 			clock.setTimer(0, 10);
 			clock.start();

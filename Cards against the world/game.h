@@ -4,7 +4,7 @@
 #include "socketUtils.h"
 #include"messages.h"
 #include "chat.h"
-#include "ScoreBoard.h"
+#include "staticScoreBoard.h"
 #include "timer.h"
 #include "table.h"
 #include "chosingTable.h"
@@ -17,7 +17,7 @@ private:
 	table normalTable;
 	chosingTable chosingTabl;
 	timer clock;
-	ScoreBoard score;
+	staticScoreBoard score;
 	card black;
 	bool doubleMode;//black card rewuire 2 white ones
 	enum state { lobby, init, newRound, choser, normal, exit };

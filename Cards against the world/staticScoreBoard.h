@@ -9,30 +9,25 @@ struct data
 	std::string nickname;
 	sf::Text text;
 	data() {};
-	data(int sco, std::string str, bool ac) :score(sco), nickname(str) {};
+	data(int id_, int sco, std::string str) :id(id_), score(sco), nickname(str) {};
 };
 class staticScoreBoard
 {
 private:
 	std::vector<int> positions;
-	float diff;
-	int posx;
-	int posy;
 	int charSize;
 	sf::RenderWindow& window;
 	std::vector<data> dates;
 	sf::Color base;
-	float vel;
-	int chosing = 0;
-	bool updating;
+	std::vector<data>::iterator chosing;
 public:
 	void updateScore(int id);
-	void draw();
+	void draw() { for (auto& x : dates) window.draw(x.text); }
 	void setColor(sf::Color col) { base = col; }
-	void setChosing(int id) { dates[chosing].text.setFillColor(base); chosing = id; dates[id].text.setFillColor(sf::Color::Yellow); }
-	void setPosition(int x, int y, std::map<int, sf::String>& players, sf::Font& font);
+	void setChosing(int id);
+	void setPosition(int x, int y);
 	staticScoreBoard(sf::RenderWindow& win);
-	void init(int size, float vel_);
+	void init(int size, std::map<int, sf::String>& players, sf::Font& font);
 	~staticScoreBoard();
 };
 

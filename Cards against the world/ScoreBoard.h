@@ -10,7 +10,6 @@ struct data
 	bool activte;
 	sf::Text text;
 	sf::Clock timer;
-	data() {};
 	data(int sco, std::string str, bool ac) :score(sco), nickname(str), activte(ac) {};
 };
 class ScoreBoard
