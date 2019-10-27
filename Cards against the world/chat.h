@@ -34,7 +34,7 @@ private:
 	void move(int delta);
 public:
 	chat(sf::RenderWindow& win, sf::SoundBuffer& click_, int charLimit, int chatlines, sf::Font& font_);
-	void setValues(sf::Vector2f position, int charSize, int widen);
+	void setValues(int charSize, int widen);
 	void checkState();
 	void checkSideBarState();
 	bool addChar(sf::Event::KeyEvent h);//inputteext wrappers
@@ -43,6 +43,7 @@ public:
 	void scrolled(int delta);
 	std::u32string getText() { std::u32string tmp; for (auto x : textToSend) tmp += x; return tmp; }
 	void send(sf::String string, sf::Color col) { sf::String input = string; computeText(input, col); };//text compute
+	void setPosition(sf::Vector2f position);
 	void operator<<(std::u32string string) {};//text compute
 	~chat();
 };

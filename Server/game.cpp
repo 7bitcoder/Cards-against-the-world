@@ -240,27 +240,33 @@ states game::waitingF()
 						broadCast(sock, buff, 4, true);
 						break;
 					case codes::start://start game
+					{
 						if (clients.size() < 3) {
 							addMessagePrefix(buff, 1, codes::notEnoughPlayers, 0);
 							if (!sendLen(leader, buff, 4));
 							//TODO
 							break;
 						}
+						bool br = false;
 						for (auto it = clients.begin(); it != clients.end(); it++)
 							if (it->first != leader)
 								if (!it->second.ready) {
 									addMessagePrefix(buff, 1, codes::notAllPlayersAreReady, 0);
-									if (!sendLen(leader, buff, 4));
-									//TODO
+									if (!sendLen(leader, buff, 4))
+										;//todo
+									br = true;
 									break;
 								}
+						if (br)
+							break;
 						lock = true;
 						addMessagePrefix(buff, 1, codes::start, 0);
 						if (!broadCast(0, buff, 4, true)) {
 							;//todo
 						}
 						return states::starting;
-						break;
+					}
+					break;
 					case codes::sendWhiteDequeLen:
 						white.init(additionalInfo);
 						break;

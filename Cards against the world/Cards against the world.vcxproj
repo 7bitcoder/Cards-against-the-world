@@ -189,6 +189,7 @@
     <ClCompile Include="SliderW.cpp" />
     <ClCompile Include="socketUtils.cpp" />
     <ClCompile Include="Sounds.cpp" />
+    <ClCompile Include="staticScoreBoard.cpp" />
     <ClCompile Include="table.cpp" />
     <ClCompile Include="timer.cpp" />
   </ItemGroup>
@@ -211,6 +212,7 @@
     <ClInclude Include="SliderW.h" />
     <ClInclude Include="socketUtils.h" />
     <ClInclude Include="Sounds.h" />
+    <ClInclude Include="staticScoreBoard.h" />
     <ClInclude Include="table.h" />
     <ClInclude Include="timer.h" />
   </ItemGroup>

@@ -62,7 +62,8 @@ game::game(sf::RenderWindow& win, sf::SoundBuffer& sndbuff, sf::Font font_, sf::
 	lobbyId = lobbyId_;
 	nickname = nick;
 	state_ = state::lobby;
-	Chat.setValues(sf::Vector2f((1920 - 650), 450), 20, 600);
+	Chat.setValues(20, 600);
+	Chat.setPosition(sf::Vector2f((1920 - 650), 50));
 	Chat.send("Welcome to lobby \'" + lobbyId + "\'", sf::Color::Yellow);
 	if (!backgroundTexture.loadFromFile("PNG/background.jpg"))
 		throw std::exception("png background file missing");
@@ -212,26 +213,29 @@ message::code game::connect()
 
 void game::run()
 {
-	switch (state_) {
-	case state::lobby:
-		state_ = newLobby ? LeaderWait() : joinWait();
-		break;
-	case state::init:
-		state_ = initF();
-		break;
-	case state::newRound:
-		state_ = newRoundF();
-		break;
-	case state::choser:
-		state_ = choserF();
-		break;
-	case state::normal:
-		state_ = normalF();
-		break;
-	case state::exit:
-		return;
-	default:
-		break;
+	while (true) {
+		switch (state_) {
+		case state::lobby:
+			state_ = newLobby ? LeaderWait() : joinWait();
+			break;
+		case state::init:
+			state_ = initF();
+			break;
+		case state::newRound:
+			state_ = newRoundF();
+			break;
+		case state::choser:
+			state_ = choserF();
+			break;
+		case state::normal:
+			state_ = normalF();
+			break;
+		case state::exit:
+			return;
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -546,7 +550,7 @@ game::state game::LeaderWait()
 			else if (goBack.buttonFunction())
 				return game::state::exit;
 			else if (apply.buttonFunction()) {
-
+				
 			}
 			else if (start.buttonFunction()) {
 				addMessagePrefix(buff, static_cast<uint16_t>(deck.getBlackDeckSize()), codes::sendBlackDequeLen, playerId);
@@ -641,8 +645,6 @@ game::state game::initF()
 	chosingTabl.init(players.size() - 1);
 	chosingTabl.hideF();
 	chosingTabl.resetChosen();
-
-	Chat.setValues(sf::Vector2f((1920 - 650), 50), 20, 600);
 
 	score.init(25, 200, players.size());
 	score.setColor(sf::Color::White);

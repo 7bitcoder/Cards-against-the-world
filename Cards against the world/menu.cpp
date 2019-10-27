@@ -202,7 +202,8 @@ st Menu::test()
 	tabl.init(5);
 
 	chat Chat(window, clickBuff, 150, 12, font);
-	Chat.setValues(sf::Vector2f((1920 - 650), 50), 20, 600);
+	Chat.setValues(20, 600);
+	Chat.setPosition(sf::Vector2f((1920 - 650), 50));
 
 	ScoreBoard score(window);
 	score.setColor(sf::Color::White);
@@ -216,6 +217,8 @@ st Menu::test()
 	pla[5] = "sylwek";
 	pla[6] = "jack";
 	pla[7] = "fuck";
+	score.init(20, 300, pla.size());
+	score.setColor(sf::Color::White);
 	score.setPosition(50, 50, pla, font);
 
 	card black(card::kind::black);
@@ -289,7 +292,7 @@ st Menu::test()
 		score.draw();
 		next.draw();
 		quit.draw();
-		tabl.draw();
+		//tabl.draw();
 		window.draw(clock);
 		window.draw(black);
 		window.display();

@@ -192,37 +192,28 @@ chat::chat(sf::RenderWindow & win, sf::SoundBuffer & click_, int charLimit, int 
 	test.setFillColor(sf::Color::Black);
 }
 
-void chat::setValues(sf::Vector2f position, int charSize, int widen)
+void chat::setValues(int charSize, int widen)
 {
 	charSize_ = charSize;
 	int outline = 10;
 	test.setCharacterSize(charSize);
 
-	box.setPosition(position);
 	box.setSize(sf::Vector2f(widen, chatLines * (charSize + 5)));
 	box.setFillColor(sf::Color(240, 240, 240, 128));
 	box.setOutlineColor(sf::Color(195, 195, 195, 255));
 	box.setOutlineThickness(charSize);
-	sf::Vector2f topp(position.x - outline, position.y - charSize);
 
-	inputBox.setPosition(sf::Vector2f(position.x, position.y + outline + box.getSize().y));
 	inputBox.setSize(sf::Vector2f(widen, charSize + 10));
 	inputBox.setFillColor(sf::Color(240, 240, 240, 255));
 	inputBox.setOutlineColor(sf::Color(195, 195, 195, 255));
 	inputBox.setOutlineThickness(outline);
 
 	inputLeftTerm.setSize(sf::Vector2f(charSize, 2 * outline + charSize + 10));
-	inputLeftTerm.setPosition(sf::Vector2f(position.x - charSize, position.y + box.getSize().y));
 	inputLeftTerm.setFillColor(sf::Color(195, 195, 195, 255));
 
 	inputRightTerm.setSize(sf::Vector2f(charSize, 2 * outline + charSize + 10));
-	inputRightTerm.setPosition(sf::Vector2f(position.x + inputBox.getSize().x, position.y + box.getSize().y));
 	inputRightTerm.setFillColor(sf::Color(195, 195, 195, 255));
 
-	textBar.setPosition(position.x, position.y + outline + box.getSize().y);
-	sf::Vector2f pos(position.x, position.y + outline + box.getSize().y);
-	sf::Vector2f sizeP(inputBox.getSize().x - charSize, inputBox.getSize().y);
-	textBar.setBounds(pos, sizeP);
 	textBar.setString("");
 	textBar.setColor();
 	textBar.setFont(font);
@@ -230,18 +221,10 @@ void chat::setValues(sf::Vector2f position, int charSize, int widen)
 	textBar.setBounds(inputLeftTerm.getPosition().x, inputRightTerm.getPosition().x);
 
 	rightSide.setSize(sf::Vector2f(charSize, box.getSize().y)); // init scroll
-	rightSide.setPosition(sf::Vector2f(position.x + box.getSize().x - charSize, position.y));
 	rightSide.setFillColor(sf::Color(205, 205, 205, 255));
 
 	scroll.setSize(sf::Vector2f(charSize, box.getSize().y)); // init scroll
-	scroll.setPosition(sf::Vector2f(position.x + box.getSize().x - charSize, position.y));
 	scroll.setFillColor(sf::Color(127, 127, 127, 255));
-
-	scroll.setXcoord(rightSide.getPosition().x);
-	scroll.setOrigin(rightSide.getPosition().y);
-	for (int i = 0; i < visible.size(); i++) {
-		containerPositions.push_back(sf::Vector2f(3 + position.x, position.y + i * (charSize + 5)));
-	}
 }
 void chat::draw()
 {
@@ -259,6 +242,30 @@ void chat::draw()
 
 }
 
+
+void chat::setPosition(sf::Vector2f position)
+{
+	int outline = 10;
+	box.setPosition(position);
+	sf::Vector2f topp(position.x - outline, position.y - charSize_);
+	inputBox.setPosition(sf::Vector2f(position.x, position.y + outline + box.getSize().y));
+	inputLeftTerm.setPosition(sf::Vector2f(position.x - charSize_, position.y + box.getSize().y));
+	inputRightTerm.setPosition(sf::Vector2f(position.x + inputBox.getSize().x, position.y + box.getSize().y));
+	textBar.setPosition(position.x, position.y + outline + box.getSize().y);
+	sf::Vector2f pos(position.x, position.y + outline + box.getSize().y);
+	sf::Vector2f sizeP(inputBox.getSize().x - charSize_, inputBox.getSize().y);
+	textBar.setBounds(pos, sizeP);
+	rightSide.setPosition(sf::Vector2f(position.x + box.getSize().x - charSize_, position.y));
+	scroll.setPosition(sf::Vector2f(position.x + box.getSize().x - charSize_, position.y));
+	scroll.setXcoord(rightSide.getPosition().x);
+	scroll.setOrigin(rightSide.getPosition().y);
+
+	containerPositions.clear();
+	for (int i = 0; i < visible.size(); i++) {
+		containerPositions.push_back(sf::Vector2f(3 + position.x, position.y + i * (charSize_ + 5)));
+	}
+	setContainerPositions();
+}
 
 chat::~chat()
 {

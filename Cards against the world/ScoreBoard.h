@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 struct data
 {
+	int id;
 	int score;
 	std::string nickname;
 	bool activte;
