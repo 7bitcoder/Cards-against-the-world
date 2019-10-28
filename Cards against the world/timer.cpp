@@ -72,6 +72,7 @@ bool timer::setTimer(int min_, int sec_)
 	update();
 	tim.setOrigin(tim.getGlobalBounds().width / 2, 0);
 	tim.setFillColor(sf::Color::Black);
+	clock.restart();
 }
 
 void timer::update()

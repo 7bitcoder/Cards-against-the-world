@@ -14,6 +14,7 @@ public:
 		data(card::kind car, int pl, int re) : card_(car), playerId(pl), related(re) {}
 	};
 private:
+	Deck& deck;
 	sf::RenderWindow& window;
 	std::vector<sf::Vector2f> normalPositions;
 	std::vector<sf::Vector2f> doublePositions;
@@ -28,7 +29,7 @@ public:
 	void resetChosen() { if (chosen != -1) { resetOne(chosen); resetOne(slots[chosen].related); this->chosen = -1; selected = false; } }
 	bool selectedCards() { return selected; }
 	void hideF(bool hid = true) { hide = hid; }
-	chosingTable(sf::RenderWindow& win);
+	chosingTable(sf::RenderWindow & win, Deck & deck_);
 	~chosingTable();
 	int getChosenPlayerId(); // get player id of chosen cards
 	void function();

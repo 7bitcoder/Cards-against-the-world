@@ -2,7 +2,6 @@
 #include <cstdlib>
 #include <ctime>
 #include <random>
-#include <chrono>
 #include <ratio>
 
 namespace codes {
@@ -62,6 +61,7 @@ game::game(SOCKET listen, SOCKET leader_, std::u32string nick, std::u32string id
 	clients[leader].nick = nick;
 	clients[leader].id = 1;
 	clients[leader].ready = false;
+	clients[leader].sock = leader;
 	free[1] = false;
 	listenSocket = listen;
 	FD_SET(listenSocket, &fds);
@@ -164,6 +164,7 @@ bool game::acceptNewClient() {//TODO dorobienie zwracania kodu bledów
 	clients[client].nick = nick;
 	clients[client].id = ID;
 	clients[client].ready = false;
+	clients[client].sock = client;
 	FD_SET(client, &fds);
 	//send new id to player
 	addMessagePrefix(buff, 1, codes::getId, ID);
@@ -232,15 +233,18 @@ states game::waitingF()
 					int additionalInfo = getMessagePrefix(buff, code, playerID);
 					switch (code) {
 					case codes::Ready://ready
+						printf("got ready\n");
 						clients[sock].ready = true;
 						broadCast(sock, buff, 4, true);//true to send all
 						break;
 					case codes::notReady://notReady
+						printf("got not ready\n");
 						clients[sock].ready = false;
 						broadCast(sock, buff, 4, true);
 						break;
 					case codes::start://start game
 					{
+						printf("got not start\n");
 						if (clients.size() < 3) {
 							addMessagePrefix(buff, 1, codes::notEnoughPlayers, 0);
 							if (!sendLen(leader, buff, 4));
@@ -264,14 +268,23 @@ states game::waitingF()
 						if (!broadCast(0, buff, 4, true)) {
 							;//todo
 						}
+						printf("starting\n");
 						return states::starting;
 					}
 					break;
 					case codes::sendWhiteDequeLen:
+						printf("got white Deque len\n");
 						white.init(additionalInfo);
 						break;
-
+					case codes::timeUpdate:
+						GameTime = additionalInfo;
+						if (!broadCast(0, buff, 4, true)) {
+							;//todo
+						}
+						printf("got time &d\n", GameTime);
+						break;
 					case codes::sendBlackDequeLen:
+						printf("got black Deque len\n");
 						black.init(additionalInfo);
 						break;
 					default:
@@ -285,83 +298,61 @@ states game::waitingF()
 }
 states game::startingF()
 {
+	begin = std::chrono::high_resolution_clock::now();
 	//deques shuffle;
 	white.shuffle();
 	black.shuffle();
+	printf("shufflin\n");
+	//init inGame vector
+	inGamePLayers.clear();
+	for (auto& x : clients) {
+		inGamePLayers.push_back(x.second);
+	}
+	std::sort(inGamePLayers.begin(), inGamePLayers.end(), [](slot & x, slot & y) {return x.id < y.id; });
+	printf("init game vec\n");
 	//send to all players 10 init cards
 	addMessagePrefix(buff, 1, codes::sendRandomTenCards, 0);
 	for (auto& player : clients) {
-		for (int i = 0; i < 10; i++) {
-			uint16_t id = white.getCard();
-			id = htons(id);
-			memcpy(buff + 4 + i * 2, (char*)& id, 2);//add to raw data units 16 *10 cards = cards id
-		}
+		for (int i = 0; i < 10; i++)
+			codeCard(buff + 4 + i * 2, white.getCard());//add to raw data units 16 *10 cards = cards id
 		if (!sendLen(player.first, buff, 4 + 10 * 2))
 			;//todo
 	}
+	printf("send 10 cards to palyers\n");
 	//init random choser
-	int off = std::rand() % clients.size();
-	auto it = clients.begin();
-	while (off--) {
-		it++;
-	}
-	choser = it;
+	choser = std::rand() % inGamePLayers.size();
+	printf("rand choser\n");
 	return states::questionInit;
 }
 states game::questionInitF() {
 
 	//send black card
-	uint16_t id = black.getCard();
-	id = htons(id);
-	memcpy(buff + 4, (char*)& id, 2);
 	addMessagePrefix(buff, 1, codes::sendBlackCard, 0);
+	codeCard(buff + 4, black.getCard());
 	broadCast(0, buff, 6, true);
-
+	printf("send black\n");
 	//get new choser
-	int min = 10;
-	auto it = clients.end();
-	for (auto x = clients.begin(); x != clients.end(); x++) {
-		if (x->second.id > choser->second.id) {
-			if (x->second.id < min) {
-				min = x->second.id;
-				it = x;
-			}
-		}
-	}
-	if (min == 10)
-		choser = clients.find(leader); //leader = first new round
-	else
-		choser = it;
+	choser++;
+	if (choser >= inGamePLayers.size())
+		choser = 0;
 
 	//send info choser
-	addMessagePrefix(buff, 1, codes::sendChoserId, choser->second.id);
+	addMessagePrefix(buff, 1, codes::sendChoserId, inGamePLayers.at(choser).id);
 	broadCast(0, buff, 4, true);
-
+	printf("send choser\n");
 	return states::question;
 }
 states game::questionF() {
+	printf("start question\n");
 	playersSended.clear();
-	auto start = std::chrono::high_resolution_clock::now();
-	TIMEVAL tv = { 60 * 3 , 0 };//3 min 0  sec
-
 	while (true) {
 		if (!clients.size())
 			return states::kill;
 		fd_set copy = fds;
-		auto now = std::chrono::high_resolution_clock::now();
-		auto durr = std::chrono::duration_cast<std::chrono::microseconds>(start - now);
-		tv.tv_sec -= durr.count() / 1000000;
-		tv.tv_usec -= durr.count() % 1000000;
-		if (tv.tv_sec <= 0 && tv.tv_usec <= 0) {
-			return states::questionOvertime;
-		}
-		int socketCount = select(0, &copy, nullptr, nullptr, &tv);
+		int socketCount = select(0, &copy, nullptr, nullptr, nullptr);
 		if (socketCount == SOCKET_ERROR) {
 			printf("select failed with error: %d\n", WSAGetLastError());
 			continue;
-		}
-		else if (socketCount == 0) {
-			return states::questionOvertime;
 		}
 		printf("after xd\n");
 		for (int i = 0; i < socketCount; i++) {
@@ -382,35 +373,38 @@ states game::questionF() {
 					switch (code) {
 					case codes::sendChosenWhiteCards://get cards to send to choser
 					{
+						printf("got cards from players\n");
+						char save[10];
+						memcpy(save, buff, 4);
+						bool doubleMode = additionalInfo > 2;
 						playersSended.push_back(sock);
-						bool doubleMode = false;
+						int get = doubleMode ? 4 : 2;
+						i = recv(sock, buff, get, 0);
+						if (i != get) {
+							;//todo
+						}
+						memcpy(save + 4, buff, 4);
 						int len = 6;
 						uint16_t newFirst, newSec;
-						uint16_t* ptr = (uint16_t*)(buff + 4);
-						white.putCardBack(ntohs(*ptr));
+						uint16_t cc = decodeCard(buff);
+						white.putCardBack(cc);
 						newFirst = white.getCard();
-						if (additionalInfo > 2) {
-							doubleMode = true;
+						if (doubleMode) {
 							newSec = white.getCard();
 							len += 2;
-							ptr = (uint16_t*)(buff + 6);
-							white.putCardBack(ntohs(*ptr));
-
+							white.putCardBack(decodeCard(buff + 2));
 						}
-						if (!sendLen(choser->first, buff, len));
+						if (!sendLen(inGamePLayers.at(choser).sock, save, len));
 						;//todo
 						//send new card/s
-						newFirst = htons(newFirst);
-						memcpy(buff + 4, (char*)& newFirst, 2);
-						if (doubleMode) {
-							newSec = htons(newSec);
-							memcpy(buff + 6, (char*)& newSec, 2);
-						}
+						codeCard(buff + 4, newFirst);
+						if (doubleMode)
+							codeCard(buff + 6, newSec);
 						addMessagePrefix(buff, len, codes::getNewWhiteCards, 0);
 						if (!sendLen(sock, buff, len))
 							;//todo
-						int size = clients.size() - 1;
-						if (playersSended.size() == size)//all players sended cards
+						printf("got %d cards\n", playersSended.size());
+						if (playersSended.size() == clients.size() - 1)//all players sended cards
 							return states::choseInit;
 					}
 					default:
@@ -422,134 +416,26 @@ states game::questionF() {
 	}
 	return states::choseInit;
 }
-states game::questionOvertimeF()
-{
-	for (auto& x : clients) {
-		if (x.first != choser->first) {
-			auto it = std::find(playersSended.begin(), playersSended.end(), x.first);
-			if (it == playersSended.end()) {//if player did not send cards 
-				addMessagePrefix(buff, 1, codes::randomWhiteCardsRequest, 0);
-				if (!sendLen(x.first, buff, 4))
-					;//todo
-			}
-		}
-	}
-	auto start = std::chrono::high_resolution_clock::now();
-	TIMEVAL tv = { 5 , 0 };//3 min 0  sec
-
-	while (true) {
-		if (!clients.size())
-			return states::kill;
-		fd_set copy = fds;
-		auto now = std::chrono::high_resolution_clock::now();
-		auto durr = std::chrono::duration_cast<std::chrono::microseconds>(start - now);
-		tv.tv_sec -= durr.count() / 1000000;
-		tv.tv_usec -= durr.count() % 1000000;
-		if (tv.tv_sec <= 0 && tv.tv_usec <= 0) {
-			break;
-		}
-		int socketCount = select(0, &copy, nullptr, nullptr, &tv);
-		if (socketCount == SOCKET_ERROR) {
-			printf("select failed with error: %d\n", WSAGetLastError());
-			continue;
-		}
-		else if (socketCount == 0) {
-			break;
-		}
-		printf("after xd\n");
-		for (int i = 0; i < socketCount; i++) {
-			printf("in for %d\n", i);
-			SOCKET sock = copy.fd_array[i];
-			if (sock == listenSocket) {//listen
-				rejectNewClient();
-				continue;
-			}///TODO if leared is disconnected what happens?????
-			else {//get message
-				int i = recv(sock, buff, 4, 0);
-				if (i <= 0) //TODO
-					disconnect(sock);
-				else {//decode
-					char code, playerID;
-
-					int additionalInfo = getMessagePrefix(buff, code, playerID);
-					switch (code) {
-					case codes::sendChosenWhiteCards://get cards to send to choser
-					{
-						playersSended.push_back(sock);
-						bool doubleMode = false;
-						int len = 6;
-						uint16_t newFirst, newSec;
-						uint16_t* ptr = (uint16_t*)(buff + 4);
-						white.putCardBack(ntohs(*ptr));
-						newFirst = white.getCard();
-						if (additionalInfo > 2) {
-							doubleMode = true;
-							newSec = white.getCard();
-							len += 2;
-							ptr = (uint16_t*)(buff + 6);
-							white.putCardBack(ntohs(*ptr));
-
-						}
-						if (!sendLen(choser->first, buff, len));
-						;//todo
-						//send new card/s
-						newFirst = htons(newFirst);
-						memcpy(buff + 4, (char*)& newFirst, 2);
-						if (doubleMode) {
-							newSec = htons(newSec);
-							memcpy(buff + 6, (char*)& newSec, 2);
-						}
-						addMessagePrefix(buff, len, codes::getNewWhiteCards, 0);
-						if (!sendLen(sock, buff, len))
-							;//todo
-						int size = clients.size() - 1;
-						if (playersSended.size() == size)//all players sended cards
-							return states::choseInit;
-					}
-					break;
-					default:
-						break;
-					}
-				}
-			}
-		}
-	}
-	for (auto& x : clients) {
-		if (x.first != choser->first) {
-			auto it = std::find(playersSended.begin(), playersSended.end(), x.first);
-			if (it == playersSended.end()) {//if player is did not send cards 
-				addMessagePrefix(buff, 1, codes::playerIsNotResponsing, x.second.id);
-				if (!broadCast(x.first, buff, 4))
-					;//todo
-			}
-		}
-	}
-}
 states game::choseinitF() {
+	printf("chose init\n", playersSended.size());
 	playersSended.clear();
 	return states::chose;
 }
 states game::choseF() {
 	//find choser
-	TIMEVAL tv = { 3 * 60, 0 };
 	int length = 4;
 	// Set up the file descriptor set.
 	int count = 0;
 	while (count < length) {
 		fd_set tmp;
 		FD_ZERO(&tmp);
-		FD_SET(choser->first, &tmp);
-		int iResult = select(0, &tmp, NULL, NULL, &tv);
+		FD_SET(inGamePLayers.at(choser).sock, &tmp);
+		int iResult = select(0, &tmp, nullptr, nullptr, nullptr);
 		if (iResult == SOCKET_ERROR) {
 			printf("select failed with error: %d\n", WSAGetLastError());
 			//
 		}
-		else if (iResult == 0) {
-			printf("response time for data is is up\n");
-			return states::choseOvertime;
-		}
-
-		int n = recv(choser->first, buff + count, length, 0);
+		int n = recv(inGamePLayers.at(choser).sock, buff + count, length, 0);
 		if (n == SOCKET_ERROR) {
 			printf("receiving data failed with code :%d\n", WSAGetLastError());
 			//closesocket(sock);
@@ -564,8 +450,8 @@ states game::choseF() {
 	char coding, playerID;
 	int l = getMessagePrefix(buff, coding, playerID);
 	if (coding == codes::choserWinnerId) {
-		int winner = playerID;
-		addMessagePrefix(buff, 1, codes::sendWinner, winner);
+		printf("got %d winner\n", int(playerID));
+		addMessagePrefix(buff, 1, codes::sendWinner, playerID);
 		if (!broadCast(0, buff, 4, true))
 			;//todo
 	}
@@ -574,26 +460,14 @@ states game::choseF() {
 	}
 	return states::summing;
 }
-states game::choseOvertimeF()
-{
-	TIMEVAL tv = { 3 * 60, 0 };
-	if (!receiveTime(choser->first, buff, 4, 5, 0))
-		;//todo
-
-	char coding, playerID;
-	int l = getMessagePrefix(buff, coding, playerID);
-	if (coding != codes::choserWinnerId)
-		;//todo
-	int winner = playerID;
-	addMessagePrefix(buff, 1, codes::sendWinner, winner);
-	if (!broadCast(0, buff, 4, true))
-		;//todo
-	return states::summing;
-}
 states game::summingF()//finalize round
 {
+	printf("summing\n");
 	//check all time;
-	if (black.empty()) {
+	auto end = std::chrono::high_resolution_clock::now();
+	auto durr = std::chrono::duration_cast<std::chrono::minutes>(begin - end);
+	int x = durr.count();
+	if (durr.count() > GameTime || black.empty()) {
 		addMessagePrefix(buff, 1, codes::gameIsOver, 0);
 		if (!broadCast(0, buff, 4, true))
 			;//todo

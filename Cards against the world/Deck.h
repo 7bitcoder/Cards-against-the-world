@@ -26,5 +26,3 @@ public:
 	bool getDouble(std::size_t pos);//only black cards !!!!
 	~Deck();
 };
-
-extern Deck deck;

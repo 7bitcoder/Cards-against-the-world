@@ -168,6 +168,7 @@ st Menu::test()
 	int linex = 1920;
 	int liney = 1080;
 
+	Deck deck;
 
 	if (!deck.load("taliaRocka.txt")) { ; }
 	//todo
@@ -194,11 +195,16 @@ st Menu::test()
 		;//todo
 	tabl.setDouble(true);
 	*/
-	std::vector<sf::Vector2i> xd = { {0,0},{1,0},{2,1},{3,1},{4,2},{5,2},{6,3},{7,3},{8,4},{9,4},{10,5},{11,5},{12,6},{13,6} };
+	//std::vector<sf::Vector2i> xd = { {0,0},{1,0},{2,1},{3,1},{4,2},{5,2},{6,3},{7,3},{8,4},{9,4},{10,5},{11,5},{12,6},{13,6} };
+	std::vector<int> xd = { 0,1,2,3,4,5,6,7,8,9 };
 	bool doubl = false;
 	int siz = 6;
-	chosingTable tabl(window);
-	tabl.init(5);
+	table normalTable(window, deck);
+	normalTable.init(10);
+	normalTable.hideF(false);
+	normalTable.resetChosen();
+	normalTable.setCards(xd);
+
 
 	chat Chat(window, clickBuff, 150, 12, font);
 	Chat.setValues(20, 600);
@@ -276,7 +282,7 @@ st Menu::test()
 				//tabl.init(xd);
 			}
 			else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
-				tabl.function();
+				normalTable.function();
 			}
 			else;
 		}
@@ -290,7 +296,7 @@ st Menu::test()
 		score.draw();
 		next.draw();
 		quit.draw();
-		//tabl.draw();
+		normalTable.draw();
 		window.draw(clock);
 		window.draw(black);
 		window.display();

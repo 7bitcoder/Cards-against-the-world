@@ -6,7 +6,6 @@
 #include <iostream>
 #include "Deck.h"
 Settings setting;
-Deck deck;
 int main()
 {
 	try

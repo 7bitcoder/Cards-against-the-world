@@ -9,7 +9,6 @@ socketUtils::~socketUtils()
 {
 }
 void socketUtils::addMessagePrefix(char* pos, uint16_t nmb, char coding, char playerId) {
-	mbstate_t state{};
 	pos[0] = coding;
 	nmb = htons(nmb);
 	memcpy(pos + 1, (char*)& nmb, 2);
@@ -18,7 +17,6 @@ void socketUtils::addMessagePrefix(char* pos, uint16_t nmb, char coding, char pl
 uint16_t socketUtils::getMessagePrefix(char* pos, char& coding, char& playerId) {
 	coding = pos[0];
 	playerId = pos[3];
-	char16_t ch; mbstate_t state{};
 	uint16_t* ptr = (uint16_t*)(pos + 1);
 	return ntohs(*ptr);
 }
@@ -38,10 +36,10 @@ std::u32string socketUtils::decode(char* pos, int limit, int reserve) {
 	return str;
 }
 
-int socketUtils::code(const std::u32string& string, char* pos) {
+int socketUtils::code(const std::u32string & string, char* pos) {
 	mbstate_t p{};
 	int size = string.size();
-	if (size + 4 > LEN || !size)
+	if (size + 2 > LEN || !size)
 		return 0;//error
 	size_t length;
 	int i;
@@ -51,4 +49,31 @@ int socketUtils::code(const std::u32string& string, char* pos) {
 	}
 	clear(pos + i * 4);
 	return (++i) * 4;
+}
+
+void socketUtils::codeCard(char* pos, uint16_t card)
+{
+	card = htons(card);
+	memcpy(pos, (char*)& card, 2);
+}
+
+void socketUtils::codeCards(char* pos, std::vector<uint16_t> & cards)
+{
+	for (int i = 0; i < cards.size(); i++)
+		codeCard(pos + i * 2, cards.at(i));
+}
+
+uint16_t socketUtils::decodeCard(char* pos)
+{
+	uint16_t* ptr = (uint16_t*)(pos);
+	return ntohs(*ptr);
+}
+
+std::vector<int> socketUtils::decodeCards(char* pos, int len)
+{
+	std::vector<int> cards;
+	for (int i = 0; i < len; i++) {
+		cards.push_back(decodeCard(pos + i * 2));
+	}
+	return cards;
 }

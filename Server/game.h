@@ -5,6 +5,7 @@
 #include <vector>
 #include <deque>
 #include <set>
+#include<chrono>
 
 #define LEN 8000
 class Cards{//front is top back is bottom of cards deque
@@ -55,18 +56,22 @@ struct slot
 	std::u32string nick;
 	bool ready;
 	int id;
+	SOCKET sock;
 };
 enum states { waiting = 1, starting, questionInit, question, questionOvertime, choseInit, chose, choseOvertime, summing, kill };
 class game: public serverUtils
 {
 private:
+	std::chrono::time_point<std::chrono::steady_clock> begin;
+	int GameTime;
 	Cards black;
 	whiteCards white;
 	bool lock;//lock lobby for new players
 	char buff[LEN];
-	std::map<SOCKET, slot>::iterator choser;
+	int choser;
 	char free[9];//free table to check if slot of id is free;
 	std::map<SOCKET, slot> clients;//0 listen rest players up to 8
+	std::vector<slot> inGamePLayers;//when game starts this vector has sorted map clients via id
 	std::vector<int> playersSended;//players that sended cards
 	SOCKET leader;
 	SOCKET listenSocket;
@@ -84,10 +89,8 @@ public:
 	states startingF();
 	states questionInitF();
 	states questionF();
-	states questionOvertimeF();
 	states choseinitF();
 	states choseF();
-	states choseOvertimeF();
 	states summingF();
 	~game();
 };

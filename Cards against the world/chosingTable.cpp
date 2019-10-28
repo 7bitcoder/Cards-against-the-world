@@ -116,7 +116,7 @@ void chosingTable::init(int numberOfCards_) {
 	}
 	chosen = -1;
 }
-chosingTable::chosingTable(sf::RenderWindow & win) : window(win), chosen(-1), doubl(false)
+chosingTable::chosingTable(sf::RenderWindow & win, Deck & deck_) :deck(deck_), window(win), chosen(-1), doubl(false)
 {
 	std::srand(std::time(nullptr));
 }

@@ -19,6 +19,8 @@ private:
 	sf::RenderWindow& window;
 	std::vector<data> dates;
 	sf::Color base;
+	sf::Color marked;
+	int markId;
 	std::vector<data>::iterator chosing;
 public:
 	void updateScore(int id);
@@ -28,6 +30,7 @@ public:
 	void setPosition(int x, int y);
 	staticScoreBoard(sf::RenderWindow& win);
 	void init(int size, std::map<int, sf::String>& players, sf::Font& font);
+	void mark(int id, sf::Color col);
 	~staticScoreBoard();
 };
 

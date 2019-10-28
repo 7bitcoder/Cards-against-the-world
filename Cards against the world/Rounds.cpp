@@ -8,7 +8,7 @@ Rounds::Rounds(sf::RenderWindow& win, sf::Texture& box_, sf::Texture& pointner_,
 {
 	back.setTexture(box_);
 	min = 10;
-	max = 100;
+	max = 60;
 	number = 10;
 	nmb.setCharacterSize(50);
 	nmb.setString("20");

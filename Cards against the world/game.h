@@ -8,12 +8,14 @@
 #include "timer.h"
 #include "table.h"
 #include "chosingTable.h"
+#include "Deck.h"
 #define LEN 4000
 
 
 class game :public socketUtils
 {
 private:
+	Deck deck;
 	table normalTable;
 	chosingTable chosingTabl;
 	timer clock;
@@ -25,7 +27,7 @@ private:
 	chat Chat;
 	std::map<int, sf::String > players;//0 listen rest players up to 8
 	unsigned short portToConnect = 3000;
-	sf::IpAddress address = "127.0.0.1";// "3.229.14.134";
+	sf::IpAddress address = "3.229.14.134";
 	std::u32string code = U"a7dzRwQjnw5kW6uEnhx7";
 	sf::RenderWindow& window;
 	sf::String lobbyId;
@@ -38,6 +40,9 @@ private:
 	char playerId;
 	bool ready_ = false;
 	bool lockLobby = false;
+	int gotFirst;
+	int gotSec;
+	int gameTime;
 
 	//
 	sf::Texture backgroundTexture;
@@ -50,6 +55,7 @@ private:
 	sf::Texture blockPressed;
 	sf::Texture offButton;
 	sf::Texture checkOff;
+	sf::Texture clockBack;
 
 	//
 	bool Send(std::u32string s, sf::TcpSocket& socket);

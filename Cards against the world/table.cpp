@@ -66,7 +66,7 @@ void table::init(int numberOfCards)
 	resetChosen();
 }
 
-table::table(sf::RenderWindow & win) : window(win)
+table::table(sf::RenderWindow & win, Deck& deck_) : window(win), deck(deck_)
 {
 	std::srand(std::time(nullptr));
 }
@@ -82,7 +82,7 @@ bool table::setCards(std::vector<int> initCards) {
 void table::replaceChosenFirst(int newId)
 {
 	slots[chosen.x].setId(newId);
-	slots[chosen.x].setTextUtf8(deck.getCard(newId, true));
+	slots[chosen.x].setTextUtf8(deck.getCard(newId, false));
 }
 
 void table::replaceChosenSecound(int newId)

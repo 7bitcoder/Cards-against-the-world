@@ -3,7 +3,8 @@
 #define WIN32_LEAN_AND_MEAN
 #else
 #endif // !WIN32_LEAN_AND_MEAN
-
+#include <vector>
+#include <vector>
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -26,5 +27,9 @@ public:
 	uint16_t getMessagePrefix(char* pos, char& coding, char& playerId);
 	std::u32string decode(char* begData, int limit = 0, int reserve = 30);//decode from rcvbuff
 	int code(const std::u32string& string, char* pos); //return bytes writed //code in buff
+	void codeCard(char* pos, uint16_t card);
+	void codeCards(char* pos, std::vector<uint16_t>& cards);
+	uint16_t decodeCard(char* pos);
+	std::vector<int> decodeCards(char* pos, int len);
 };
 
