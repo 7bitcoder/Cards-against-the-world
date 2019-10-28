@@ -26,7 +26,7 @@ void staticScoreBoard::setChosing(int id)
 void staticScoreBoard::setPosition(int x, int y)
 {
 	for (int i = 0; i < dates.size(); i++) {
-		dates[i].text.setPosition(x, y + i*(2*charSize));
+		dates[i].text.setPosition(x, y + i*(1.1*charSize));
 	}
 }
 

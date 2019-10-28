@@ -12,7 +12,6 @@ int chosingTable::getChosenPlayerId()
 void chosingTable::function()
 {
 	if (!hide) {
-		static bool full = false;
 		sf::Vector2i pos = sf::Mouse::getPosition(window);
 		for (int i = 0; i < slots.size(); i++) {
 			if (slots[i].card_.isOn(sf::Vector2f(pos.x, pos.y))) {

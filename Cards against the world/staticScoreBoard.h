@@ -4,6 +4,10 @@
 #include <SFML/Graphics.hpp>
 struct data
 {
+	sf::Sprite check;
+	bool checked = false;
+	bool chosen = false;
+	bool lastWinner = false;
 	int id;
 	int score;
 	std::string nickname;
@@ -16,6 +20,8 @@ class staticScoreBoard
 private:
 	std::vector<int> positions;
 	int charSize;
+	sf::Sprite winner;
+	sf::Sprite choserSprite;
 	sf::RenderWindow& window;
 	std::vector<data> dates;
 	sf::Color base;
@@ -23,6 +29,9 @@ private:
 	int markId;
 	std::vector<data>::iterator chosing;
 public:
+	static sf::Texture checkText;
+	static sf::Texture choserText;
+	static sf::Texture lasWinnerText;
 	void updateScore(int id);
 	void draw() { for (auto& x : dates) window.draw(x.text); }
 	void setColor(sf::Color col) { base = col; }

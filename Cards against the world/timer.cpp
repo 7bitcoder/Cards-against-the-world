@@ -8,23 +8,21 @@ timer::timer(sf::Font& font_) : font(font_)
 {
 	title.setFont(font);
 	tim.setFont(font);
-	title.setFillColor(sf::Color::Black);
-	tim.setFillColor(sf::Color::Black);
+	title.setFillColor(sf::Color::White);
+	tim.setFillColor(sf::Color::White);
 	deadline_ = 10;
 }
 
 void timer::setPosition(int x, int y)
 {
-	int centr = back.getGlobalBounds().width / 2;
 	back.setPosition(x, y);
-	title.setPosition(centr + x, y + 10);
-	tim.setPosition(centr + x, y + 50);
+	title.setPosition(x, y);
+	tim.setPosition( x + 90, y);
 }
 
 void timer::setTitle(std::string str)
 {
 	title.setString(str);
-	title.setOrigin(title.getGlobalBounds().width / 2, 0);
 }
 
 void timer::stop()
@@ -70,8 +68,6 @@ bool timer::setTimer(int min_, int sec_)
 	time_ = { min_, sec_ };
 	allSecounds = min_ * 60 + sec_;
 	update();
-	tim.setOrigin(tim.getGlobalBounds().width / 2, 0);
-	tim.setFillColor(sf::Color::Black);
 	clock.restart();
 }
 

@@ -20,22 +20,16 @@ C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(380): wa
           ]
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(406): warning C4477: „printf”: ciąg formatu „%d” wymaga argumentu typu „int”, ale argument 1 ze zmienną liczbą argumentów ma typ „unsigned __int64”
   C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(406): note: rozważ użycie elementu „%zd” w ciągu formatu
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(397): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(398): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(405): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(420): warning C4474: „printf”: przekazano za dużo argumentów dla ciągu formatowania
   C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(420): note: symbole zastępcze i ich parametry oczekują 0 argumentów ze zmienną liczbą argumentów, ale podano następującą liczbę zmiennych argumentów: 1
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(456): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(473): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(480): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-  lobbyThread.cpp
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.h(10): warning C4005: "LEN": ponowna definicja makra
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\socketUtils.h(16): note: zobacz poprzednią definicję „LEN”
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.h(30): warning C4267: "return": konwersja z "size_t" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\lobbyThread.cpp(10): warning C4005: "DEFAULT_BUFLEN": ponowna definicja makra
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\MainThreadListener.h(4): note: zobacz poprzednią definicję „DEFAULT_BUFLEN”
   Trwa generowanie kodu
-  0 of 1247 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  2 of 1247 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    14 functions had inline decision re-evaluated but remain unchanged
   Zakończono generowanie kodu
   Server.vcxproj -> C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\x64\Release\Server.exe

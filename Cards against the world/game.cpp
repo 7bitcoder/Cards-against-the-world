@@ -661,7 +661,7 @@ game::state game::initF()
 
 	score.init(30, players, font);
 	score.setColor(sf::Color::White);
-	score.setPosition(50, 50);//set Pos and add players
+	score.setPosition(50, 100);//set Pos and add players
 	score.mark(playerId, sf::Color::Yellow);
 
 	black.setOffest(20);
@@ -674,10 +674,10 @@ game::state game::initF()
 
 	clock.setTexture(clockBack);
 	clock.setTitle("Time:");
-	clock.setPosition(linex / 2 - 150, 10);
+	clock.setPosition(50, 10);
 	clock.setTimer(gameTime, 0);
 	clock.start();
-	clock.setSize(40);
+	clock.setSize(30);
 	clock.setDeadline(1, 0);
 
 	Chat.send("Waiting for server", sf::Color::Yellow);
@@ -696,14 +696,14 @@ game::state game::newRoundF()
 
 	Button confirm(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
 	confirm.setPosition((linex - 190 * 1.8) * setting.xScale, (liney - 200) * setting.yScale);
-	confirm.setScale(setting.xScale, 1 * setting.yScale);
+	confirm.setScale(setting.xScale*1.5, 1 * setting.yScale);
 	confirm.setTitle("CONFIRM");
 	confirm.setSoundVolume(setting.SoundVolume);
 	confirm.setColor(sf::Color::White);
 
 	Button quit(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
 	quit.setPosition((linex - 190 * 1.8) * setting.xScale, (liney - 100) * setting.yScale);
-	quit.setScale(setting.xScale, 1 * setting.yScale);
+	quit.setScale(setting.xScale * 1.5, 1 * setting.yScale);
 	quit.setTitle("EXIT");
 	quit.setSoundVolume(setting.SoundVolume);
 	quit.setColor(sf::Color::White);
@@ -793,6 +793,7 @@ game::state game::newRoundF()
 		window.clear(sf::Color::Black);
 		window.draw(background);
 		Chat.draw();
+		normalTable.draw();
 		score.draw();
 		confirm.draw();
 		quit.draw();
@@ -807,14 +808,14 @@ game::state game::choserF()
 
 	Button confirm(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
 	confirm.setPosition((linex - 190 * 1.8) * setting.xScale, (liney - 200) * setting.yScale);
-	confirm.setScale(setting.xScale, 1 * setting.yScale);
+	confirm.setScale(setting.xScale * 1.5, 1 * setting.yScale);
 	confirm.setTitle("CONFIRM WINNER");
 	confirm.setSoundVolume(setting.SoundVolume);
 	confirm.setColor(sf::Color::White);
 
 	Button quit(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
 	quit.setPosition((linex - 190 * 1.8) * setting.xScale, (liney - 100) * setting.yScale);
-	quit.setScale(setting.xScale, 1 * setting.yScale);
+	quit.setScale(setting.xScale * 1.5, 1 * setting.yScale);
 	quit.setTitle("EXIT");
 	quit.setSoundVolume(setting.SoundVolume);
 	quit.setColor(sf::Color::White);
@@ -883,7 +884,7 @@ game::state game::choserF()
 			{
 				std::size_t received;
 				int howMany = doubleMode ? 4 : 2;
-				if (lobbySocket.receive(buff, howMany, received) != sf::Socket::Done && received != howMany)//get rest data (10 cards in 20 bytes)
+				if (lobbySocket.receive(buff, howMany, received) != sf::Socket::Done && received != howMany)//
 				{
 					;//todo
 				}
@@ -960,6 +961,8 @@ game::state game::normalF()
 
 	sf::Event event;
 	Chat.send("Chose card//s", sf::Color::Yellow);
+	std::vector<sf::Vector2i> cards_;
+	int gotCards = 0;
 
 	char coding, playerID;
 	while (window.isOpen())
@@ -1018,6 +1021,28 @@ game::state game::normalF()
 		{
 			sf::String out;
 			switch (coding) {
+			case codes::sendChosenWhiteCards:
+			{
+				std::size_t received;
+				int howMany = doubleMode ? 4 : 2;
+				if (lobbySocket.receive(buff, howMany, received) != sf::Socket::Done && received != howMany)//
+				{
+					;//todo
+				}
+				cards_.emplace_back(decodeCard(buff), playerID);// first 
+				if (doubleMode) {
+					cards_.emplace_back(decodeCard(buff + 2), playerID);//sec
+				}
+				gotCards++;
+				if (gotCards == players.size() - 1) {// got all cards from players accept you (choser)
+					Chat.send("All players sent cards, chose winner", sf::Color::Yellow);
+					normalTable.hideF(true);
+					chosingTabl.hideF(false);
+					chosingTabl.setCards(cards_, doubleMode);
+					state_ = intState::run;
+				}
+			}
+				break;
 			case codes::getNewWhiteCards:
 			{
 				std::size_t received;

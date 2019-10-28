@@ -222,9 +222,9 @@ st Menu::test()
 	pla[5] = "sylwek";
 	pla[6] = "jack";
 	pla[7] = "fuck";
-	score.init(20, pla, font);
+	score.init(30, pla, font);
 	score.setColor(sf::Color::White);
-	score.setPosition(50, 50);
+	score.setPosition(50, 80);
 
 	card black(card::kind::black);
 	black.setOffest(20);
@@ -236,8 +236,8 @@ st Menu::test()
 	tmp.loadFromFile("PNG/tmp.png");
 	timer clock(font);
 	clock.setTitle("Time:");
-	clock.setPosition(linex / 2 - 150, 10);
-	clock.setSize(60);
+	clock.setPosition(50, 10);
+	clock.setSize(30);
 	clock.setTimer(0, 10);
 	clock.setDeadline(0, 5);
 	clock.start();

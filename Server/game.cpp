@@ -394,7 +394,7 @@ states game::questionF() {
 							len += 2;
 							white.putCardBack(decodeCard(buff + 2));
 						}
-						if (!sendLen(inGamePLayers.at(choser).sock, save, len));
+						if (!broadCast(0, save, len, true))
 						;//todo
 						//send new card/s
 						codeCard(buff + 4, newFirst);

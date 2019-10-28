@@ -20,10 +20,10 @@ public:
 	void setTexture(sf::Texture& back_) { back.setTexture(back_); }
 	void setPosition(int x, int y);
 	void setTitle(std::string str);
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const { target.draw(back); target.draw(title); target.draw(tim); }
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {  target.draw(title); target.draw(tim); }
 	void stop();
 	void start();
-	void setSize(int size) { tim.setCharacterSize(size); }
+	void setSize(int size) { tim.setCharacterSize(size); title.setCharacterSize(size); }
 	bool run();//true if time is up
 	void setDeadline(int min, int sec) { deadline_ = min * 60 + sec; }//bez zabezpieczen uwaga !!!
 	bool setTimer(int min, int sec);//setTimer

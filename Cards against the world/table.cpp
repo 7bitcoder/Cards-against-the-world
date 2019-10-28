@@ -5,7 +5,6 @@
 void table::function()
 {
 	if (!hide) {
-		static bool full = false;
 		sf::Vector2i pos = sf::Mouse::getPosition(window);
 		for (int i = 0; i < slots.size(); i++) {
 			if (slots[i].isOn(sf::Vector2f(pos.x, pos.y))) {
@@ -15,11 +14,11 @@ void table::function()
 					if (chosen.x == -1) {
 						chosen.x = i;
 						slots[i].setChosen();//first
-						selected = true;
 					}
 					else if (chosen.y == -1 && chosen.x != i) {
 						chosen.y = i;
 						slots[i].setChosen(true); //secound
+						selected = true;
 					}
 				}
 				else if (!slots[i].isChosen()) {
