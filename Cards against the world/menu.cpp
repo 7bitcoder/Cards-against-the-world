@@ -205,6 +205,12 @@ st Menu::test()
 	normalTable.resetChosen();
 	normalTable.setCards(xd);
 
+	if (!staticScoreBoard::checkText.loadFromFile("PNG/check-mark.png"))
+		throw std::exception("png file missing");
+	if (!staticScoreBoard::choserText.loadFromFile("PNG/bookmarklet.png"))
+		throw std::exception("png file missing");
+	if (!staticScoreBoard::lasWinnerText.loadFromFile("PNG/laurel-crown.png"))
+		throw std::exception("png file missing");
 
 	chat Chat(window, clickBuff, 150, 12, font);
 	Chat.setValues(20, 600);
@@ -225,6 +231,7 @@ st Menu::test()
 	score.init(30, pla, font);
 	score.setColor(sf::Color::White);
 	score.setPosition(50, 80);
+	score.rotateMainPlayer(3);
 
 	card black(card::kind::black);
 	black.setOffest(20);
@@ -254,8 +261,10 @@ st Menu::test()
 			if (Chat.function() && event.type == sf::Event::KeyPressed) {
 				if (Chat.addChar(event.key)) {
 					auto text = Chat.getText();
-					if (!text.empty()) {
-						char x = char(text[0]);
+					if (text.size() > 1) {
+						char choseee = char(text[0]);
+
+						char x = char(text[1]);
 						std::string dd;
 						dd += x;
 						int index = -1;
@@ -265,7 +274,14 @@ st Menu::test()
 						catch (...) {}
 						if (index < 0 || index > pla.size() - 1)
 							continue;
-						score.updateScore(index);
+						if (choseee == 's') {
+							score.updateScore(index);
+						}
+						else if (choseee == 'c')
+							score.check(index);
+						else {
+							score.setChosing(index);
+						}
 					}
 
 				}

@@ -82,6 +82,13 @@ game::game(sf::RenderWindow& win, sf::SoundBuffer& sndbuff, sf::Font font_, sf::
 		throw std::exception("Sound file missing");
 	if (!clockBack.loadFromFile("PNG/tmp.png"))
 		throw std::exception("Sound file missing");
+	
+	if (!staticScoreBoard::checkText.loadFromFile("PNG/check-mark.png"))
+		throw std::exception("png file missing");
+	if (!staticScoreBoard::choserText.loadFromFile("PNG/bookmarklet.png"))
+		throw std::exception("png file missing");
+	if (!staticScoreBoard::lasWinnerText.loadFromFile("PNG/laurel-crown.png"))
+		throw std::exception("png file missing");
 }
 
 message::code game::connect()
@@ -662,7 +669,7 @@ game::state game::initF()
 	score.init(30, players, font);
 	score.setColor(sf::Color::White);
 	score.setPosition(50, 100);//set Pos and add players
-	score.mark(playerId, sf::Color::Yellow);
+	score.rotateMainPlayer(playerId);
 
 	black.setOffest(20);
 	black.setPosition(1920 - 400, 500);
@@ -693,6 +700,8 @@ game::state game::newRoundF()
 	normalTable.resetChosen();
 	chosingTabl.hideF(true);
 	chosingTabl.resetChosen();
+
+	score.resetCheck();
 
 	Button confirm(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
 	confirm.setPosition((linex - 190 * 1.8) * setting.xScale, (liney - 200) * setting.yScale);
@@ -769,6 +778,7 @@ game::state game::newRoundF()
 			}
 			break;
 			case codes::sendChoserId:
+				score.setChosing(playerID);
 				if (playerId == playerID) {// if choser id is equal to your id
 					score.setChosing(playerID);
 					chosingTabl.resetChosen();
@@ -893,6 +903,7 @@ game::state game::choserF()
 					cards_.emplace_back(decodeCard(buff + 2), playerID);//sec
 				}
 				gotCards++;
+				score.check(playerID);
 				if (gotCards == players.size() - 1) {// got all cards from players accept you (choser)
 					Chat.send("All players sent cards, chose winner", sf::Color::Yellow);
 					normalTable.hideF(true);
@@ -1034,6 +1045,7 @@ game::state game::normalF()
 					cards_.emplace_back(decodeCard(buff + 2), playerID);//sec
 				}
 				gotCards++;
+				score.check(playerID);
 				if (gotCards == players.size() - 1) {// got all cards from players accept you (choser)
 					Chat.send("All players sent cards, chose winner", sf::Color::Yellow);
 					normalTable.hideF(true);
