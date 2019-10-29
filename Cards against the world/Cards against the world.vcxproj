@@ -191,6 +191,7 @@
     <ClCompile Include="staticScoreBoard.cpp" />
     <ClCompile Include="table.cpp" />
     <ClCompile Include="timer.cpp" />
+    <ClCompile Include="toggleTables.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
@@ -213,6 +214,7 @@
     <ClInclude Include="staticScoreBoard.h" />
     <ClInclude Include="table.h" />
     <ClInclude Include="timer.h" />
+    <ClInclude Include="toggleTables.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

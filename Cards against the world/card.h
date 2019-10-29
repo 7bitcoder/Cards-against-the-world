@@ -1,10 +1,15 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+# define M_PI           3.14159265358979323846  /* pi */
+
 class card : public sf::Drawable
 {
 public:
 	enum kind { black, white };
 private:
+	sf::Time clock;
+	float scale;
+	float maxScale = 1.5;
 	static sf::Texture whiteTempl;
 	static sf::Texture blackTempl;
 	static sf::Font font;
@@ -20,15 +25,19 @@ private:
 	sf::Text number; //id
 	sf::String string;
 	void compute();
+
 public:
+	bool update();
 	void setId(int id);
 	int getId() { return id; }
 	bool isOn(sf::Vector2f pos);
 	void setOffest(int off) { offset = off; }
-	void setPosition(int x, int y);
+	void setPosition(float x, float y);
+	void move(float x, float y) { back.move(x, y); 	text.move(x, y); number.move(x, y); chose.move(x, y) }
 	void setTextUtf8(std::string str);//get
 	float getXSize() { return back.getGlobalBounds().width; }
 	float getYSize() { return back.getGlobalBounds().height; }
+	sf::Vector2f getPosition() { return back.getPosition(); }
 	bool isChosen() { return chosen; }
 	void setChosen(bool secound = false);
 	void resetChosen();

@@ -32,18 +32,18 @@ void staticScoreBoard::setChosing(int id)
 	}
 }
 void staticScoreBoard::updateCHosingAndWinner() {
-	int off = 30;
+	int off = 20;
 	if (chosing == lastWinner && chosing != dates.end() && lastWinner != dates.end()) {
 		int posx = lastWinner->text.getPosition().x + lastWinner->text.getGlobalBounds().width;
 		int posy = lastWinner->text.getPosition().y;
 		choserSprite.setPosition(posx, posy - off);
-		winner.setPosition(posx + choserSprite.getGlobalBounds().width, posy - off);
+		winner.setPosition(posx + choserSprite.getGlobalBounds().width - 30, posy - off -2);
 	}
 	else {
 		if (lastWinner != dates.end()) {
 			int posx = lastWinner->text.getPosition().x + lastWinner->text.getGlobalBounds().width;
 			int posy = lastWinner->text.getPosition().y;
-			winner.setPosition(posx, posy - off);
+			winner.setPosition(posx, posy - off - 2);
 		}
 		if (chosing != dates.end()) {
 			int posx = chosing->text.getPosition().x + chosing->text.getGlobalBounds().width;
@@ -57,7 +57,7 @@ void staticScoreBoard::setPosition(int x, int y)
 	for (int i = 0; i < dates.size(); i++) {
 		int yVal = y + i * (1.3 * charSize);
 		dates.at(i).text.setPosition(x, yVal);
-		dates.at(i).check.setPosition(x - 80, yVal - 30);
+		dates.at(i).check.setPosition(x - 65, yVal - 20);
 	}
 }
 

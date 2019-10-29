@@ -8,7 +8,32 @@ int chosingTable::getChosenPlayerId()
 {
 	return  slots[chosen].playerId;
 }
+void chosingTable::update()
+{
+	static float alpha = 0.01;
+	if (hiding) {
+		sf::Time diff = clock.getElapsedTime() - last;
+		if (doubl) {
+			dist = slots.at(0).card_.getPosition().y - defaultDouble;
+			float vel = goingUpF(maxDistDouble);
+			float move = vel * alpha * diff.asMilliseconds();
+			for (auto& x : slots) {
+				x.card_.move(0, move);
+			}
+		}
+		else {
+			dist = slots.at(0).card_.getPosition().y - defaultNormal;
+			float vel = goingUpF(maxDist);
+			float move = vel * alpha * diff.asMilliseconds();
+			for (auto& x : slots) {
+				x.card_.move(0, move);
+			}
+		}
+	}
+	else {
 
+	}
+}
 void chosingTable::function()
 {
 	if (!hide) {
@@ -114,7 +139,18 @@ void chosingTable::init(int numberOfCards_) {
 		break;																																						 ///UUU
 	}
 	chosen = -1;
+	defaultNormal = normalPositions.at(0).y;
+	maxDist = 1100 - defaultNormal;
+	for (auto& x : normalPositions) {
+		normalHidePositions.push_back({ x.x, x.y + maxDist });
+	}
+	defaultDouble = doublePositions.at(0).y;
+	maxDistDouble = 1100 - defaultDouble;
+	for (auto& x : doublePositions) {
+		doubleHidePositions.push_back({ x.x, x.y + maxDistDouble });
+	}
 }
+
 chosingTable::chosingTable(sf::RenderWindow & win, Deck & deck_) :deck(deck_), window(win), chosen(-1), doubl(false)
 {
 	std::srand(std::time(nullptr));
@@ -140,6 +176,7 @@ bool chosingTable::setCards(std::vector<sf::Vector2i> initCards, bool doubleMode
 		}
 	}
 	chosen = -1;
+	focused = slots.end();
 	return true;
 }
 

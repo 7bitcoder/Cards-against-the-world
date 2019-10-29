@@ -41,16 +41,10 @@ void card::setId(int id_)
 
 bool card::isOn(sf::Vector2f pos)
 {
-	pos -= back.getPosition();
-	auto bound = back.getGlobalBounds();
-	if (pos.x > 0 && pos.y > 0 && pos.x < bound.width && pos.y < bound.height)
-	{
-		return true;
-	}
-	return false;
+	return back.getGlobalBounds().contains(pos);
 }
 
-void card::setPosition(int x, int y)
+void card::setPosition(float x, float y)
 {
 	back.setPosition(x, y);
 	text.setPosition(x + offset, y + offset);

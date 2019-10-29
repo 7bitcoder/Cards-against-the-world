@@ -668,8 +668,8 @@ game::state game::initF()
 
 	score.init(30, players, font);
 	score.setColor(sf::Color::White);
-	score.setPosition(50, 100);//set Pos and add players
 	score.rotateMainPlayer(playerId);
+	score.setPosition(50, 100);//set Pos and add players
 
 	black.setOffest(20);
 	black.setPosition(1920 - 400, 500);
