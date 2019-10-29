@@ -10,29 +10,66 @@ int chosingTable::getChosenPlayerId()
 }
 void chosingTable::update()
 {
-	static float alpha = 0.01;
-	if (hiding) {
-		sf::Time diff = clock.getElapsedTime() - last;
-		if (doubl) {
-			dist = slots.at(0).card_.getPosition().y - defaultDouble;
-			float vel = goingUpF(maxDistDouble);
-			float move = vel * alpha * diff.asMilliseconds();
-			for (auto& x : slots) {
-				x.card_.move(0, move);
+	static float alpha = 0.08;
+	if (!stop)
+		if (hiding) {
+			sf::Time diff = clock.getElapsedTime() - last;
+			if (doubl) {
+				dist = slots.at(0).card_.getPosition().y - defaultDouble;
+				float vel = goingUpF(maxDistDouble);
+				float move = vel * alpha * diff.asMilliseconds();
+				for (auto& x : slots) {
+					x.card_.move(0, move);
+				}
+				if (slots.at(0).card_.getPosition().y > 1100) {
+					stop = true;
+					for (int i = 0; i < doubleHidePositions.size(); i++)
+						slots[i].card_.setPosition(doubleHidePositions.at(i).x, doubleHidePositions.at(i).y);
+				}
+			}
+			else {
+				dist = slots.at(0).card_.getPosition().y - defaultNormal;
+				float vel = goingUpF(maxDist);
+				float move = vel * alpha * diff.asMilliseconds();
+				for (auto& x : slots) {
+					x.card_.move(0, move);
+				}
+				if (slots.at(0).card_.getPosition().y > 1100) {
+					stop = true;
+					for (int i = 0; i < normalHidePositions.size(); i++)
+						slots[i].card_.setPosition(normalHidePositions.at(i).x, normalHidePositions.at(i).y);
+				}
 			}
 		}
 		else {
-			dist = slots.at(0).card_.getPosition().y - defaultNormal;
-			float vel = goingUpF(maxDist);
-			float move = vel * alpha * diff.asMilliseconds();
-			for (auto& x : slots) {
-				x.card_.move(0, move);
+			sf::Time diff = clock.getElapsedTime() - last;
+			if (doubl) {
+				dist = slots.at(0).card_.getPosition().y - defaultDouble;
+				float vel = -goingUpF(maxDistDouble);
+				float move = vel * alpha * diff.asMilliseconds();
+				for (auto& x : slots) {
+					x.card_.move(0, move);
+				}
+				if (slots.at(0).card_.getPosition().y < defaultDouble) {
+					stop = true;
+					for (int i = 0; i < doublePositions.size(); i++)
+						slots[i].card_.setPosition(doublePositions.at(i).x, doublePositions.at(i).y);
+				}
+			}
+			else {
+				dist = slots.at(0).card_.getPosition().y - defaultNormal;
+				float vel = -goingUpF(maxDist);
+				float move = vel * alpha * diff.asMilliseconds();
+				for (auto& x : slots) {
+					x.card_.move(0, move);
+				}
+				if (slots.at(0).card_.getPosition().y < defaultNormal) {
+					stop = true;
+					for (int i = 0; i < normalPositions.size(); i++)
+						slots[i].card_.setPosition(normalPositions.at(i).x, normalPositions.at(i).y);
+				}
 			}
 		}
-	}
-	else {
-
-	}
 }
 void chosingTable::function()
 {

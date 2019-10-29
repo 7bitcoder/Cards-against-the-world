@@ -2,6 +2,39 @@
 #include <cstdlib>
 #include <iostream>
 #include <ctime>
+void table::update()
+{
+	static float alpha = 0.08;
+	if (!stop)
+		if (hiding) {
+			sf::Time diff = clock.getElapsedTime() - last;
+			dist = slots.at(0).getPosition().y - defaultNormal;
+			float vel = goingUpF(maxDist);
+			float move = vel * alpha * diff.asMilliseconds();
+			for (auto& x : slots) {
+				x.move(0, move);
+			}
+			if (slots.at(0).getPosition().y > 1100) {
+				stop = true;
+				for (int i = 0; i < slots.size(); i++)
+					slots[i].setPosition(hidePositions.at(i).x, hidePositions.at(i).y);
+			}
+		}
+		else {
+			sf::Time diff = clock.getElapsedTime() - last;
+			dist = slots.at(0).getPosition().y - defaultNormal;
+			float vel = -goingUpF(maxDist);
+			float move = vel * alpha * diff.asMilliseconds();
+			for (auto& x : slots) {
+				x.move(0, move);
+			}
+			if (slots.at(0).getPosition().y < defaultNormal) {
+				stop = true;
+				for (int i = 0; i < positions.size(); i++)
+					slots[i].setPosition(positions.at(i).x, positions.at(i).y);
+			}
+		}
+}
 void table::function()
 {
 	if (!hide) {
@@ -59,13 +92,20 @@ void table::init(int numberOfCards)
 	for (int rows = 0; rows < 2; rows++) {
 		for (int i = 0; i < inRow; i++) {
 			slots[i + rows * inRow].setOffest(20);
-			slots[i + rows * inRow].setPosition(beg + i * (width + spacing), centry + rows * (heigh + spacing));
+			positions.emplace_back(beg + i * (width + spacing), centry + rows * (heigh + spacing));
+			hidePositions.emplace_back(positions.back().x, 1100);
+			slots[i + rows * inRow].setPosition(positions.back().x, positions.back().y);
 		}
+	}
+	defaultNormal = positions.at(0).y;
+	maxDist = 1100 - defaultNormal;
+	for (auto& x : positions) {
+		hidePositions.push_back({ x.x, x.y + maxDist });
 	}
 	resetChosen();
 }
 
-table::table(sf::RenderWindow & win, Deck& deck_) : window(win), deck(deck_)
+table::table(sf::RenderWindow & win, Deck & deck_) : window(win), deck(deck_)
 {
 	std::srand(std::time(nullptr));
 }

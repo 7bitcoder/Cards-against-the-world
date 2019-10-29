@@ -6,6 +6,7 @@
 #include "chat.h"
 #include "timer.h"
 #include "chosingTable.h"
+#include "toggleTables.h"
 
 Menu::Menu(sf::RenderWindow& win, std::string& ver_) : window(win), version(ver_)
 {
@@ -195,16 +196,22 @@ st Menu::test()
 		;//todo
 	tabl.setDouble(true);
 	*/
-	//std::vector<sf::Vector2i> xd = { {0,0},{1,0},{2,1},{3,1},{4,2},{5,2},{6,3},{7,3},{8,4},{9,4},{10,5},{11,5},{12,6},{13,6} };
-	std::vector<int> xd = { 0,1,2,3,4,5,6,7,8,9 };
+	std::vector<sf::Vector2i> xd = { {0,0},{1,0},{2,1},{3,1},{4,2},{5,2},{6,3},{7,3},{8,4},{9,4},{10,5},{11,5},{12,6},{13,6} };
+	std::vector<int> xdd = { 0,1,2,3,4,5,6,7,8,9 };
 	bool doubl = false;
 	int siz = 6;
 	table normalTable(window, deck);
 	normalTable.init(10);
-	normalTable.hideF(false);
 	normalTable.resetChosen();
-	normalTable.setCards(xd);
+	normalTable.setCards(xdd);
 
+	chosingTable chosingTabl(window, deck);
+	chosingTabl.init(xd.size() / 2);
+	chosingTabl.resetChosen();
+	chosingTabl.setCards(xd, true);
+
+	toggleTables toggle(normalTable, chosingTabl);
+	toggle.showChosingTable();
 	if (!staticScoreBoard::checkText.loadFromFile("PNG/check-mark.png"))
 		throw std::exception("png file missing");
 	if (!staticScoreBoard::choserText.loadFromFile("PNG/bookmarklet.png"))
@@ -263,7 +270,10 @@ st Menu::test()
 					auto text = Chat.getText();
 					if (text.size() > 1) {
 						char choseee = char(text[0]);
-
+						if (choseee == 't') {
+							toggle.toggle();
+							continue;
+						}
 						char x = char(text[1]);
 						std::string dd;
 						dd += x;
@@ -302,6 +312,7 @@ st Menu::test()
 			}
 			else;
 		}
+		toggle.update();
 		if (clock.run()) {
 			clock.setTimer(0, 10);
 			clock.start();
@@ -312,7 +323,7 @@ st Menu::test()
 		score.draw();
 		next.draw();
 		quit.draw();
-		normalTable.draw();
+		toggle.draw();
 		window.draw(clock);
 		window.draw(black);
 		window.display();

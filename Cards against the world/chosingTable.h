@@ -30,19 +30,21 @@ private:
 	bool selected = false;
 	bool doubl;
 	bool hide = false;
+	bool stop = true;
 	float dist;
 	float defaultDouble;//default pos when not hiding
 	float defaultNormal;
 	float maxDistDouble;
 	float maxDist;
 	void resetOne(int x) { if (x != -1) slots[x].card_.resetChosen(); }
-	float goingUpF(float maxDist) { return std::cosf(dist * (maxDist / (M_PI / 2 - 0.01))); }
-	float goingDownF(float maxDist) { return std::cosf(dist * (maxDist / (M_PI / 2 - 0.01))); }
+	float goingUpF(float maxDist) { return std::sinf((dist) * ((M_PI / 2 - 0.05) / maxDist) + 0.05); }
+	float goingDownF(float maxDist) { return std::sinf(dist * (maxDist / (M_PI / 2))); }
 public:
 	void update();
+	bool end() { return stop; }
 	void resetChosen() { if (chosen != -1) { resetOne(chosen); resetOne(slots[chosen].related); this->chosen = -1; selected = false; } }
 	bool selectedCards() { return selected; }
-	void hideF(bool hid = true) { hiding = hid; clock.restart(); last = clock.getElapsedTime(); }
+	void hideF(bool hid = true) { hiding = hid; clock.restart(); last = clock.getElapsedTime(); stop = false; }
 	chosingTable(sf::RenderWindow & win, Deck & deck_);
 	~chosingTable();
 	int getChosenPlayerId(); // get player id of chosen cards
