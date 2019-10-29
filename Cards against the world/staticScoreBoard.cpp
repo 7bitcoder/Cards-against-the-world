@@ -1,12 +1,16 @@
 #include "staticScoreBoard.h"
 #include <algorithm>
 
-void staticScoreBoard::updateScore(int id)
+void staticScoreBoard::updateScore(int id)//set last winner also
 {
+	isChosing = true;
+	isLastWinner = true;
 	for (auto it = dates.begin(); it != dates.end(); it++) {
 		if (it->id == id) {
 			it->score++;
 			it->text.setString(it->nickname + std::to_string(it->score));
+			lastWinner = it;
+			updateCHosingAndWinner();
 			return;
 		}
 	}
@@ -15,18 +19,36 @@ void staticScoreBoard::updateScore(int id)
 
 void staticScoreBoard::setChosing(int id)
 {
-	chosing->text.setFillColor(chosing->id == markId ? marked : base);
 	for (auto it = dates.begin(); it != dates.end(); it++) {
-		if (it->id == id)
+		if (it->id == id){
 			chosing = it;
+			updateCHosingAndWinner();
+			return;
+		}
 	}
-	chosing->text.setFillColor(sf::Color::Green);
 }
-
+void updateCHosingAndWinner(){
+	if(chosing == lastWinner){
+		int posx = lastWinner.text.getPosition().x + lastWinner.text.getGlobalBounds().width;
+		int posy = lastWinner.text.getPosition().y;
+		choserSprite.setPosition(posx, posy);
+		winner.setPosition(posx + choserSprite.getGlobalBounds().width, posy);
+	} else {
+		int posx = lastWinner.text.getPosition().x + lastWinner.text.getGlobalBounds().width;
+		int posy = lastWinner.text.getPosition().y;
+		winner.setPosition(posx, posy);
+		
+		posx = chosing.text.getPosition().x + chosing.text.getGlobalBounds().width;
+		posy = chosing.text.getPosition().y;
+		choserSprite.setPosition(posx, posy);
+	}
+}
 void staticScoreBoard::setPosition(int x, int y)
 {
 	for (int i = 0; i < dates.size(); i++) {
-		dates[i].text.setPosition(x, y + i*(1.1*charSize));
+		int yVal =  y + i*(1.1*charSize)
+		dates.at(i).text.setPosition(x, yVal);
+		dates.at(i).check.setPosition(x - 50, yVal);
 	}
 }
 
@@ -42,18 +64,35 @@ void staticScoreBoard::init(int size, std::map<int, sf::String>& players, sf::Fo
 		dates.back().text.setFillColor(base);
 		dates.back().text.setFont(font);
 		dates.back().text.setCharacterSize(size);
+		dates.back().check.setTexture(checkText);
 	}
 	sort(dates.begin(), dates.end(), [](data & x1, data & x2) { return x1.id < x2.id; });
-	chosing = dates.begin();
+	winner.setTexturre(lasWinnerText);
+	choserSprite.setTexture(choserText);
 }
 
-void staticScoreBoard::mark(int id, sf::Color col)
+void staticScoreBoard::check(int id)
 {
-	marked = col;
 	for (auto& x : dates) {
 		if (x.id == id){
 			markId = id;
-			x.text.setFillColor(marked);
+			x.checked = true;
+			break;
+		}
+	}
+}
+
+void staticScoreBoard::resetCheck(int id)
+{
+	for (auto& x : dates) {
+		x.checked = false;
+	}
+}
+void rotateMainPlayer(int id){
+	for (auto it = dates.begin(); it != dates.end() ; it++) {
+		if(it->id == id){
+			std::rotate(dates.begin(); it, dates.end());
+			break;
 		}
 	}
 }
