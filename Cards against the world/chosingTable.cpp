@@ -73,7 +73,7 @@ void chosingTable::update()
 }
 void chosingTable::function()
 {
-	if (!hide) {
+	if (!hiding) {
 		sf::Vector2i pos = sf::Mouse::getPosition(window);
 		for (int i = 0; i < slots.size(); i++) {
 			if (slots[i].card_.isOn(sf::Vector2f(pos.x, pos.y))) {
@@ -101,7 +101,7 @@ void chosingTable::function()
 
 void chosingTable::draw()
 {
-	if (!hide) {
+	if (!hidden) {
 		int max = doubl ? numberOfCards * 2 : numberOfCards;
 		for (int i = 0; i < max; i++)
 			window.draw(slots[i].card_);
