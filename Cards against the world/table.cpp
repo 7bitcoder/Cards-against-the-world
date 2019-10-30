@@ -17,7 +17,7 @@ void table::update()
 			if (slots.at(0).getPosition().y > 1100) {
 				stop = true;
 				for (int i = 0; i < slots.size(); i++)
-					slots[i].setPosition(hidePositions.at(i).x, hidePositions.at(i).y);
+					slots.at(i).setPosition(hidePositions.at(i).x, hidePositions.at(i).y);
 			}
 		}
 		else {
@@ -30,14 +30,14 @@ void table::update()
 			}
 			if (slots.at(0).getPosition().y < defaultNormal) {
 				stop = true;
-				for (int i = 0; i < positions.size(); i++)
-					slots[i].setPosition(positions.at(i).x, positions.at(i).y);
+				for (int i = 0; i < slots.size(); i++)
+					slots.at(i).setPosition(positions.at(i).x, positions.at(i).y);
 			}
 		}
 }
 void table::function()
 {
-	if (!hide) {
+	if (!hiding) {
 		sf::Vector2i pos = sf::Mouse::getPosition(window);
 		for (int i = 0; i < slots.size(); i++) {
 			if (slots[i].isOn(sf::Vector2f(pos.x, pos.y))) {
@@ -67,7 +67,7 @@ void table::function()
 
 void table::draw()
 {
-	if (!hide)
+	if (!hidden)
 		for (auto& x : slots)
 			window.draw(x);
 }
@@ -89,18 +89,16 @@ void table::init(int numberOfCards)
 	float spacing = 15;
 	int inRow = 5;
 	int centry = 800 - heigh - spacing;
-	for (int rows = 0; rows < 2; rows++) {
-		for (int i = 0; i < inRow; i++) {
-			slots[i + rows * inRow].setOffest(20);
-			positions.emplace_back(beg + i * (width + spacing), centry + rows * (heigh + spacing));
-			hidePositions.emplace_back(positions.back().x, 1100);
-			slots[i + rows * inRow].setPosition(positions.back().x, positions.back().y);
-		}
-	}
+	
 	defaultNormal = positions.at(0).y;
 	maxDist = 1100 - defaultNormal;
-	for (auto& x : positions) {
-		hidePositions.push_back({ x.x, x.y + maxDist });
+	for (int rows = 0; rows < 2; rows++) {
+		for (int i = 0; i < inRow; i++) {
+			slots.at(i + rows * inRow).setOffest(20);
+			positions.emplace_back(beg + i * (width + spacing), centry + rows * (heigh + spacing));
+			hidePositions.emplace_back(positions.back().x, positions.back().y + maxDist);
+			slots.at(i + rows * inRow).setPosition(positions.back().x, positions.back().y);
+		}
 	}
 	resetChosen();
 }
