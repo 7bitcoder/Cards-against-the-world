@@ -7,7 +7,7 @@
 #include "Button.h"
 #include "Rounds.h"
 #include"lobbyPlayers.h"
-
+#include "toggleTables.h"
 
 namespace codes {
 	/*protokól komunikacji
@@ -57,7 +57,7 @@ namespace codes {
 
 }//TODO naprawnie deadlocka broadcast disconnect
 game::game(sf::RenderWindow& win, sf::SoundBuffer& sndbuff, sf::Font font_, sf::String lobbyId_, sf::String nick, bool newlobby_) :deck(), window(win), Chat(win, sndbuff, 150, 12, font)
-, font(font_), clickBuff(sndbuff), clock(font), normalTable(win, deck), chosingTabl(win, deck), score(win), black(card::kind::black)
+, font(font_), clickBuff(sndbuff), clock(font), normalTable(win, deck), chosingTabl(win, deck), score(win), black(card::kind::black) 
 {
 	newLobby = newlobby_;
 	lobbyId = lobbyId_;
@@ -83,6 +83,13 @@ game::game(sf::RenderWindow& win, sf::SoundBuffer& sndbuff, sf::Font font_, sf::
 	if (!clockBack.loadFromFile("PNG/tmp.png"))
 		throw std::exception("Sound file missing");
 	
+	if (!circle.loadFromFile("PNG/grey_boxTick.png"))
+		throw std::exception("Sound file missing");
+
+	if (!noCircle.loadFromFile("PNG/grey_circle.png"))
+		throw std::exception("Sound file missing");
+
+
 	if (!staticScoreBoard::checkText.loadFromFile("PNG/check-mark.png"))
 		throw std::exception("png file missing");
 	if (!staticScoreBoard::choserText.loadFromFile("PNG/bookmarklet.png"))
@@ -663,7 +670,6 @@ game::state game::initF()
 
 
 	chosingTabl.init(players.size() - 1);
-	chosingTabl.hideF();
 	chosingTabl.resetChosen();
 
 	score.init(30, players, font);
@@ -687,6 +693,16 @@ game::state game::initF()
 	clock.setSize(30);
 	clock.setDeadline(1, 0);
 
+	toggle.setTables(&normalTable, &chosingTabl);
+	toggle.setTitle("Show your cards");
+	toggle.title.setFillColor(sf::Color::White);
+	toggle.title.setFont(font);
+	toggle.title.setCharacterSize(20);
+	toggle.setTextures(circle, noCircle);
+	toggle.setPosition({ 100, 500 });
+	toggle.setSound(clickBuff);
+	toggle.setSpeed(0.02);
+
 	Chat.send("Waiting for server", sf::Color::Yellow);
 	return state::newRound;
 }
@@ -696,10 +712,10 @@ game::state game::newRoundF()
 	int linex = 1920;
 	int liney = 1080;
 
-	normalTable.hideF(false);
 	normalTable.resetChosen();
-	chosingTabl.hideF(true);
 	chosingTabl.resetChosen();
+	toggle.forcewNormalTable();
+	toggle.block();
 
 	score.resetCheck();
 
@@ -763,6 +779,7 @@ game::state game::newRoundF()
 					;//todo
 				}
 				normalTable.setCards(decodeCards(buff, 10)); // decode cards from message
+				toggle.forcewNormalTable();
 			}
 			break;
 			case codes::sendBlackCard://get black card from server
@@ -783,12 +800,14 @@ game::state game::newRoundF()
 					score.setChosing(playerID);
 					chosingTabl.resetChosen();
 					chosingTabl.setDouble(doubleMode);
+					toggle.blockChosing();
 					return state::choser;
 				}
 				else {
 					score.setChosing(playerID);
 					normalTable.resetChosen();
 					normalTable.setDouble(doubleMode);
+					toggle.blockChosing();
 					return state::normal;
 				}
 				break;
@@ -800,10 +819,11 @@ game::state game::newRoundF()
 				break;
 			}
 		}
+		toggle.update();
 		window.clear(sf::Color::Black);
 		window.draw(background);
 		Chat.draw();
-		normalTable.draw();
+		window.draw(toggle);
 		score.draw();
 		confirm.draw();
 		quit.draw();
@@ -834,9 +854,6 @@ game::state game::choserF()
 
 	enum intState { wait, run };
 	intState state_ = wait;
-
-	normalTable.hideF(false);
-	chosingTabl.hideF(true);
 
 	std::vector<sf::Vector2i> cards_;
 
@@ -882,7 +899,9 @@ game::state game::choserF()
 				}
 			}
 			else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
+				normalTable.function();
 				chosingTabl.function();
+				toggle.function();
 			}
 			else;
 		}
@@ -906,9 +925,10 @@ game::state game::choserF()
 				score.check(playerID);
 				if (gotCards == players.size() - 1) {// got all cards from players accept you (choser)
 					Chat.send("All players sent cards, chose winner", sf::Color::Yellow);
-					normalTable.hideF(true);
-					chosingTabl.hideF(false);
 					chosingTabl.setCards(cards_, doubleMode);
+					toggle.forceChosingTable();
+					toggle.blockNormal();
+					toggle.unBlock();
 					state_ = intState::run;
 				}
 			}
@@ -929,6 +949,7 @@ game::state game::choserF()
 				break;
 			}
 		}
+		toggle.update();
 		if (clock.run()) {
 		}
 		window.clear(sf::Color::Black);
@@ -937,8 +958,7 @@ game::state game::choserF()
 		score.draw();
 		confirm.draw();
 		quit.draw();
-		chosingTabl.draw();
-		normalTable.draw();
+		window.draw(toggle);
 		window.draw(clock);
 		window.draw(black);
 		window.display();
@@ -949,9 +969,6 @@ game::state game::normalF()
 {
 	int linex = 1920;
 	int liney = 1080;
-
-	normalTable.hideF(false);
-	chosingTabl.hideF(true);
 
 	Button confirm(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
 	confirm.setPosition((linex - 190 * 1.8) * setting.xScale, (liney - 200) * setting.yScale);
@@ -1025,6 +1042,8 @@ game::state game::normalF()
 			}
 			else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
 				normalTable.function();
+				chosingTabl.function();
+				toggle.function();
 			}
 		}
 		int len = getCommand(lobbySocket, coding, playerID);
@@ -1048,9 +1067,10 @@ game::state game::normalF()
 				score.check(playerID);
 				if (gotCards == players.size() - 1) {// got all cards from players accept you (choser)
 					Chat.send("All players sent cards, chose winner", sf::Color::Yellow);
-					normalTable.hideF(true);
-					chosingTabl.hideF(false);
 					chosingTabl.setCards(cards_, doubleMode);
+					toggle.forceChosingTable();
+					toggle.blockNormal();
+					toggle.unBlock();
 					state_ = intState::run;
 				}
 			}
@@ -1087,6 +1107,7 @@ game::state game::normalF()
 				break;
 			}
 		}
+		toggle.update();
 		if (clock.run()) {
 		}
 		window.clear(sf::Color::Black);
@@ -1095,8 +1116,7 @@ game::state game::normalF()
 		score.draw();
 		confirm.draw();
 		quit.draw();
-		normalTable.draw();
-		chosingTabl.draw();
+		window.draw(toggle);
 		window.draw(clock);
 		window.draw(black);
 		window.display();

@@ -14,6 +14,7 @@ public:
 		data(card::kind car, int pl, int re) : card_(car), playerId(pl), related(re) {}
 	};
 private:
+	float alpha;
 	sf::Clock clock;
 	sf::Time last;
 	Deck& deck;
@@ -25,10 +26,12 @@ private:
 	std::vector<data> slots;
 	std::vector<data>::iterator focused;
 	bool hiding = false;
+	bool block = false;
 	int chosen = -1;
 	int numberOfCards;
 	bool selected = false;
 	bool doubl;
+	bool hidden = false;
 	bool hide = false;
 	bool stop = true;
 	float dist;
@@ -40,11 +43,13 @@ private:
 	float goingUpF(float maxDist) { return std::sinf((dist) * ((M_PI / 2 - 0.05) / maxDist) + 0.05); }
 	float goingDownF(float maxDist) { return std::sinf(dist * (maxDist / (M_PI / 2))); }
 public:
+	void setBlock(bool val) { block = val; }
+	void setAlpha(float al) { alpha = al; }
 	void update();
 	bool end() { return stop; }
 	void resetChosen() { if (chosen != -1) { resetOne(chosen); resetOne(slots[chosen].related); this->chosen = -1; selected = false; } }
 	bool selectedCards() { return selected; }
-	void hideF(bool hid = true) { hiding = hid; clock.restart(); last = clock.getElapsedTime(); stop = false; }
+	void hideF(bool hid = true);
 	chosingTable(sf::RenderWindow & win, Deck & deck_);
 	~chosingTable();
 	int getChosenPlayerId(); // get player id of chosen cards

@@ -34,6 +34,7 @@ public:
 	void setOffest(int off) { offset = off; }
 	void setPosition(float x, float y);
 	void move(float x, float y) { back.move(x, y); 	text.move(x, y); number.move(x, y); chose.move(x, y); }
+	void setBacgrounded(uint8_t val);
 	void setTextUtf8(std::string str);//get
 	float getXSize() { return back.getGlobalBounds().width; }
 	float getYSize() { return back.getGlobalBounds().height; }

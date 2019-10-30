@@ -209,9 +209,24 @@ st Menu::test()
 	chosingTabl.init(xd.size() / 2);
 	chosingTabl.resetChosen();
 	chosingTabl.setCards(xd, true);
+	sf::Texture fir;
+	fir.loadFromFile("PNG/grey_boxTick.png");
 
-	toggleTables toggle(normalTable, chosingTabl);
-	toggle.showChosingTable();
+	sf::Texture sec;
+	sec.loadFromFile("PNG/grey_circle.png");
+
+	toggleTables toggle;
+	toggle.setTables(&normalTable, &chosingTabl);
+	toggle.setTitle("Show your cards");
+	toggle.title.setFillColor(sf::Color::White);
+	toggle.title.setFont(font);
+	toggle.title.setCharacterSize(20);
+	toggle.setTextures(sec, fir);
+	toggle.setPosition({ 100, 500 });
+	toggle.setSound(clickBuff);
+
+	toggle.forcewNormalTable();
+	toggle.setSpeed(0.02);
 	if (!staticScoreBoard::checkText.loadFromFile("PNG/check-mark.png"))
 		throw std::exception("png file missing");
 	if (!staticScoreBoard::choserText.loadFromFile("PNG/bookmarklet.png"))
@@ -248,6 +263,7 @@ st Menu::test()
 	black.setTextUtf8("W mieszkaniu znanego dziennikarza znaleziono __.");
 	sf::Texture tmp;
 	tmp.loadFromFile("PNG/tmp.png");
+
 	timer clock(font);
 	clock.setTitle("Time:");
 	clock.setPosition(50, 10);
@@ -265,13 +281,20 @@ st Menu::test()
 			quit.checkState();
 			next.checkState();
 			Chat.checkSideBarState();
-			if (Chat.function() && event.type == sf::Event::KeyPressed) {
+			if (event.type == sf::Event::MouseButtonReleased && toggle.function()) {
+				;
+			}
+			else if (Chat.function() && event.type == sf::Event::KeyPressed) {
 				if (Chat.addChar(event.key)) {
 					auto text = Chat.getText();
 					if (text.size() > 1) {
 						char choseee = char(text[0]);
-						if (choseee == 't') {
-							toggle.toggle();
+						if (choseee == 'q') {
+							toggle.forceChosingTable();
+							continue;
+						}
+						else if (choseee == 'w') {
+							toggle.forcewNormalTable();
 							continue;
 						}
 						char x = char(text[1]);
@@ -299,16 +322,15 @@ st Menu::test()
 			else if (event.type == sf::Event::MouseWheelScrolled) {
 				Chat.scrolled(event.mouseWheelScroll.delta);
 			}
-			if (quit.buttonFunction())
-				return st::mainMenu;
-			if (next.buttonFunction()) {
-				//for (int i = xd.back(), f = 0; f < 10; f++, i++) {
-					//xd[f] = i;
-			//	}
-				//tabl.init(xd);
+			else if (quit.buttonFunction())
+				toggle.forceChosingTable();
+			else if (next.buttonFunction()) {
+				toggle.forcewNormalTable();
 			}
 			else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
+				toggle.function();
 				normalTable.function();
+				chosingTabl.function();
 			}
 			else;
 		}
@@ -323,7 +345,7 @@ st Menu::test()
 		score.draw();
 		next.draw();
 		quit.draw();
-		toggle.draw();
+		window.draw(toggle);
 		window.draw(clock);
 		window.draw(black);
 		window.display();

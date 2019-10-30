@@ -53,6 +53,11 @@ void card::setPosition(float x, float y)
 	chose.setPosition(x + offset / 3, y + offset / 3);
 }
 
+void card::setBacgrounded(uint8_t val)
+{
+	back.setColor(sf::Color(val, val, val, 255));
+}
+
 void card::setTextUtf8(std::string str)
 {
 	string.clear();
@@ -71,10 +76,12 @@ void card::setChosen(bool secound)
 {
 	chosen = true;
 	secound ? chose.setString("2") : chose.setString("1");
+	setBacgrounded(200);
 }
 
 void card::resetChosen()
 {
+	setBacgrounded(255);
 	chosen = false;
 	chose.setString("");
 }

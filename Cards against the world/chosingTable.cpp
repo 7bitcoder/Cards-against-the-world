@@ -10,7 +10,6 @@ int chosingTable::getChosenPlayerId()
 }
 void chosingTable::update()
 {
-	static float alpha = 0.08;
 	if (!stop)
 		if (hiding) {
 			sf::Time diff = clock.getElapsedTime() - last;
@@ -25,6 +24,7 @@ void chosingTable::update()
 					stop = true;
 					for (int i = 0; i < doubleHidePositions.size(); i++)
 						slots[i].card_.setPosition(doubleHidePositions.at(i).x, doubleHidePositions.at(i).y);
+					hidden = true;
 				}
 			}
 			else {
@@ -38,6 +38,7 @@ void chosingTable::update()
 					stop = true;
 					for (int i = 0; i < normalHidePositions.size(); i++)
 						slots[i].card_.setPosition(normalHidePositions.at(i).x, normalHidePositions.at(i).y);
+					hidden = true;
 				}
 			}
 		}
@@ -54,6 +55,7 @@ void chosingTable::update()
 					stop = true;
 					for (int i = 0; i < doublePositions.size(); i++)
 						slots[i].card_.setPosition(doublePositions.at(i).x, doublePositions.at(i).y);
+					hidden = false;
 				}
 			}
 			else {
@@ -67,13 +69,14 @@ void chosingTable::update()
 					stop = true;
 					for (int i = 0; i < normalPositions.size(); i++)
 						slots[i].card_.setPosition(normalPositions.at(i).x, normalPositions.at(i).y);
+					hidden = false;
 				}
 			}
 		}
 }
 void chosingTable::function()
 {
-	if (!hiding) {
+	if (!block) {
 		sf::Vector2i pos = sf::Mouse::getPosition(window);
 		for (int i = 0; i < slots.size(); i++) {
 			if (slots[i].card_.isOn(sf::Vector2f(pos.x, pos.y))) {
@@ -101,11 +104,11 @@ void chosingTable::function()
 
 void chosingTable::draw()
 {
-	if (!hidden) {
-		int max = doubl ? numberOfCards * 2 : numberOfCards;
-		for (int i = 0; i < max; i++)
-			window.draw(slots[i].card_);
-	}
+
+	int max = doubl ? numberOfCards * 2 : numberOfCards;
+	for (int i = 0; i < max; i++)
+		window.draw(slots[i].card_);
+
 }
 void chosingTable::init(int numberOfCards_) {
 	for (int i = 0; i < 2 * numberOfCards_; i++) {
@@ -188,6 +191,22 @@ void chosingTable::init(int numberOfCards_) {
 	}
 }
 
+void chosingTable::hideF(bool hid)
+{
+	hiding = hid;
+	clock.restart();
+	last = clock.getElapsedTime();
+	stop = false;
+	uint8_t val = hid ? 128 : 255;
+	for (int i = 0; i < slots.size(); i++) {
+		if (!hid && chosen != -1 && (i == chosen || (doubl && i == slots.at(chosen).related))) {
+			slots.at(i).card_.setBacgrounded(200);
+		}
+		else
+			slots.at(i).card_.setBacgrounded(val);
+	}
+}
+
 chosingTable::chosingTable(sf::RenderWindow & win, Deck & deck_) :deck(deck_), window(win), chosen(-1), doubl(false)
 {
 	std::srand(std::time(nullptr));
@@ -201,7 +220,7 @@ bool chosingTable::setCards(std::vector<sf::Vector2i> initCards, bool doubleMode
 			slots[i].playerId = initCards[i].y;
 			slots[i].related = i % 2 ? i - 1 : i + 1;
 			slots[i].card_.setTextUtf8(deck.getCard(initCards[i].x, false));
-			slots[i].card_.setPosition(doublePositions[i].x, doublePositions[i].y);
+			slots[i].card_.setPosition(doubleHidePositions[i].x, doubleHidePositions[i].y);
 		}
 	}
 	else {
@@ -209,7 +228,7 @@ bool chosingTable::setCards(std::vector<sf::Vector2i> initCards, bool doubleMode
 			slots[i].card_.setId(initCards[i].x);
 			slots[i].playerId = initCards[i].y;
 			slots[i].card_.setTextUtf8(deck.getCard(initCards[i].x, false));
-			slots[i].card_.setPosition(normalPositions[i].x, normalPositions[i].y);
+			slots[i].card_.setPosition(normalHidePositions[i].x, normalHidePositions[i].y);
 		}
 	}
 	chosen = -1;

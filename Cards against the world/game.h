@@ -8,6 +8,7 @@
 #include "timer.h"
 #include "table.h"
 #include "chosingTable.h"
+#include "toggleTables.h"
 #include "Deck.h"
 #define LEN 4000
 
@@ -18,6 +19,7 @@ private:
 	Deck deck;
 	table normalTable;
 	chosingTable chosingTabl;
+	toggleTables toggle;
 	timer clock;
 	staticScoreBoard score;
 	card black;
@@ -56,6 +58,8 @@ private:
 	sf::Texture offButton;
 	sf::Texture checkOff;
 	sf::Texture clockBack;
+	sf::Texture circle;
+	sf::Texture noCircle;
 
 	//
 	bool Send(std::u32string s, sf::TcpSocket& socket);

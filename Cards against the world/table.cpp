@@ -4,7 +4,6 @@
 #include <ctime>
 void table::update()
 {
-	static float alpha = 0.08;
 	if (!stop)
 		if (hiding) {
 			sf::Time diff = clock.getElapsedTime() - last;
@@ -18,6 +17,7 @@ void table::update()
 				stop = true;
 				for (int i = 0; i < slots.size(); i++)
 					slots.at(i).setPosition(hidePositions.at(i).x, hidePositions.at(i).y);
+				hidden = true;
 			}
 		}
 		else {
@@ -35,9 +35,23 @@ void table::update()
 			}
 		}
 }
+void table::hideF(bool hid)
+{
+	hiding = hid;
+	clock.restart();
+	last = clock.getElapsedTime();
+	stop = false;
+	uint8_t val = hid ? 128 : 255;
+	for (int i = 0; i < slots.size(); i++) {
+		if ((i == chosen.x || i == chosen.y) && !hid)
+			slots.at(i).setBacgrounded(200);
+		else
+			slots.at(i).setBacgrounded(val);
+	}
+}
 void table::function()
 {
-	if (!hiding) {
+	if (!block) {
 		sf::Vector2i pos = sf::Mouse::getPosition(window);
 		for (int i = 0; i < slots.size(); i++) {
 			if (slots[i].isOn(sf::Vector2f(pos.x, pos.y))) {
@@ -67,9 +81,8 @@ void table::function()
 
 void table::draw()
 {
-	if (!hidden)
-		for (auto& x : slots)
-			window.draw(x);
+	for (auto& x : slots)
+		window.draw(x);
 }
 
 void table::init(int numberOfCards)
@@ -89,16 +102,21 @@ void table::init(int numberOfCards)
 	float spacing = 15;
 	int inRow = 5;
 	int centry = 800 - heigh - spacing;
-	
-	defaultNormal = positions.at(0).y;
-	maxDist = 1100 - defaultNormal;
+
+
 	for (int rows = 0; rows < 2; rows++) {
 		for (int i = 0; i < inRow; i++) {
 			slots.at(i + rows * inRow).setOffest(20);
 			positions.emplace_back(beg + i * (width + spacing), centry + rows * (heigh + spacing));
-			hidePositions.emplace_back(positions.back().x, positions.back().y + maxDist);
-			slots.at(i + rows * inRow).setPosition(positions.back().x, positions.back().y);
 		}
+	}
+	defaultNormal = positions.at(0).y;
+	maxDist = 1100 - defaultNormal;
+	int i = 0;
+	for (auto& x : positions) {
+		hidePositions.emplace_back(x.x, x.y + maxDist);
+		slots.at(i).setPosition(x.x, x.y);
+		i++;
 	}
 	resetChosen();
 }

@@ -5,6 +5,8 @@
 #include "Sounds.h"
 #include <iostream>
 #include "Deck.h"
+#include "Music.h"
+Music music;
 Settings setting;
 int main()
 {
@@ -18,6 +20,9 @@ int main()
 		sf::RenderWindow window(sf::VideoMode(defaultSize.x, defaultSize.y), "Sylio " + version, sf::Style::Fullscreen, set);
 		setting.xScale = double(window.getSize().x) / defaultSize.x;
 		setting.yScale = double(window.getSize().y) / defaultSize.y;
+
+		music.load();
+		music.playGameMusic();
 
 		window.clear(sf::Color::Black);
 		Menu Menu_(window, version);

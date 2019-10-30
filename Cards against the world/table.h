@@ -8,6 +8,7 @@
 class table
 {
 private:
+	float alpha;
 	sf::Clock clock;
 	sf::Time last;
 	Deck& deck;
@@ -21,6 +22,8 @@ private:
 	bool selected = false;//did you select card
 	bool hide;
 	bool hiding = false;
+	bool block = false;
+	bool hidden = false;
 	bool stop = true;
 	float dist;
 	float defaultDouble;//default pos when not hiding
@@ -30,9 +33,11 @@ private:
 	void resetOne(int x) { if (x != -1) slots[x].resetChosen(); }
 	float goingUpF(float maxDist) { return std::sinf((dist) * ((M_PI / 2 - 0.05) / maxDist) + 0.05); }
 public:
+	void setBlock(bool val) { block = val; }
+	void setAlpha(float al) { alpha = al; }
 	bool end() { return stop; }
 	void update();
-	void hideF(bool hid = true) { hiding = hid; clock.restart(); last = clock.getElapsedTime(); stop = false; }
+	void hideF(bool hid = true);
 	void function();
 	void draw();
 	void setDouble(bool doubl_) { doubl = doubl_; }

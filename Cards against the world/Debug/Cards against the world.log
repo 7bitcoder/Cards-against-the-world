@@ -1,15 +1,9 @@
-﻿  chosingTable.cpp
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\card.h(44): warning C4244: "argument": konwersja z "float" do "unsigned int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(40): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(41): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(31): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(13): warning C4305: "inicjowanie": obcięcie z "double" do "float"
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(26): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(39): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(55): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(68): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(78): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(79): warning C4244: "argument": konwersja z "T" do "T", możliwa utrata danych
+﻿  toggleTables.cpp
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\card.h(45): warning C4244: "argument": konwersja z "float" do "unsigned int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(34): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(43): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.h(44): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\toggleTables.cpp(6): warning C4244: "argument": konwersja z "T" do "T", możliwa utrata danych
           with
           [
               T=int
@@ -18,81 +12,4 @@ C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\
           [
               T=float
           ]
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(127): warning C4244: "inicjowanie": konwersja z "double" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(141): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(143): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(147): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(149): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(154): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(156): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(157): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(162): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(164): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(169): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(170): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(172): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(173): warning C4244: "argument": konwersja z "float" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\chosingTable.cpp(193): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
-  table.cpp
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\card.h(44): warning C4244: "argument": konwersja z "float" do "unsigned int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.h(31): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.cpp(7): warning C4305: "inicjowanie": obcięcie z "double" do "float"
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.cpp(19): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.cpp(33): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.cpp(42): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.cpp(43): warning C4244: "argument": konwersja z "T" do "T", możliwa utrata danych
-          with
-          [
-              T=int
-          ]
-          and
-          [
-              T=float
-          ]
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.cpp(84): warning C4244: "inicjowanie": konwersja z "double" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.cpp(91): warning C4244: "inicjowanie": konwersja z "float" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.cpp(110): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.cpp(115): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.20.27508\include\xmemory0(819): warning C4244: "argument": konwersja z "_Ty" do "T", możliwa utrata danych
-          with
-          [
-              _Ty=int
-          ]
-          and
-          [
-              T=float
-          ]
-  C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.20.27508\include\vector(620): note: zobacz odwołanie do funkcji szablon; wystąpienie „void std::_Default_allocator_traits<_Alloc>::construct<_Ty,T&,int>(_Alloc &,_Objty *const ,T &,int &&)” jest kompilowane
-          with
-          [
-              _Alloc=std::allocator<sf::Vector2f>,
-              _Ty=sf::Vector2<float>,
-              T=float,
-              _Objty=sf::Vector2<float>
-          ]
-  C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.20.27508\include\vector(622): note: zobacz odwołanie do funkcji szablon; wystąpienie „void std::_Default_allocator_traits<_Alloc>::construct<_Ty,T&,int>(_Alloc &,_Objty *const ,T &,int &&)” jest kompilowane
-          with
-          [
-              _Alloc=std::allocator<sf::Vector2f>,
-              _Ty=sf::Vector2<float>,
-              T=float,
-              _Objty=sf::Vector2<float>
-          ]
-  C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.20.27508\include\vector(636): note: zobacz odwołanie do funkcji szablon; wystąpienie „void std::vector<sf::Vector2f,std::allocator<_Ty>>::_Emplace_back_with_unused_capacity<T&,int>(T &,int &&)” jest kompilowane
-          with
-          [
-              _Ty=sf::Vector2f,
-              T=float
-          ]
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.cpp(96): note: zobacz odwołanie do funkcji szablon; wystąpienie „void std::vector<sf::Vector2f,std::allocator<_Ty>>::emplace_back<T&,int>(T &,int &&)” jest kompilowane
-          with
-          [
-              _Ty=sf::Vector2f,
-              T=float
-          ]
-  C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.20.27508\include\chrono(595): note: zobacz odwołanie do klasy klasa szablon; wystąpienie „std::chrono::duration<double,std::ratio<1,1>>” jest kompilowane
-  C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.20.27508\include\chrono(172): note: zobacz odwołanie do klasy klasa szablon; wystąpienie „std::chrono::duration<__int64,std::nano>” jest kompilowane
-  C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.20.27508\include\chrono(574): note: zobacz odwołanie do klasy klasa szablon; wystąpienie „std::chrono::time_point<std::chrono::steady_clock,std::chrono::steady_clock::duration>” jest kompilowane
-  Generowanie kodu...
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\table.cpp(120): warning C4715: "table::setCards”: niewszystkie ścieżki kodu zwracają wartość
   Cards against the world.vcxproj -> C:\Users\Sylwester\source\repos\Cards-against-the-world\Cards against the world\Debug\Cards against the world.exe

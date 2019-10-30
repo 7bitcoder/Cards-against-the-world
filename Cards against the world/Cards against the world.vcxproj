@@ -181,6 +181,7 @@
     <ClCompile Include="lobbyPlayers.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="messages.cpp" />
+    <ClCompile Include="Music.cpp" />
     <ClCompile Include="PopAlert.cpp" />
     <ClCompile Include="Rounds.cpp" />
     <ClCompile Include="Settings.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="lobbyPlayers.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="messages.h" />
+    <ClInclude Include="Music.h" />
     <ClInclude Include="PopAlert.h" />
     <ClInclude Include="Rounds.h" />
     <ClInclude Include="Settings.h" />
