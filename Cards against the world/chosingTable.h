@@ -39,7 +39,7 @@ private:
 	float defaultNormal;
 	float maxDistDouble;
 	float maxDist;
-	void resetOne(int x) { if (x != -1) slots[x].card_.resetChosen(); }
+	void resetOne(int x) { if (x != -1) slots[x].card_.resetChosen(); uint8_t val = hiding ? 128 : 255; slots.at(chosen).setBacgrounded(val);}
 	float goingUpF(float maxDist) { return std::sinf((dist) * ((M_PI / 2 - 0.05) / maxDist) + 0.05); }
 	float goingDownF(float maxDist) { return std::sinf(dist * (maxDist / (M_PI / 2))); }
 public:
