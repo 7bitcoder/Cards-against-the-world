@@ -671,6 +671,8 @@ game::state game::initF()
 
 	chosingTabl.init(players.size() - 1);
 	chosingTabl.resetChosen();
+	chosingTabl.setDouble(false);
+	chosingTabl.setCards(std::vector(player.size() - 1, {1,1}), false);//for bad displaying todo lock seeing or sth
 
 	score.init(30, players, font);
 	score.setColor(sf::Color::White);
@@ -1071,7 +1073,6 @@ game::state game::normalF()
 					toggle.forceChosingTable();
 					toggle.blockNormal();
 					toggle.unBlock();
-					state_ = intState::run;
 				}
 			}
 				break;
