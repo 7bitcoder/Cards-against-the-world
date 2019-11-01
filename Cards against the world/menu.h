@@ -15,6 +15,7 @@ private:
 	std::string& version;
 	sf::Font font;
 	sf::Font font2;
+	sf::Font font3;
 	sf::SoundBuffer clickBuff;
 	sf::SoundBuffer switchBuff;
 	sf::Texture base;

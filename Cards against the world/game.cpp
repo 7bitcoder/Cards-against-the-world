@@ -946,8 +946,10 @@ game::state game::choserF()
 				if (gotCards == players.size() - 1) {// got all cards from players accept you (choser)
 					Chat.send("All players sent cards, chose winner", sf::Color::Yellow);
 					std::vector<sf::String> nicks;
-
-					chosingTabl.setCards(cards_, doubleMode);
+					for (auto &x:cards_) {
+						nicks.push_back(players.at(x.y));
+					}
+					chosingTabl.setCards(cards_,nicks, doubleMode);
 					toggle.forceChosingTable();
 					toggle.blockNormal();
 					toggle.unBlock();
@@ -1096,7 +1098,11 @@ game::state game::normalF()
 				score.check(playerID);
 				if (gotCards == players.size() - 1) {// got all cards from players accept you (choser)
 					Chat.send("All players sent cards, chose winner", sf::Color::Yellow);
-					chosingTabl.setCards(cards_, doubleMode);
+					std::vector<sf::String> nicks;
+					for (auto& x : cards_) {
+						nicks.push_back(players.at(x.y));
+					}
+					chosingTabl.setCards(cards_, nicks, doubleMode);
 					toggle.forceChosingTable();
 					toggle.blockNormal();
 					toggle.unBlock();

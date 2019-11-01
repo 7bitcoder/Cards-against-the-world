@@ -48,6 +48,7 @@ private:
 public:
 	void setNickOffset(sf::Vector2f of, int size) { nickOffset = of; for (auto& x : slots) x.nick.setCharacterSize(size); }
 	void hideNicks() { showNicks = false; }
+	void showNick() { showNicks = true; }
 	void setBlock(bool val) { block = val; }
 	void setAlpha(float al) { alpha = al; }
 	void update();

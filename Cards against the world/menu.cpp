@@ -23,6 +23,9 @@ Menu::Menu(sf::RenderWindow& win, std::string& ver_) : window(win), version(ver_
 	if (!font.loadFromFile("Fonts/NunitoSans-Bold.ttf"))
 		throw std::exception("font file missing");
 
+	if (!font3.loadFromFile("Fonts/Lato-Regular.ttf"))
+		throw std::exception("font file missing");
+
 	if (!block.loadFromFile("PNG/green_button00.png"))
 		throw std::exception("png file missing");
 
@@ -206,9 +209,13 @@ st Menu::test()
 	normalTable.setCards(xdd);
 
 	chosingTable chosingTabl(window, deck);
-	chosingTabl.init(xd.size() / 2);
+	chosingTabl.init(xd.size() / 2, font2);
+	chosingTabl.setNickOffset({ 19,215 }, 18);
 	chosingTabl.resetChosen();
-	chosingTabl.setCards(xd, true);
+	std::vector<sf::String> nicks(xd.size(), "nick");
+	chosingTabl.setCards(xd, nicks, true);
+	chosingTabl.showNick();
+
 	sf::Texture fir;
 	fir.loadFromFile("PNG/grey_boxTick.png");
 
