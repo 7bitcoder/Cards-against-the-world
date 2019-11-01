@@ -100,6 +100,8 @@ bool Deck::load(std::experimental::filesystem::path name)
 		for (auto& x : black_)
 			if (x.text.empty())
 				return false;
+		if (white_.empty() || black_.empty())
+			return false;
 		return true;
 	}
 	catch (...) {

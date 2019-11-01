@@ -1,0 +1,23 @@
+test deck
+5 black
+5 white
+test 1
+//b0
+test 2
+//b1
+test 3
+//b2
+test 4
+//b3
+test 5
+//b4
+test 1
+//w0
+test 2
+//w1
+test 5
+//w2
+test 3
+//w3
+test 4
+//w4

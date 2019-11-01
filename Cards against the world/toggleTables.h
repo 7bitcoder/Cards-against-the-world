@@ -27,8 +27,8 @@ public:
 	chosingTable* chosing;
 	void forcewNormalTable();
 	void forceChosingTable();
-	void block() { block_ = true; }
-	void unBlock() { block_ = false; }
+	void block() { block_ = true; circle.setColor(sf::Color(255,255,255,128)); back.setColor(sf::Color(255, 255, 255, 128));}
+	void unBlock() { block_ = false; circle.setColor(sf::Color(255, 255, 255, 255)); back.setColor(sf::Color(255, 255, 255, 255));}
 	void blockNormal() { normal->setBlock(true); chosing->setBlock(false); }
 	void blockChosing() { normal->setBlock(false); chosing->setBlock(true); }
 	void setTitle(sf::String str) { title.setString(str); }

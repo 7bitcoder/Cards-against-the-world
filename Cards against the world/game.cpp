@@ -53,11 +53,11 @@ namespace codes {
 	const char playerIsNotResponsing = 27;//if pleyer is not responsing send it to rest and stop game
 	const char notEnoughPlayers = 28;//min 4 players required
 	const char getNewWhiteCards = 29;//get new white cards from server;
-	const char sendChosenToChoser = 30;//send cards to choser
+	const char lobbyError = 30;//send cards to choser
 
 }//TODO naprawnie deadlocka broadcast disconnect
 game::game(sf::RenderWindow& win, sf::SoundBuffer& sndbuff, sf::Font font_, sf::String lobbyId_, sf::String nick, bool newlobby_) :deck(), window(win), Chat(win, sndbuff, 150, 12, font)
-, font(font_), clickBuff(sndbuff), clock(font), normalTable(win, deck), chosingTabl(win, deck), score(win), black(card::kind::black) 
+, font(font_), clickBuff(sndbuff), clock(font), normalTable(win, deck), chosingTabl(win, deck), score(win), black(card::kind::black)
 {
 	newLobby = newlobby_;
 	lobbyId = lobbyId_;
@@ -82,7 +82,7 @@ game::game(sf::RenderWindow& win, sf::SoundBuffer& sndbuff, sf::Font font_, sf::
 		throw std::exception("Sound file missing");
 	if (!clockBack.loadFromFile("PNG/tmp.png"))
 		throw std::exception("Sound file missing");
-	
+
 	if (!circle.loadFromFile("PNG/grey_boxTick.png"))
 		throw std::exception("Sound file missing");
 
@@ -95,6 +95,8 @@ game::game(sf::RenderWindow& win, sf::SoundBuffer& sndbuff, sf::Font font_, sf::
 	if (!staticScoreBoard::choserText.loadFromFile("PNG/bookmarklet.png"))
 		throw std::exception("png file missing");
 	if (!staticScoreBoard::lasWinnerText.loadFromFile("PNG/laurel-crown.png"))
+		throw std::exception("png file missing");
+	if (!staticScoreBoard::discText.loadFromFile("PNG/disconnected.png"))
 		throw std::exception("png file missing");
 }
 
@@ -352,7 +354,7 @@ game::state game::joinWait() {
 
 	std::experimental::filesystem::path deck_ = "taliaRocka.txt";
 	if (!deck.load(deck_))
-		Chat.send("Could not load default deck: " + deck_.filename().string() + " validate txt file", sf::Color::Yellow);
+		Chat.send("Could not load default deck: " + deck_.filename().string() + " validate txt file", sf::Color::Red);
 	else
 		Chat.send("Default Deck: " + deck_.filename().string() + " loaded", sf::Color::Yellow);
 
@@ -458,6 +460,9 @@ game::state game::joinWait() {
 				Chat.send("Game started", sf::Color::Yellow);
 				return state::init;
 				break;
+			case codes::lobbyError:
+				Chat.send("Server has crushed", sf::Color::Yellow);
+				break;
 			case codes::timeUpdate:
 				gameTime = len;
 				break;
@@ -495,7 +500,7 @@ game::state game::LeaderWait()
 
 	std::experimental::filesystem::path deck_ = "taliaRocka.txt";
 	if (!deck.load(deck_))
-		Chat.send("Could not load default deck: " + deck_.stem().string() + " validate txt file", sf::Color::Yellow);
+		Chat.send("Could not load default deck: " + deck_.stem().string() + " validate txt file", sf::Color::Red);
 	else
 		Chat.send("Default Deck: " + deck_.filename().string() + " loaded", sf::Color::Yellow);
 
@@ -646,6 +651,9 @@ game::state game::LeaderWait()
 			case codes::notEnoughPlayers:
 				Chat.send("Minimum four players required to start the game", sf::Color::Yellow);
 				break;
+			case codes::lobbyError:
+				Chat.send("Server has crushed", sf::Color::Yellow);
+				break;
 			case codes::timeUpdate:
 				gameTime = len;
 				break;
@@ -669,19 +677,22 @@ game::state game::initF()
 	normalTable.init(10);
 
 
-	chosingTabl.init(players.size() - 1);
+	chosingTabl.init(players.size() - 1, font);
 	chosingTabl.resetChosen();
 	chosingTabl.setDouble(false);
-	chosingTabl.setCards(std::vector(player.size() - 1, {1,1}), false);//for bad displaying todo lock seeing or sth
+	std::vector<sf::Vector2i> tmp1(players.size() - 1, { 1,1 });
+	std::vector<sf::String> tmp2(players.size() - 1, "test");
+	chosingTabl.setCards(tmp1, tmp2, false);//for bad displaying todo lock seeing or sth
 
 	score.init(30, players, font);
 	score.setColor(sf::Color::White);
 	score.rotateMainPlayer(playerId);
 	score.setPosition(50, 100);//set Pos and add players
 
-	black.setOffest(20);
+	black.setOffest(30);
+	black.setIndexOffest({ 212,288 }, 27);
 	black.setPosition(1920 - 400, 500);
-	black.setCharSize(30);
+	black.setCharSize(26);
 	black.setId(0);
 	black.setTextUtf8("");
 
@@ -700,7 +711,7 @@ game::state game::initF()
 	toggle.title.setFillColor(sf::Color::White);
 	toggle.title.setFont(font);
 	toggle.title.setCharacterSize(20);
-	toggle.setTextures(circle, noCircle);
+	toggle.setTextures(noCircle, circle);
 	toggle.setPosition({ 100, 500 });
 	toggle.setSound(clickBuff);
 	toggle.setSpeed(0.02);
@@ -723,7 +734,7 @@ game::state game::newRoundF()
 
 	Button confirm(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
 	confirm.setPosition((linex - 190 * 1.8) * setting.xScale, (liney - 200) * setting.yScale);
-	confirm.setScale(setting.xScale*1.5, 1 * setting.yScale);
+	confirm.setScale(setting.xScale * 1.5, 1 * setting.yScale);
 	confirm.setTitle("CONFIRM");
 	confirm.setSoundVolume(setting.SoundVolume);
 	confirm.setColor(sf::Color::White);
@@ -784,6 +795,10 @@ game::state game::newRoundF()
 				toggle.forcewNormalTable();
 			}
 			break;
+			case codes::disconnect: //check playerID
+				Chat.send(players[playerID] + " disconnected", sf::Color::Red);
+				score.disconnected(playerID);
+				break;
 			case codes::sendBlackCard://get black card from server
 			{
 				std::size_t received;
@@ -812,6 +827,9 @@ game::state game::newRoundF()
 					toggle.blockChosing();
 					return state::normal;
 				}
+				break;
+			case codes::lobbyError:
+				Chat.send("Server has crushed", sf::Color::Yellow);
 				break;
 			case codes::gameIsOver:
 				Chat.send("Game is over", sf::Color::Yellow);
@@ -927,6 +945,8 @@ game::state game::choserF()
 				score.check(playerID);
 				if (gotCards == players.size() - 1) {// got all cards from players accept you (choser)
 					Chat.send("All players sent cards, chose winner", sf::Color::Yellow);
+					std::vector<sf::String> nicks;
+
 					chosingTabl.setCards(cards_, doubleMode);
 					toggle.forceChosingTable();
 					toggle.blockNormal();
@@ -942,6 +962,13 @@ game::state game::choserF()
 				break;
 			case codes::playerIsNotResponsing:
 				Chat.send("Player " + players.at(playerID) + " is not responsing", sf::Color::Yellow);
+				break;
+			case codes::disconnect: //check playerID
+				Chat.send(players[playerID] + " disconnected", sf::Color::Red);
+				score.disconnected(playerID);
+				break;
+			case codes::lobbyError:
+				Chat.send("Server has crushed", sf::Color::Yellow);
 				break;
 			case codes::gameIsOver:
 				Chat.send("Game is over", sf::Color::Yellow);
@@ -1075,7 +1102,7 @@ game::state game::normalF()
 					toggle.unBlock();
 				}
 			}
-				break;
+			break;
 			case codes::getNewWhiteCards:
 			{
 				std::size_t received;
@@ -1096,6 +1123,13 @@ game::state game::normalF()
 				if (doubleMode)
 					normalTable.replaceChosenSecound(gotSec);
 				return state::newRound;
+				break;
+			case codes::lobbyError:
+				Chat.send("Server has crushed", sf::Color::Yellow);
+				break;
+			case codes::disconnect: //check playerID
+				Chat.send(players[playerID] + " disconnected", sf::Color::Red);
+				score.disconnected(playerID);
 				break;
 			case codes::playerIsNotResponsing:
 				Chat.send("Player " + players.at(playerID) + " is not responsing", sf::Color::Yellow);

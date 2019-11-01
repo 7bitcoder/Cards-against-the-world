@@ -91,7 +91,7 @@ void table::init(int numberOfCards)
 		slots.emplace_back(card::kind::white);
 	}
 	for (auto& x : slots) {
-		x.setCharSize(20);
+		x.setCharSize(22);
 	}
 	int beg = 250;
 	int centr = (window.getSize().x / 2) - 190 * 1.8;
@@ -115,6 +115,7 @@ void table::init(int numberOfCards)
 	int i = 0;
 	for (auto& x : positions) {
 		hidePositions.emplace_back(x.x, x.y + maxDist);
+		slots.at(i).setIndexOffest({ 164, 222 }, 20);
 		slots.at(i).setPosition(x.x, x.y);
 		i++;
 	}

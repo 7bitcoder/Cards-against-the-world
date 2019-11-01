@@ -17,6 +17,7 @@ private:
 	bool chosen;
 	int offset;
 	float charSize;
+	sf::Vector2f indexOffest;
 	card::kind kind_;
 	sf::Sprite back;
 	sf::Text text;
@@ -33,6 +34,7 @@ public:
 	bool isOn(sf::Vector2f pos);
 	void setOffest(int off) { offset = off; }
 	void setPosition(float x, float y);
+	void setIndexOffest(sf::Vector2f offset, int charSize);
 	void move(float x, float y) { back.move(x, y); 	text.move(x, y); number.move(x, y); chose.move(x, y); }
 	void setBacgrounded(uint8_t val);
 	void setTextUtf8(std::string str);//get

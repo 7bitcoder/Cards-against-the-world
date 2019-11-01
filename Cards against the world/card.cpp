@@ -49,8 +49,14 @@ void card::setPosition(float x, float y)
 	back.setPosition(x, y);
 	text.setPosition(x + offset, y + offset);
 	//219 302
-	number.setPosition(x + 174, y + 230);
+	number.setPosition(x + indexOffest.x, y + indexOffest.y);
 	chose.setPosition(x + offset / 3, y + offset / 3);
+}
+
+void card::setIndexOffest(sf::Vector2f offest, int charSize)
+{
+	indexOffest = offest;
+	number.setCharacterSize(charSize);
 }
 
 void card::setBacgrounded(uint8_t val)
@@ -97,7 +103,6 @@ card::card(card::kind kind__)
 	text.setFillColor(kind_ == kind::black ? sf::Color::White : sf::Color::Black);
 	number.setFont(font);
 	number.setFillColor(kind_ == kind::black ? sf::Color::White : sf::Color::Black);
-	number.setCharacterSize(18);
 	chose.setFont(font);
 	chose.setFillColor(kind_ == kind::black ? sf::Color::White : sf::Color::Black);
 	chose.setCharacterSize(18);

@@ -45,8 +45,8 @@ Menu::Menu(sf::RenderWindow& win, std::string& ver_) : window(win), version(ver_
 		throw std::exception("png file missing");
 
 	card::setFont("Fonts/Lato-Regular.ttf");
-	card::setBlackTexture("PNG/cardTemplate.png");
-	card::setWhiteTexture("PNG/cardTemplateWhite.png");
+	card::setBlackTexture("PNG/newBlack.png");
+	card::setWhiteTexture("PNG/newWhite.png");
 
 	background.setTexture(backgroundTexture);
 }
@@ -171,7 +171,7 @@ st Menu::test()
 
 	Deck deck;
 
-	if (!deck.load("taliaRocka.txt")) { ; }
+	if (!deck.load("test.txt")) { ; }
 	//todo
 
 	Button next(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
@@ -249,16 +249,17 @@ st Menu::test()
 	pla[4] = "xDDDDDDDDDD";
 	pla[5] = "sylwek";
 	pla[6] = "jack";
-	pla[7] = "fuck";
+	pla[7] = "muck";
 	score.init(30, pla, font);
 	score.setColor(sf::Color::White);
 	score.setPosition(50, 80);
 	score.rotateMainPlayer(3);
 
 	card black(card::kind::black);
-	black.setOffest(20);
+	black.setOffest(30);
+	black.setIndexOffest({ 212,288 }, 27);
 	black.setPosition(1920 - 400, 500);
-	black.setCharSize(30);
+	black.setCharSize(26);
 	black.setId(0);
 	black.setTextUtf8("W mieszkaniu znanego dziennikarza znaleziono __.");
 	sf::Texture tmp;
@@ -297,6 +298,14 @@ st Menu::test()
 							toggle.forcewNormalTable();
 							continue;
 						}
+						else if (choseee == 'b') {
+							toggle.block();
+							continue;
+						}
+						else if (choseee == 'u') {
+							toggle.unBlock();
+							continue;
+						}
 						char x = char(text[1]);
 						std::string dd;
 						dd += x;
@@ -323,7 +332,7 @@ st Menu::test()
 				Chat.scrolled(event.mouseWheelScroll.delta);
 			}
 			else if (quit.buttonFunction())
-				toggle.forceChosingTable();
+				return st::quit;
 			else if (next.buttonFunction()) {
 				toggle.forcewNormalTable();
 			}

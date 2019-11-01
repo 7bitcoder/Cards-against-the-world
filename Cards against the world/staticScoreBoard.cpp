@@ -3,6 +3,18 @@
 sf::Texture staticScoreBoard::checkText;
 sf::Texture staticScoreBoard::choserText;
 sf::Texture staticScoreBoard::lasWinnerText;
+sf::Texture staticScoreBoard::discText;
+void staticScoreBoard::disconnected(int id)
+{
+	for (auto it = dates.begin(); it != dates.end(); it++) {
+		if (it->id == id) {
+			it->disconnected = true;
+			it->check.setTexture(discText);
+			it->checked = true;
+			break;
+		}
+	}
+}
 void staticScoreBoard::updateScore(int id)//set last winner also
 {
 	isChosing = true;
@@ -37,7 +49,7 @@ void staticScoreBoard::updateCHosingAndWinner() {
 		int posx = lastWinner->text.getPosition().x + lastWinner->text.getGlobalBounds().width;
 		int posy = lastWinner->text.getPosition().y;
 		choserSprite.setPosition(posx, posy - off);
-		winner.setPosition(posx + choserSprite.getGlobalBounds().width - 30, posy - off -2);
+		winner.setPosition(posx + choserSprite.getGlobalBounds().width - 30, posy - off - 2);
 	}
 	else {
 		if (lastWinner != dates.end()) {
@@ -93,7 +105,8 @@ void staticScoreBoard::check(int id)
 void staticScoreBoard::resetCheck()
 {
 	for (auto& x : dates) {
-		x.checked = false;
+		if (!x.disconnected)
+			x.checked = false;
 	}
 }
 void staticScoreBoard::rotateMainPlayer(int id) {

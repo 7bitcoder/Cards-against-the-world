@@ -19,11 +19,14 @@ void chosingTable::update()
 				float move = vel * alpha * diff.asMilliseconds();
 				for (auto& x : slots) {
 					x.card_.move(0, move);
+					x.nick.move(0, move);
 				}
 				if (slots.at(0).card_.getPosition().y > 1100) {
 					stop = true;
-					for (int i = 0; i < doubleHidePositions.size(); i++)
+					for (int i = 0; i < doubleHidePositions.size(); i++) {
 						slots[i].card_.setPosition(doubleHidePositions.at(i).x, doubleHidePositions.at(i).y);
+						slots[i].nick.setPosition(doubleHidePositions.at(i) + nickOffset);
+					}
 					hidden = true;
 				}
 			}
@@ -33,11 +36,14 @@ void chosingTable::update()
 				float move = vel * alpha * diff.asMilliseconds();
 				for (auto& x : slots) {
 					x.card_.move(0, move);
+					x.nick.move(0, move);
 				}
 				if (slots.at(0).card_.getPosition().y > 1100) {
 					stop = true;
-					for (int i = 0; i < normalHidePositions.size(); i++)
+					for (int i = 0; i < normalHidePositions.size(); i++) {
 						slots[i].card_.setPosition(normalHidePositions.at(i).x, normalHidePositions.at(i).y);
+						slots[i].nick.setPosition(normalHidePositions.at(i) + nickOffset);
+					}
 					hidden = true;
 				}
 			}
@@ -50,11 +56,14 @@ void chosingTable::update()
 				float move = vel * alpha * diff.asMilliseconds();
 				for (auto& x : slots) {
 					x.card_.move(0, move);
+					x.nick.move(0, move);
 				}
 				if (slots.at(0).card_.getPosition().y < defaultDouble) {
 					stop = true;
-					for (int i = 0; i < doublePositions.size(); i++)
+					for (int i = 0; i < doublePositions.size(); i++) {
 						slots[i].card_.setPosition(doublePositions.at(i).x, doublePositions.at(i).y);
+						slots[i].nick.setPosition(doublePositions.at(i) + nickOffset);
+					}
 					hidden = false;
 				}
 			}
@@ -64,11 +73,14 @@ void chosingTable::update()
 				float move = vel * alpha * diff.asMilliseconds();
 				for (auto& x : slots) {
 					x.card_.move(0, move);
+					x.nick.move(0, move);
 				}
 				if (slots.at(0).card_.getPosition().y < defaultNormal) {
 					stop = true;
-					for (int i = 0; i < normalPositions.size(); i++)
+					for (int i = 0; i < normalPositions.size(); i++) {
 						slots[i].card_.setPosition(normalPositions.at(i).x, normalPositions.at(i).y);
+						slots[i].nick.setPosition(normalPositions.at(i) + nickOffset);
+					}
 					hidden = false;
 				}
 			}
@@ -102,21 +114,42 @@ void chosingTable::function()
 	}
 }
 
+void chosingTable::setChosen(int id)
+{
+	for (int i = 0; i < slots.size(); i++) {
+		if (slots.at(i).playerId = id)
+		{
+			resetChosen();
+			chosen = i;
+			slots[i].card_.setChosen();
+			if (doubl)
+				slots.at(i + 1).card_.setChosen(true);
+			showNicks = true;
+			return;
+		}
+	}
+}
+
 void chosingTable::draw()
 {
 
 	int max = doubl ? numberOfCards * 2 : numberOfCards;
-	for (int i = 0; i < max; i++)
+	for (int i = 0; i < max; i++) {
 		window.draw(slots[i].card_);
+		if (showNicks)
+			window.draw(slots[i].nick);
+	}
 
 }
-void chosingTable::init(int numberOfCards_) {
+void chosingTable::init(int numberOfCards_, sf::Font & font) {
 	for (int i = 0; i < 2 * numberOfCards_; i++) {
 		slots.emplace_back(card::kind::white, 0, 0);
 	}
 	for (auto& x : slots) {
-		x.card_.setCharSize(20);
+		x.card_.setCharSize(22);
 		x.card_.setOffest(20);
+		x.nick.setFillColor(sf::Color::Black);
+		x.nick.setFont(font);
 	}
 	float spacing = 15;
 	numberOfCards = numberOfCards_;
@@ -189,6 +222,8 @@ void chosingTable::init(int numberOfCards_) {
 	for (auto& x : doublePositions) {
 		doubleHidePositions.push_back({ x.x, x.y + maxDistDouble });
 	}
+	for (auto& x : slots)
+		x.card_.setIndexOffest({ 164, 222 }, 20);
 }
 
 void chosingTable::hideF(bool hid)
@@ -211,7 +246,7 @@ chosingTable::chosingTable(sf::RenderWindow & win, Deck & deck_) :deck(deck_), w
 {
 	std::srand(std::time(nullptr));
 }
-bool chosingTable::setCards(std::vector<sf::Vector2i> initCards, bool doubleMode) {
+bool chosingTable::setCards(std::vector<sf::Vector2i> & initCards, std::vector<sf::String>& nicks, bool doubleMode) {
 	resetChosen();
 	doubl = doubleMode;
 	if (doubl) {
@@ -221,6 +256,8 @@ bool chosingTable::setCards(std::vector<sf::Vector2i> initCards, bool doubleMode
 			slots[i].related = i % 2 ? i - 1 : i + 1;
 			slots[i].card_.setTextUtf8(deck.getCard(initCards[i].x, false));
 			slots[i].card_.setPosition(doubleHidePositions[i].x, doubleHidePositions[i].y);
+			slots[i].nick.setPosition(doubleHidePositions[i] + nickOffset);
+			slots[i].nick.setString(nicks[i]);
 		}
 	}
 	else {
@@ -229,6 +266,8 @@ bool chosingTable::setCards(std::vector<sf::Vector2i> initCards, bool doubleMode
 			slots[i].playerId = initCards[i].y;
 			slots[i].card_.setTextUtf8(deck.getCard(initCards[i].x, false));
 			slots[i].card_.setPosition(normalHidePositions[i].x, normalHidePositions[i].y);
+			slots[i].nick.setPosition(normalHidePositions[i] + nickOffset);
+			slots[i].nick.setString(nicks[i]);
 		}
 	}
 	chosen = -1;

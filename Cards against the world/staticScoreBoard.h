@@ -8,6 +8,7 @@ struct data: public sf::Drawable
 	bool checked = false;
 	int id;
 	int score;
+	bool disconnected = false;
 	std::string nickname;
 	sf::Text text;
 	data() {};
@@ -37,6 +38,8 @@ public:
 	static sf::Texture checkText;
 	static sf::Texture choserText;
 	static sf::Texture lasWinnerText;
+	static sf::Texture discText;
+	void disconnected(int id);
 	void updateScore(int id);
 	void draw() { for (auto& x : dates) window.draw(x); if (isChosing) window.draw(choserSprite); if (isLastWinner) window.draw(winner); }
 	void setColor(sf::Color col) { base = col; }

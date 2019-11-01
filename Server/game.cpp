@@ -48,6 +48,7 @@ namespace codes {
 	const char playerIsNotResponsing = 27;//if pleyer is not responsing send it to rest and stop game
 	const char notEnoughPlayers = 28;//min 4 players required
 	const char getNewWhiteCards = 29;//get new white cards from server;
+	const char lobbyError = 30;//lobby has crushed;
 
 }//TODO naprawnie deadlocka broadcast disconnect 
 game::game(SOCKET listen, SOCKET leader_, std::u32string nick, std::u32string id)
@@ -316,7 +317,7 @@ states game::startingF()
 		for (int i = 0; i < 10; i++)
 			codeCard(buff + 4 + i * 2, white.getCard());//add to raw data units 16 *10 cards = cards id
 		if (!sendLen(player.first, buff, 4 + 10 * 2))
-			;//todo
+			disconnect(player.first);
 	}
 	printf("send 10 cards to palyers\n");
 	//init random choser
@@ -381,7 +382,7 @@ states game::questionF() {
 						int get = doubleMode ? 4 : 2;
 						i = recv(sock, buff, get, 0);
 						if (i != get) {
-							;//todo
+							disconnect(sock);
 						}
 						memcpy(save + 4, buff, 4);
 						int len = 6;
@@ -402,7 +403,7 @@ states game::questionF() {
 							codeCard(buff + 6, newSec);
 						addMessagePrefix(buff, len, codes::getNewWhiteCards, 0);
 						if (!sendLen(sock, buff, len))
-							;//todo
+							disconnect(sock);
 						printf("got %d cards\n", playersSended.size());
 						if (playersSended.size() == clients.size() - 1)//all players sended cards
 							return states::choseInit;
@@ -438,11 +439,11 @@ states game::choseF() {
 		int n = recv(inGamePLayers.at(choser).sock, buff + count, length, 0);
 		if (n == SOCKET_ERROR) {
 			printf("receiving data failed with code :%d\n", WSAGetLastError());
-			//closesocket(sock);
+			disconnect(inGamePLayers.at(choser).sock);
 		}
 		else if (!n) {
 			printf("client closed connection");
-			//closesocket(sock);
+			disconnect(inGamePLayers.at(choser).sock);
 		}
 		count += n;
 		length -= n;
