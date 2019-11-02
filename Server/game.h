@@ -67,6 +67,8 @@ private:
 	Cards black;
 	whiteCards white;
 	bool lock;//lock lobby for new players
+	bool doubleMode;
+	std::vector<std::array<int, 2>> allCardsToSend;
 	char buff[LEN];
 	int choser;
 	char free[9];//free table to check if slot of id is free;

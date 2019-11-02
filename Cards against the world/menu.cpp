@@ -438,7 +438,6 @@ st Menu::ConnectToLobby()
 					auto msg = gameLobby.connect();
 					if (msg == message::connected) {
 						//ok play
-						std::cout << "fail\n";
 						gameLobby.run();
 					}
 					else {

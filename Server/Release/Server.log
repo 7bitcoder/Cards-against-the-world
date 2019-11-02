@@ -1,7 +1,4 @@
-﻿  MainThreadListener.cpp
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\MainThreadListener.cpp(35): warning C4267: "argument": konwersja z "size_t" do "uint16_t", możliwa utrata danych
-  Server.cpp
-  chat.cpp
+﻿  chat.cpp
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\chat.cpp(13): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\chat.cpp(22): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\chat.cpp(44): warning C4101: "state": lokalna zmienna, do której nie istnieje odwołanie
@@ -11,22 +8,24 @@ C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.h(10): warni
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.h(23): error C2039: „random_shuffle”: Nie jest składową „std”
   C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.20.27508\include\chrono(19): note: zobacz deklarację „std”
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.h(23): error C3861: "random_shuffle": identyfikatora nie odnaleziono
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(55): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(175): warning C4267: "argument": konwersja z "size_t" do "char", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(190): warning C4267: "argument": konwersja z "size_t" do "uint16_t", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(284): warning C4474: „printf”: przekazano za dużo argumentów dla ciągu formatowania
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(284): note: symbole zastępcze i ich parametry oczekują 0 argumentów ze zmienną liczbą argumentów, ale podano następującą liczbę zmiennych argumentów: 1
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(250): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(260): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(319): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(336): warning C4018: ">=": niezgodność typu ze znakiem/bez znaku
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(397): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(405): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(420): warning C4474: „printf”: przekazano za dużo argumentów dla ciągu formatowania
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(420): note: symbole zastępcze i ich parametry oczekują 0 argumentów ze zmienną liczbą argumentów, ale podano następującą liczbę zmiennych argumentów: 1
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(456): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(473): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(480): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(60): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(182): warning C4267: "argument": konwersja z "size_t" do "char", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(197): warning C4267: "argument": konwersja z "size_t" do "uint16_t", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(291): warning C4474: „printf”: przekazano za dużo argumentów dla ciągu formatowania
+  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(291): note: symbole zastępcze i ich parametry oczekują 0 argumentów ze zmienną liczbą argumentów, ale podano następującą liczbę zmiennych argumentów: 1
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(257): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(267): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(343): warning C4018: ">=": niezgodność typu ze znakiem/bez znaku
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(426): warning C4474: „printf”: przekazano za dużo argumentów dla ciągu formatowania
+  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(426): note: symbole zastępcze i ich parametry oczekują 0 argumentów ze zmienną liczbą argumentów, ale podano następującą liczbę zmiennych argumentów: 1
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(427): warning C4267: "argument": konwersja z "size_t" do "uint16_t", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(386): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(423): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(445): warning C4474: „printf”: przekazano za dużo argumentów dla ciągu formatowania
+  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(445): note: symbole zastępcze i ich parametry oczekują 0 argumentów ze zmienną liczbą argumentów, ale podano następującą liczbę zmiennych argumentów: 1
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(481): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(498): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(505): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
   lobbyThread.cpp
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.h(10): warning C4005: "LEN": ponowna definicja makra
   C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\socketUtils.h(16): note: zobacz poprzednią definicję „LEN”
@@ -35,9 +34,12 @@ C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.h(23): error
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.h(23): error C3861: "random_shuffle": identyfikatora nie odnaleziono
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\lobbyThread.cpp(10): warning C4005: "DEFAULT_BUFLEN": ponowna definicja makra
   C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\MainThreadListener.h(4): note: zobacz poprzednią definicję „DEFAULT_BUFLEN”
+  MainThreadListener.cpp
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\MainThreadListener.cpp(35): warning C4267: "argument": konwersja z "size_t" do "uint16_t", możliwa utrata danych
+  Server.cpp
   serverUtils.cpp
-  severRawUtils.cpp
   socketUtils.cpp
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\socketUtils.cpp(62): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\socketUtils.cpp(83): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
   tcpListener.cpp
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\tcpListener.cpp(9): warning C4101: "state": lokalna zmienna, do której nie istnieje odwołanie

@@ -77,3 +77,11 @@ std::vector<int> socketUtils::decodeCards(char* pos, int len)
 	}
 	return cards;
 }
+
+void socketUtils::codeAllCards(char * pos, std::vector<std::array<int, 2>>& cardPlayer)
+{
+	for (int i = 0; i < cardPlayer.size(); i++) {
+		codeCard(pos + i * 3, cardPlayer.at(i).at(0));
+		*(pos + (i * 3) + 2) = cardPlayer.at(i).at(1);
+	}
+}

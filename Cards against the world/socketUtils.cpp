@@ -77,3 +77,11 @@ std::vector<int> socketUtils::decodeCards(char* pos, int len)
 	}
 	return cards;
 }
+std::vector<sf::Vector2i> socketUtils::decodeAllCards(char* buff, int len)
+{
+	std::vector<sf::Vector2i> data;
+	for (int i = 0; i < len; i++) {
+		data.push_back({ int(decodeCard(buff + i * 3)), int(*(buff + (i * 3) + 2)) });
+	}
+	return data;
+}

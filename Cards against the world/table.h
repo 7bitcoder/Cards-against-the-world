@@ -25,6 +25,7 @@ private:
 	bool block = false;
 	bool hidden = false;
 	bool stop = true;
+
 	float dist;
 	float defaultDouble;//default pos when not hiding
 	float defaultNormal;

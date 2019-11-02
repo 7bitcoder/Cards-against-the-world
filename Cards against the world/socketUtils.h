@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <string>
 #include <uchar.h>
-
+#include <SFML/System.hpp>
 #define LEN 4000
 #pragma comment (lib, "Ws2_32.lib")
 class socketUtils {
@@ -28,8 +28,9 @@ public:
 	std::u32string decode(char* begData, int limit = 0, int reserve = 30);//decode from rcvbuff
 	int code(const std::u32string& string, char* pos); //return bytes writed //code in buff
 	void codeCard(char* pos, uint16_t card);
-	void codeCards(char* pos, std::vector<uint16_t> & cards);
+	void codeCards(char* pos, std::vector<uint16_t>& cards);
 	uint16_t decodeCard(char* pos);
 	std::vector<int> decodeCards(char* pos, int len);
+	std::vector<sf::Vector2i> decodeAllCards(char* buff, int len);
 };
 

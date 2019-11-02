@@ -46,6 +46,9 @@ private:
 	int gotSec;
 	int gameTime;
 
+	sf::Clock timer;
+	bool time = false;
+	std::vector<sf::Vector2i> cards_;
 	//
 	sf::Texture backgroundTexture;
 	sf::Sprite background;

@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <string>
 #include <uchar.h>
-
+#include <array>
 #define LEN 4000
 #pragma comment (lib, "Ws2_32.lib")
 class socketUtils {
@@ -31,5 +31,6 @@ public:
 	void codeCards(char* pos, std::vector<uint16_t>& cards);
 	uint16_t decodeCard(char* pos);
 	std::vector<int> decodeCards(char* pos, int len);
+	void codeAllCards(char * pos, std::vector<std::array<int, 2>>& cardPlayer);
 };
 

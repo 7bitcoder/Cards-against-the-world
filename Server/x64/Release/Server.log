@@ -2,29 +2,34 @@
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.h(10): warning C4005: "LEN": ponowna definicja makra
   C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\socketUtils.h(16): note: zobacz poprzednią definicję „LEN”
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.h(30): warning C4267: "return": konwersja z "size_t" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(56): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(91): warning C4101: "state": lokalna zmienna, do której nie istnieje odwołanie
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(176): warning C4267: "argument": konwersja z "size_t" do "char", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(182): warning C4267: "inicjowanie": konwersja z "size_t" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(191): warning C4267: "argument": konwersja z "size_t" do "uint16_t", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(193): warning C4267: "argument": konwersja z "size_t" do "int", możliwa utrata danych
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(285): warning C4474: „printf”: przekazano za dużo argumentów dla ciągu formatowania
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(285): note: symbole zastępcze i ich parametry oczekują 0 argumentów ze zmienną liczbą argumentów, ale podano następującą liczbę zmiennych argumentów: 1
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(251): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(261): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(381): warning C4244: "argument": konwersja z "SOCKET" do "const _Ty", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(61): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(99): warning C4101: "state": lokalna zmienna, do której nie istnieje odwołanie
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(184): warning C4267: "argument": konwersja z "size_t" do "char", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(190): warning C4267: "inicjowanie": konwersja z "size_t" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(199): warning C4267: "argument": konwersja z "size_t" do "uint16_t", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(201): warning C4267: "argument": konwersja z "size_t" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(293): warning C4474: „printf”: przekazano za dużo argumentów dla ciągu formatowania
+  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(293): note: symbole zastępcze i ich parametry oczekują 0 argumentów ze zmienną liczbą argumentów, ale podano następującą liczbę zmiennych argumentów: 1
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(259): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(269): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(397): warning C4244: "argument": konwersja z "SOCKET" do "const _Ty", możliwa utrata danych
           with
           [
               _Ty=int
           ]
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(407): warning C4477: „printf”: ciąg formatu „%d” wymaga argumentu typu „int”, ale argument 1 ze zmienną liczbą argumentów ma typ „unsigned __int64”
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(407): note: rozważ użycie elementu „%zd” w ciągu formatu
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(399): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(421): warning C4474: „printf”: przekazano za dużo argumentów dla ciągu formatowania
-  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(421): note: symbole zastępcze i ich parametry oczekują 0 argumentów ze zmienną liczbą argumentów, ale podano następującą liczbę zmiennych argumentów: 1
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(457): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(474): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
-C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(481): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(426): warning C4477: „printf”: ciąg formatu „%d” wymaga argumentu typu „int”, ale argument 1 ze zmienną liczbą argumentów ma typ „unsigned __int64”
+  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(426): note: rozważ użycie elementu „%zd” w ciągu formatu
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(428): warning C4474: „printf”: przekazano za dużo argumentów dla ciągu formatowania
+  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(428): note: symbole zastępcze i ich parametry oczekują 0 argumentów ze zmienną liczbą argumentów, ale podano następującą liczbę zmiennych argumentów: 1
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(429): warning C4267: "argument": konwersja z "size_t" do "uint16_t", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(431): warning C4267: "argument": konwersja z "size_t" do "int", możliwa utrata danych
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(388): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(425): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(447): warning C4474: „printf”: przekazano za dużo argumentów dla ciągu formatowania
+  C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(447): note: symbole zastępcze i ich parametry oczekują 0 argumentów ze zmienną liczbą argumentów, ale podano następującą liczbę zmiennych argumentów: 1
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(483): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(500): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(507): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
   lobbyThread.cpp
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.h(10): warning C4005: "LEN": ponowna definicja makra
   C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\socketUtils.h(16): note: zobacz poprzednią definicję „LEN”
@@ -32,8 +37,10 @@ C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.h(30): warni
 C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\lobbyThread.cpp(10): warning C4005: "DEFAULT_BUFLEN": ponowna definicja makra
   C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\MainThreadListener.h(4): note: zobacz poprzednią definicję „DEFAULT_BUFLEN”
   Trwa generowanie kodu
-  2 of 1247 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    7 functions had inline decision re-evaluated but remain unchanged
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(133): warning C4715: "game::rejectNewClient”: niewszystkie ścieżki kodu zwracają wartość
+C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\game.cpp(205): warning C4715: "game::acceptNewClient”: niewszystkie ścieżki kodu zwracają wartość
+  61 of 1304 functions ( 4.7%) were compiled, the rest were copied from previous compilation.
+    1 functions were new in current compilation
+    4 functions had inline decision re-evaluated but remain unchanged
   Zakończono generowanie kodu
   Server.vcxproj -> C:\Users\Sylwester\source\repos\Cards-against-the-world\Server\x64\Release\Server.exe

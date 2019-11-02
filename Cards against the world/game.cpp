@@ -54,6 +54,12 @@ namespace codes {
 	const char notEnoughPlayers = 28;//min 4 players required
 	const char getNewWhiteCards = 29;//get new white cards from server;
 	const char lobbyError = 30;//send cards to choser
+	const char getAllchosenCards = 31;//get all chosen cards send vector to players
+	const char setDoubleMode = 32;//in len 1 if no double mode 2 if doublemode
+	const char startNext = 33;//go to next state choser/normal
+	const char check = 34;//send check if player sended card
+	const char gotAllCards = 35;//gotAll cards
+
 
 }//TODO naprawnie deadlocka broadcast disconnect
 game::game(sf::RenderWindow& win, sf::SoundBuffer& sndbuff, sf::Font font_, sf::String lobbyId_, sf::String nick, bool newlobby_) :deck(), window(win), Chat(win, sndbuff, 150, 12, font)
@@ -678,11 +684,12 @@ game::state game::initF()
 
 
 	chosingTabl.init(players.size() - 1, font);
+	chosingTabl.setNickOffset({ 19,215 }, 18);
 	chosingTabl.resetChosen();
 	chosingTabl.setDouble(false);
-	std::vector<sf::Vector2i> tmp1(players.size() - 1, { 1,1 });
-	std::vector<sf::String> tmp2(players.size() - 1, "test");
-	chosingTabl.setCards(tmp1, tmp2, false);//for bad displaying todo lock seeing or sth
+	std::vector<sf::Vector2i> tmp1(2 * (players.size() - 1), { 1,1 });
+	std::vector<sf::String> tmp2(2 * (players.size() - 1), "init");
+	chosingTabl.setCards(tmp1, tmp2, true);//for bad displaying todo lock seeing or sth
 
 	score.init(30, players, font);
 	score.setColor(sf::Color::White);
@@ -714,8 +721,14 @@ game::state game::initF()
 	toggle.setTextures(noCircle, circle);
 	toggle.setPosition({ 100, 500 });
 	toggle.setSound(clickBuff);
-	toggle.setSpeed(0.02);
-
+	toggle.setSpeed(0.08);
+	toggle.forcewNormalTable();
+	toggle.blockChosing();
+	toggle.block();
+	normalTable.resetChosen();
+	chosingTabl.resetChosen();
+	toggle.forcewNormalTable();
+	toggle.block();
 	Chat.send("Waiting for server", sf::Color::Yellow);
 	return state::newRound;
 }
@@ -726,9 +739,6 @@ game::state game::newRoundF()
 	int liney = 1080;
 
 	normalTable.resetChosen();
-	chosingTabl.resetChosen();
-	toggle.forcewNormalTable();
-	toggle.block();
 
 	score.resetCheck();
 
@@ -750,7 +760,8 @@ game::state game::newRoundF()
 	sf::Event event;
 	event.type = sf::Event::GainedFocus;
 
-
+	bool AreYouChoser = false;
+	bool waitForTimer = false;
 	char coding, playerID;
 	while (window.isOpen())
 	{
@@ -817,19 +828,25 @@ game::state game::newRoundF()
 					score.setChosing(playerID);
 					chosingTabl.resetChosen();
 					chosingTabl.setDouble(doubleMode);
-					toggle.blockChosing();
-					return state::choser;
+					addMessagePrefix(buff, doubleMode ? 2 : 1, codes::setDoubleMode, playerId);
+					if (lobbySocket.send(buff, 4) != sf::Socket::Done)//TODO
+					{
+						//TODO
+					}
+					AreYouChoser = true;
 				}
 				else {
 					score.setChosing(playerID);
 					normalTable.resetChosen();
 					normalTable.setDouble(doubleMode);
-					toggle.blockChosing();
-					return state::normal;
+					AreYouChoser = false;
 				}
 				break;
 			case codes::lobbyError:
 				Chat.send("Server has crushed", sf::Color::Yellow);
+				break;
+			case codes::startNext:
+				waitForTimer = true;
 				break;
 			case codes::gameIsOver:
 				Chat.send("Game is over", sf::Color::Yellow);
@@ -837,6 +854,21 @@ game::state game::newRoundF()
 				break;
 			default:
 				break;
+			}
+		}
+		if (waitForTimer) {
+			if (time) {
+				if (timer.getElapsedTime().asSeconds() > cards_.size()) {
+					std::cout << "was in timer\n";
+					chosingTabl.hideNicks();
+					chosingTabl.resetChosen();
+					toggle.forcewNormalTable();
+					toggle.block();
+					return AreYouChoser ? state::choser : state::normal;
+				}
+			}
+			else {
+				return AreYouChoser ? state::choser : state::normal;
 			}
 		}
 		toggle.update();
@@ -859,7 +891,7 @@ game::state game::choserF()
 	Button confirm(window, blockPressed, block, offButton, clickBuff, switchBuff, font);
 	confirm.setPosition((linex - 190 * 1.8) * setting.xScale, (liney - 200) * setting.yScale);
 	confirm.setScale(setting.xScale * 1.5, 1 * setting.yScale);
-	confirm.setTitle("CONFIRM WINNER");
+	confirm.setTitle("CONFIRM");
 	confirm.setSoundVolume(setting.SoundVolume);
 	confirm.setColor(sf::Color::White);
 
@@ -875,7 +907,7 @@ game::state game::choserF()
 	enum intState { wait, run };
 	intState state_ = wait;
 
-	std::vector<sf::Vector2i> cards_;
+	cards_.clear();
 
 	int gotCards = 0;
 	Chat.send("You are chosing cards, wait for other players", sf::Color::Yellow);
@@ -929,37 +961,43 @@ game::state game::choserF()
 		if (len)//check commands
 		{
 			switch (coding) {
-			case codes::sendChosenWhiteCards://got cards from other players one or two
+			case codes::check: // check 
+				score.check(playerID);
+				break;
+			case codes::gotAllCards://got cards from other players one or two
 			{
 				std::size_t received;
-				int howMany = doubleMode ? 4 : 2;
+				std::cout << "got\n";
+				int howMany = len * 3;
 				if (lobbySocket.receive(buff, howMany, received) != sf::Socket::Done && received != howMany)//
 				{
-					;//todo
+					std::cout << "fail\n";
 				}
-				cards_.emplace_back(decodeCard(buff), playerID);// first 
-				if (doubleMode) {
-					cards_.emplace_back(decodeCard(buff + 2), playerID);//sec
+				cards_ = decodeAllCards(buff, len);// first 
+				// got all cards from players accept you (choser)
+				Chat.send("All players sent cards, chose winner", sf::Color::Yellow);
+				std::vector<sf::String> nicks;
+				for (auto& x : cards_) {
+					nicks.push_back(players.at(x.y));
 				}
-				gotCards++;
-				score.check(playerID);
-				if (gotCards == players.size() - 1) {// got all cards from players accept you (choser)
-					Chat.send("All players sent cards, chose winner", sf::Color::Yellow);
-					std::vector<sf::String> nicks;
-					for (auto &x:cards_) {
-						nicks.push_back(players.at(x.y));
-					}
-					chosingTabl.setCards(cards_,nicks, doubleMode);
-					toggle.forceChosingTable();
-					toggle.blockNormal();
-					toggle.unBlock();
-					state_ = intState::run;
-				}
+				chosingTabl.setCards(cards_, nicks, doubleMode);
+				toggle.forceChosingTable();
+				toggle.blockNormal();
+				toggle.unBlock();
+				std::cout << "end got\n";
+				state_ = intState::run;
 			}
 			break;
 			case codes::sendWinner:
 				Chat.send("Round winner is " + players.at(playerID), sf::Color::Yellow);
 				score.updateScore(playerID);
+				chosingTabl.showNick();
+				chosingTabl.resetChosen();
+				chosingTabl.setChosen(playerID);
+				toggle.forceChosingTable();
+				toggle.blockChosing();
+				time = true;
+				timer.restart();
 				return state::newRound;
 				break;
 			case codes::playerIsNotResponsing:
@@ -1020,7 +1058,7 @@ game::state game::normalF()
 
 	sf::Event event;
 	Chat.send("Chose card//s", sf::Color::Yellow);
-	std::vector<sf::Vector2i> cards_;
+	cards_.clear();
 	int gotCards = 0;
 
 	char coding, playerID;
@@ -1082,31 +1120,30 @@ game::state game::normalF()
 		{
 			sf::String out;
 			switch (coding) {
-			case codes::sendChosenWhiteCards:
+			case codes::check: // check 
+				score.check(playerID);
+				break;
+			case codes::gotAllCards://got all cards from server
 			{
 				std::size_t received;
-				int howMany = doubleMode ? 4 : 2;
+				int howMany = len * 3;
+				std::cout << "got\n";
 				if (lobbySocket.receive(buff, howMany, received) != sf::Socket::Done && received != howMany)//
 				{
-					;//todo
+					std::cout << "fail\n";
 				}
-				cards_.emplace_back(decodeCard(buff), playerID);// first 
-				if (doubleMode) {
-					cards_.emplace_back(decodeCard(buff + 2), playerID);//sec
+				cards_ = decodeAllCards(buff, len);// first 
+				// got all cards from players accept you (choser)
+				Chat.send("All players sent cards, chose winner", sf::Color::Yellow);
+				std::vector<sf::String> nicks;
+				for (auto& x : cards_) {
+					nicks.push_back(players.at(x.y));
 				}
-				gotCards++;
-				score.check(playerID);
-				if (gotCards == players.size() - 1) {// got all cards from players accept you (choser)
-					Chat.send("All players sent cards, chose winner", sf::Color::Yellow);
-					std::vector<sf::String> nicks;
-					for (auto& x : cards_) {
-						nicks.push_back(players.at(x.y));
-					}
-					chosingTabl.setCards(cards_, nicks, doubleMode);
-					toggle.forceChosingTable();
-					toggle.blockNormal();
-					toggle.unBlock();
-				}
+				chosingTabl.setCards(cards_, nicks, doubleMode);
+				toggle.forceChosingTable();
+				toggle.blockNormal();
+				toggle.unBlock();
+				std::cout << "end got\n";
 			}
 			break;
 			case codes::getNewWhiteCards:
@@ -1125,6 +1162,13 @@ game::state game::normalF()
 			case codes::sendWinner://got winner from server
 				Chat.send("Round winner is " + players.at(playerID), sf::Color::Yellow);
 				score.updateScore(playerID);
+				chosingTabl.showNick();
+				chosingTabl.resetChosen();
+				chosingTabl.setChosen(playerID);
+				toggle.forceChosingTable();
+				time = true;
+				timer.restart();
+				toggle.blockChosing();
 				normalTable.replaceChosenFirst(gotFirst);
 				if (doubleMode)
 					normalTable.replaceChosenSecound(gotSec);

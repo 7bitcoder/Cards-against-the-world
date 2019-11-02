@@ -13,6 +13,7 @@ serverUtils::~serverUtils()
 
 bool serverUtils::sendLen(SOCKET socket, const char* data, int length)
 {
+	waitToReadyForWrite(socket);
 	int count = 0;
 	while (count < length) {
 		int n = send(socket, data + count, length, 0);
@@ -24,6 +25,7 @@ bool serverUtils::sendLen(SOCKET socket, const char* data, int length)
 		count += n;
 		length -= n;
 	}
+	
 	return true;
 }
 int serverUtils::receiveTime(SOCKET socket, char* data, int length, int sec, int uSec)

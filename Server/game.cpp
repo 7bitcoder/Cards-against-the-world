@@ -49,6 +49,11 @@ namespace codes {
 	const char notEnoughPlayers = 28;//min 4 players required
 	const char getNewWhiteCards = 29;//get new white cards from server;
 	const char lobbyError = 30;//lobby has crushed;
+	const char getAllchosenCards = 31;//get all chosen cards send vector to players
+	const char setDoubleMode = 32;//in len 1 if no double mode 2 if doublemode
+	const char startNext = 33;//go to next state choser/normal
+	const char check = 34;//send check if player sended card
+	const char gotAllCards = 35;
 
 }//TODO naprawnie deadlocka broadcast disconnect 
 game::game(SOCKET listen, SOCKET leader_, std::u32string nick, std::u32string id)
@@ -75,8 +80,11 @@ bool game::broadCast(SOCKET socket, char* buff, int len, bool all)
 	{
 		if (all || it->first != socket)
 		{
-			if (!sendLen(it->first, buff, len))
+
+			if (!sendLen(it->first, buff, len)) {
 				toDelete.push_back(it);
+				printf("broadcast in fail\n");
+			}
 		}
 	}
 	for (auto& x : toDelete)
@@ -344,6 +352,7 @@ states game::questionInitF() {
 	return states::question;
 }
 states game::questionF() {
+	allCardsToSend.clear();
 	printf("start question\n");
 	playersSended.clear();
 	while (true) {
@@ -372,31 +381,38 @@ states game::questionF() {
 
 					int additionalInfo = getMessagePrefix(buff, code, playerID);
 					switch (code) {
+					case codes::setDoubleMode:
+						doubleMode = additionalInfo == 2;
+						addMessagePrefix(buff, 1, codes::startNext, 0);
+						if (!broadCast(0, buff, 4, true))
+							;//todo
+						break;
 					case codes::sendChosenWhiteCards://get cards to send to choser
 					{
 						printf("got cards from players\n");
-						char save[10];
-						memcpy(save, buff, 4);
-						bool doubleMode = additionalInfo > 2;
+						bool testDouble = additionalInfo > 2;
+						if (testDouble != doubleMode) {
+							;//todo
+						}
 						playersSended.push_back(sock);
 						int get = doubleMode ? 4 : 2;
 						i = recv(sock, buff, get, 0);
 						if (i != get) {
 							disconnect(sock);
 						}
-						memcpy(save + 4, buff, 4);
 						int len = 6;
 						uint16_t newFirst, newSec;
-						uint16_t cc = decodeCard(buff);
-						white.putCardBack(cc);
+						newFirst = decodeCard(buff);
+						white.putCardBack(newFirst);
+						allCardsToSend.push_back({ newFirst,playerID });
 						newFirst = white.getCard();
 						if (doubleMode) {
+							newSec = decodeCard(buff + 2);
+							white.putCardBack(newSec);
+							allCardsToSend.push_back({ newSec,playerID });
 							newSec = white.getCard();
 							len += 2;
-							white.putCardBack(decodeCard(buff + 2));
 						}
-						if (!broadCast(0, save, len, true))
-						;//todo
 						//send new card/s
 						codeCard(buff + 4, newFirst);
 						if (doubleMode)
@@ -404,9 +420,19 @@ states game::questionF() {
 						addMessagePrefix(buff, len, codes::getNewWhiteCards, 0);
 						if (!sendLen(sock, buff, len))
 							disconnect(sock);
+						addMessagePrefix(buff, 1, codes::check, playerID);
+						if (!broadCast(0, buff, 4, true))
+							;//todo
 						printf("got %d cards\n", playersSended.size());
-						if (playersSended.size() == clients.size() - 1)//all players sended cards
+						if (playersSended.size() == clients.size() - 1) {//all players sended cards
+							printf("sending all cards\n", playersSended.size());
+							addMessagePrefix(buff, allCardsToSend.size(), codes::gotAllCards, 0);
+							codeAllCards(buff + 4, allCardsToSend);
+							if (!broadCast(0, buff, 4 + allCardsToSend.size() * 3, true)) {
+								printf("broadcast fail\n");
+							}
 							return states::choseInit;
+						}
 					}
 					default:
 						break;
