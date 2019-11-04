@@ -29,7 +29,7 @@ private:
 	chat Chat;
 	std::map<int, sf::String > players;//0 listen rest players up to 8
 	unsigned short portToConnect = 3000;
-	sf::IpAddress address = "127.0.0.1";//"3.229.14.134";
+	sf::IpAddress address = "3.229.14.134";
 	std::u32string code = U"a7dzRwQjnw5kW6uEnhx7";
 	sf::RenderWindow& window;
 	sf::String lobbyId;
